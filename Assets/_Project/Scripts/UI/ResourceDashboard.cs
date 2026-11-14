@@ -13,6 +13,7 @@ namespace SpaceApps.UI
         public static readonly Color BarOk = new Color(0.25f, 0.75f, 0.55f);
         public static readonly Color BarOver = new Color(0.90f, 0.25f, 0.25f);
         static readonly Color TextOk = new Color(0.9f, 0.93f, 1f);
+        static readonly Color TextNotSet = new Color(0.6f, 0.66f, 0.75f);
 
         readonly List<ResourceRowView> rows = new List<ResourceRowView>();
         public IResourceDashboardViewModel ViewModel { get; private set; }
@@ -39,8 +40,9 @@ namespace SpaceApps.UI
         }
 
         /// <summary>"used / available unit", the same on every machine.</summary>
-        public static string ValueText(ResourceStatus r) =>
-            string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.#} / {1:0.#} {2}", r.Used, r.Available, r.Unit);
+        public static string ValueText(ResourceStatus r) => r.LimitSet
+            ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.#} / {1:0.#} {2}", r.Used, r.Available, r.Unit)
+            : string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.#} {1}, limit not set yet", r.Used, r.Unit);
 
         public bool IsOverLimitShown(int row) => rows[row].overLimitBadge.activeSelf;
 
@@ -57,10 +59,10 @@ namespace SpaceApps.UI
                 if (!used) continue;
                 var r = resources[i];
                 bool over = r.IsOverLimit;
-                float ratio = r.Available > 0f ? Mathf.Clamp01(r.Used / r.Available) : 1f;
+                float ratio = !r.LimitSet ? 0f : r.Available > 0f ? Mathf.Clamp01(r.Used / r.Available) : 1f;
                 rows[i].nameText.text = r.Name;
                 rows[i].valueText.text = ValueText(r);
-                rows[i].valueText.color = over ? BarOver : TextOk;
+                rows[i].valueText.color = over ? BarOver : r.LimitSet ? TextOk : TextNotSet;
                 rows[i].barFill.anchorMax = new Vector2(ratio, 1f);
                 rows[i].barFillImage.color = over ? BarOver : BarOk;
                 rows[i].overLimitBadge.SetActive(over);
