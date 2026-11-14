@@ -13,3 +13,4 @@ AI-generated images and video carry a visible watermark. List each generated ass
 
 | Asset | Tool | Location in the repo |
 |---|---|---|
+| Starfield mesh: 1500 star quads at random directions, drawn by `ShipBuilder.Starfield()` from a fixed seed (procedural code written with Claude Code; no image model) | Claude Code (code), Unity editor (generation) | `Assets/_Project/Art/Meshes/Starfield.asset` |
