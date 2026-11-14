@@ -70,7 +70,8 @@ namespace SpaceApps.Mission
     public class GroundStation : Entry
     {
         public string[] bands;
-        public Num passesPerDay, minutesPerPass, costUsd, months;
+        /// <summary>How many antennas; daily contact is this times the orbit's contactMinutesPerDay.</summary>
+        public Num stationCount, costUsd, months;
     }
 
     [Serializable]
@@ -87,6 +88,8 @@ namespace SpaceApps.Mission
     {
         public string summary;
         public Num altitudeKm, inclinationDeg, sunlitFraction, eclipseMinutes, lifetimeMonths;
+        /// <summary>Minutes per day one mid-latitude ground station can talk to the satellite in this orbit.</summary>
+        public Num contactMinutesPerDay;
     }
 
     [Serializable]
