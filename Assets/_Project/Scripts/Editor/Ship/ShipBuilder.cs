@@ -262,17 +262,17 @@ namespace SpaceApps.Ship.Editor
             rowView.background = row;
             rowView.button = MakeButton(row);
             rowView.nameText = Label("Name", row.rectTransform, 32, FontStyles.Bold, TextAlignmentOptions.Left, TextColor,
-                new Vector2(0, 0.58f), new Vector2(0.38f, 1), new Vector2(20, 0), new Vector2(0, -2));
+                new Vector2(0, 0.58f), new Vector2(0.42f, 1), new Vector2(20, 0), new Vector2(0, -2));
             rowView.statsText = Label("Stats", row.rectTransform, 27, FontStyles.Normal, TextAlignmentOptions.Right, TextColor,
-                new Vector2(0.38f, 0.58f), new Vector2(1, 1), new Vector2(12, 0), new Vector2(-20, -2));
+                new Vector2(0.42f, 0.58f), new Vector2(1, 1), new Vector2(12, 0), new Vector2(-20, -2));
             rowView.descriptionText = Label("Description", row.rectTransform, 28, FontStyles.Normal, TextAlignmentOptions.Left, DimText,
                 new Vector2(0, 0.28f), new Vector2(1, 0.58f), new Vector2(20, 0), new Vector2(-20, 0));
             rowView.sourceText = Label("Source", row.rectTransform, 24, FontStyles.Italic, TextAlignmentOptions.Left, SourceText,
                 new Vector2(0, 0), new Vector2(1, 0.28f), new Vector2(20, 2), new Vector2(-20, 0));
             rowView.descriptionText.textWrappingMode = rowView.sourceText.textWrappingMode = TextWrappingModes.NoWrap;
             // Long names or many stats shrink a little rather than being cut off.
-            AutoSize(rowView.nameText, 26f);
-            AutoSize(rowView.statsText, 22f);
+            AutoSize(rowView.nameText, 22f);
+            AutoSize(rowView.statsText, 20f);
             screen.optionTemplate = rowView;
 
             screen.detailsText = Label("Details", canvas, 32, FontStyles.Normal, TextAlignmentOptions.TopLeft, TextColor,
