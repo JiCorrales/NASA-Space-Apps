@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using SpaceApps.Game;
 using SpaceApps.Ship;
@@ -46,7 +47,32 @@ namespace SpaceApps.Ship.Editor
         const float Height = 3f;
         const float StationSpacing = 3f;
         const float WallThickness = 0.2f;
-        const float ScreenHeight = 1.6f;
+        const float ScreenHeight = 1.65f;
+        // 1 canvas px = 1.25 mm: body text then spans about 1 degree at 1.5 m and stays above 0.5 degree at 2 m.
+        const float ScreenScale = 0.00125f;
+        const float ScreenWidthPx = 1400f, ScreenHeightPx = 1300f;
+        const float DashboardOffset = 1.65f;
+        const float WindowBottom = 1.0f, WindowTop = 2.3f;
+        const string EarthTexturePath = "Assets/ThirdParty/NASA/BlueMarble-2048.png";
+        const string StarfieldPath = Root + "/Art/Meshes/Starfield.asset";
+
+        static bool IsLeft(int station) => station % 2 == 0;
+        static float StationZ(int station) => StationSpacing * (station + 1);
+        static float DashboardZ(int station) => StationZ(station) + (IsLeft(station) ? DashboardOffset : -DashboardOffset);
+
+        /// <summary>Stretches of one side wall covered by a screen or a dashboard; windows go in the gaps.</summary>
+        static List<(float from, float to)> Mounts(bool left)
+        {
+            float screenHalf = ScreenWidthPx * ScreenScale / 2f + 0.15f;
+            var mounts = new List<(float, float)>();
+            for (int i = 0; i < Stations.Length; i++)
+            {
+                if (IsLeft(i) != left) continue;
+                mounts.Add((StationZ(i) - screenHalf, StationZ(i) + screenHalf));
+                mounts.Add((DashboardZ(i) - 0.75f, DashboardZ(i) + 0.75f));
+            }
+            return mounts.OrderBy(m => m.Item1).ToList();
+        }
 
         static TMP_FontAsset font;
         static readonly Color TextColor = new Color(0.9f, 0.93f, 1f);
@@ -74,6 +100,17 @@ namespace SpaceApps.Ship.Editor
             var frame = Mat("Frame", new Color(0.08f, 0.09f, 0.11f));
             var desk = Mat("Desk", new Color(0.3f, 0.32f, 0.36f));
             var accent = Mat("Accent", new Color(0.1f, 0.6f, 0.8f), emission: new Color(0.2f, 1.2f, 1.6f));
+            var earthTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(EarthTexturePath);
+            if (earthTexture == null) Debug.LogWarning($"[ShipBuilder] {EarthTexturePath} missing; the Earth will be plain blue.");
+            var earth = Mat("Earth", earthTexture ? Color.white : new Color(0.2f, 0.35f, 0.8f), texture: earthTexture);
+            var stars = Unlit("Stars", Color.white, doubleSided: true);
+            var orbitLine = Unlit("Orbit Line", new Color(0.4f, 0.9f, 1f));
+            var marker = Unlit("Satellite Marker", Color.white);
+            var stationMarker = Unlit("Ground Station", new Color(1f, 0.6f, 0.2f));
+            var satBody = Mat("Satellite Body", new Color(0.75f, 0.77f, 0.8f));
+            var satPanel = Mat("Solar Panel", new Color(0.08f, 0.12f, 0.35f));
+            var satGold = Mat("Gold Foil", new Color(0.85f, 0.65f, 0.25f));
+            var satLens = Mat("Lens", new Color(0.03f, 0.03f, 0.05f));
 
             float length = StationSpacing * (Stations.Length + 1);
 
@@ -82,6 +119,9 @@ namespace SpaceApps.Ship.Editor
             var dashboardPrefab = SavePrefab(BuildDashboard(frame), "ResourceDashboard");
             var desktopPrefab = SavePrefab(BuildDesktopRig(), "DesktopRig");
             var welcomePrefab = SavePrefab(BuildWelcomeSign(frame), "WelcomeSign");
+            var satellitePrefab = SavePrefab(BuildSatelliteDisplay(desk, satBody, satPanel, satGold, satLens), "SatelliteDisplay");
+            var orbitPrefab = SavePrefab(BuildOrbitDisplay(desk, earth, orbitLine, marker, stationMarker), "OrbitDisplay");
+            var spacePrefab = SavePrefab(BuildSpaceOutside(earth, stars), "SpaceOutside");
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             RenderSettings.skybox = null;
@@ -100,12 +140,14 @@ namespace SpaceApps.Ship.Editor
 
             Place(hullPrefab, "Ship Interior", Vector3.zero, 0f);
 
+            Place(spacePrefab, "Space Outside", Vector3.zero, 0f);
+
             for (int i = 0; i < Stations.Length; i++)
             {
-                bool left = i % 2 == 0;
+                bool left = IsLeft(i);
                 float x = left ? -HalfWidth + 0.08f : HalfWidth - 0.08f;
                 var station = Place(screenPrefab, $"Station {i + 1} {Stations[i].title}",
-                    new Vector3(x, ScreenHeight, StationSpacing * (i + 1)), left ? -90f : 90f);
+                    new Vector3(x, ScreenHeight, StationZ(i)), left ? -90f : 90f);
                 var so = new SerializedObject(station.GetComponent<StationScreen>());
                 so.FindProperty("stationNumber").intValue = i + 1;
                 so.FindProperty("stationTitle").stringValue = Stations[i].title;
@@ -114,12 +156,14 @@ namespace SpaceApps.Ship.Editor
 
                 // A dashboard beside every station, so the resources are in view wherever the player stands.
                 Place(dashboardPrefab, $"Resource Dashboard {i + 1}",
-                    station.transform.position + station.transform.right * 1.5f + Vector3.up * 0.05f, left ? -90f : 90f);
+                    new Vector3(x, ScreenHeight + 0.05f, DashboardZ(i)), left ? -90f : 90f);
             }
 
             // Hangs in front of the spawn point, above eye height so the corridor stays in view.
             Place(welcomePrefab, "Welcome Sign", new Vector3(0f, 2.2f, 2.8f), 0f);
-            Place(dashboardPrefab, "Resource Dashboard End", new Vector3(0f, 1.6f, length - 0.08f), 0f);
+            // The live satellite between Spacecraft and Instruments, the orbit globe past Launch and Orbit.
+            Place(satellitePrefab, "Satellite Display", new Vector3(0f, 0f, 12.6f), 0f);
+            Place(orbitPrefab, "Orbit Display", new Vector3(0f, 0f, 20f), 0f);
             new GameObject("Mission Game").AddComponent<MissionGame>();
 
             var spawn = new Vector3(0f, 0f, 1f);
@@ -143,7 +187,8 @@ namespace SpaceApps.Ship.Editor
 
             EditorSceneManager.SaveScene(scene, ScenePath);
 
-            var others = EditorBuildSettings.scenes.Where(s => s.path != ScenePath);
+            // Only the ship goes into builds; the template's scenes stay listed but disabled.
+            var others = EditorBuildSettings.scenes.Where(s => s.path != ScenePath).Select(s => new EditorBuildSettingsScene(s.path, false));
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) }.Concat(others).ToArray();
             AssetDatabase.SaveAssets();
             Debug.Log($"[ShipBuilder] Built {ScenePath}: {Stations.Length} stations, corridor {length} m.");
@@ -162,8 +207,6 @@ namespace SpaceApps.Ship.Editor
             // the per-object limit allows.
             var floorRoot = Group("Floor", root);
             var ceilingRoot = Group("Ceiling", root);
-            var leftRoot = Group("Wall_Left", root);
-            var rightRoot = Group("Wall_Right", root);
             int pieces = Mathf.CeilToInt(length / StationSpacing);
             for (int i = 0; i < pieces; i++)
             {
@@ -172,15 +215,22 @@ namespace SpaceApps.Ship.Editor
                 float zc = z + (i == 0 ? -t / 2f : 0f) + (i == pieces - 1 ? t / 2f : 0f);
                 Box($"Floor {i}", floorRoot, new Vector3(0f, -t / 2f, zc), new Vector3(w, t, depth), floor);
                 Box($"Ceiling {i}", ceilingRoot, new Vector3(0f, Height + t / 2f, zc), new Vector3(w, t, depth), hull);
-                Box($"Wall_Left {i}", leftRoot, new Vector3(-HalfWidth - t / 2f, Height / 2f, zc), new Vector3(t, Height, depth), hull);
-                Box($"Wall_Right {i}", rightRoot, new Vector3(HalfWidth + t / 2f, Height / 2f, zc), new Vector3(t, Height, depth), hull);
             }
+
+            SideWall(Group("Wall_Left", root), -HalfWidth - t / 2f, length, Mounts(left: true), hull, accent);
+            SideWall(Group("Wall_Right", root), HalfWidth + t / 2f, length, Mounts(left: false), hull, accent);
 
             // The template's teleport ray lands on the whole floor.
             var teleport = floorRoot.AddComponent<TeleportationArea>();
             teleport.interactionLayers = InteractionLayerMask.GetMask("Teleport");
             Box("Wall_Back", root, new Vector3(0f, Height / 2f, -t / 2f), new Vector3(w, Height, t), hull);
-            Box("Wall_Front", root, new Vector3(0f, Height / 2f, length + t / 2f), new Vector3(w, Height, t), hull);
+            // The far end is one wide window onto the Earth.
+            var front = Group("Wall_Front", root);
+            float zf = length + t / 2f, pane = 1.5f;
+            Box("Front Left", front, new Vector3(-(pane + w / 2f) / 2f, Height / 2f, zf), new Vector3(w / 2f - pane, Height, t), hull);
+            Box("Front Right", front, new Vector3((pane + w / 2f) / 2f, Height / 2f, zf), new Vector3(w / 2f - pane, Height, t), hull);
+            Box("Front Sill", front, new Vector3(0f, WindowBottom / 2f, zf), new Vector3(2f * pane, WindowBottom, t), hull);
+            Box("Front Lintel", front, new Vector3(0f, (WindowTop + Height) / 2f, zf), new Vector3(2f * pane, Height - WindowTop, t), hull);
 
             Box("Ceiling Strip", root, new Vector3(0f, Height - 0.01f, midZ), new Vector3(0.3f, 0.02f, length - 1f), accent, collider: false);
             Box("Floor Guide Left", root, new Vector3(-HalfWidth + 0.6f, 0.005f, midZ), new Vector3(0.05f, 0.01f, length - 1f), accent, collider: false);
@@ -197,6 +247,42 @@ namespace SpaceApps.Ship.Editor
                 light.color = new Color(0.9f, 0.95f, 1f);
             }
             return root;
+        }
+
+        /// <summary>A side wall with a window in every gap of at least 1.2 m between mounts; solid stretches in 3 m pieces.</summary>
+        static void SideWall(GameObject wall, float x, float length, List<(float from, float to)> mounts, Material hull, Material accent)
+        {
+            const float t = WallThickness;
+            var windows = new List<(float from, float to)>();
+            float cursor = 0.3f;
+            foreach (var (from, to) in mounts.Append((length - 0.3f, length)))
+            {
+                if (from - cursor >= 1.2f) windows.Add((cursor + 0.1f, from - 0.1f));
+                cursor = Mathf.Max(cursor, to);
+            }
+
+            int piece = 0;
+            void Solid(float from, float to)
+            {
+                for (float z = from; z < to - 0.001f; z += StationSpacing)
+                {
+                    float end = Mathf.Min(to, z + StationSpacing);
+                    Box($"{wall.name} {piece++}", wall, new Vector3(x, Height / 2f, (z + end) / 2f), new Vector3(t, Height, end - z), hull);
+                }
+            }
+
+            float solidFrom = -t;
+            for (int i = 0; i < windows.Count; i++)
+            {
+                var (from, to) = windows[i];
+                Solid(solidFrom, from);
+                float mid = (from + to) / 2f, span = to - from;
+                Box($"{wall.name} Window {i} Sill", wall, new Vector3(x, WindowBottom / 2f, mid), new Vector3(t, WindowBottom, span), hull);
+                Box($"{wall.name} Window {i} Lintel", wall, new Vector3(x, (WindowTop + Height) / 2f, mid), new Vector3(t, Height - WindowTop, span), hull);
+                Box($"{wall.name} Window {i} Light", wall, new Vector3(x, WindowBottom + 0.01f, mid), new Vector3(t + 0.04f, 0.02f, span), accent, collider: false);
+                solidFrom = to;
+            }
+            Solid(solidFrom, length + t);
         }
 
         static GameObject Group(string name, GameObject parent)
@@ -222,12 +308,12 @@ namespace SpaceApps.Ship.Editor
 
         static GameObject BuildStationScreen(Material frameMat, Material deskMat)
         {
-            const float w = 1400f, h = 1300f;
+            const float w = ScreenWidthPx, h = ScreenHeightPx;
             var root = new GameObject("StationScreen");
-            Box("Frame", root, new Vector3(0f, 0f, 0.03f), new Vector3(w / 1000f + 0.08f, h / 1000f + 0.08f, 0.05f), frameMat, collider: false);
-            Box("Desk", root, new Vector3(0f, -ScreenHeight + 0.45f, -0.22f), new Vector3(1.3f, 0.9f, 0.4f), deskMat);
+            Box("Frame", root, new Vector3(0f, 0f, 0.03f), new Vector3(w * ScreenScale + 0.08f, h * ScreenScale + 0.08f, 0.05f), frameMat, collider: false);
+            Box("Desk", root, new Vector3(0f, -ScreenHeight + 0.375f, -0.22f), new Vector3(1.3f, 0.75f, 0.4f), deskMat);
 
-            var canvas = WorldCanvas(root, new Vector2(w, h));
+            var canvas = WorldCanvas(root, new Vector2(w, h), ScreenScale);
             Panel("Background", canvas, new Color(0.04f, 0.06f, 0.1f, 0.97f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
 
             var screen = root.AddComponent<StationScreen>();
@@ -271,12 +357,12 @@ namespace SpaceApps.Ship.Editor
                 new Vector2(0.42f, 0.58f), new Vector2(1, 1), new Vector2(12, 0), new Vector2(-20, -2));
             rowView.descriptionText = Label("Description", row.rectTransform, 28, FontStyles.Normal, TextAlignmentOptions.Left, DimText,
                 new Vector2(0, 0.28f), new Vector2(1, 0.58f), new Vector2(20, 0), new Vector2(-20, 0));
-            rowView.sourceText = Label("Source", row.rectTransform, 24, FontStyles.Italic, TextAlignmentOptions.Left, SourceText,
+            rowView.sourceText = Label("Source", row.rectTransform, 26, FontStyles.Italic, TextAlignmentOptions.Left, SourceText,
                 new Vector2(0, 0), new Vector2(1, 0.28f), new Vector2(20, 2), new Vector2(-20, 0));
             rowView.descriptionText.textWrappingMode = rowView.sourceText.textWrappingMode = TextWrappingModes.NoWrap;
             // Long names or many stats shrink a little rather than being cut off.
             AutoSize(rowView.nameText, 22f);
-            AutoSize(rowView.statsText, 20f);
+            AutoSize(rowView.statsText, 22f);
             screen.optionTemplate = rowView;
 
             screen.detailsText = Label("Details", canvas, 32, FontStyles.Normal, TextAlignmentOptions.TopLeft, TextColor,
@@ -377,6 +463,158 @@ namespace SpaceApps.Ship.Editor
             return root;
         }
 
+        // ---------- live satellite and orbit ----------
+
+        static GameObject BuildSatelliteDisplay(Material pedestalMat, Material body, Material panel, Material gold, Material lens)
+        {
+            var root = new GameObject("SatelliteDisplay");
+            var pedestal = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            pedestal.name = "Pedestal";
+            pedestal.transform.SetParent(root.transform, false);
+            pedestal.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+            pedestal.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            pedestal.GetComponent<MeshRenderer>().sharedMaterial = pedestalMat;
+
+            var holder = new GameObject("Satellite");
+            holder.transform.SetParent(root.transform, false);
+            holder.transform.localPosition = new Vector3(0f, 1.02f, 0f);
+            var model = holder.AddComponent<SatelliteModel>();
+            model.bodyMaterial = body;
+            model.panelMaterial = panel;
+            model.goldMaterial = gold;
+            model.lensMaterial = lens;
+            model.displayScale = 2.5f;
+
+            Caption(root, new Vector3(0f, 0.9f, -0.26f), "Your CubeSat\n<size=70%>shown 2.5 times real size</size>");
+            return root;
+        }
+
+        static GameObject BuildOrbitDisplay(Material pedestalMat, Material earth, Material line, Material marker, Material station)
+        {
+            var root = new GameObject("OrbitDisplay");
+            var pedestal = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            pedestal.name = "Pedestal";
+            pedestal.transform.SetParent(root.transform, false);
+            pedestal.transform.localPosition = new Vector3(0f, 0.55f, 0f);
+            pedestal.transform.localScale = new Vector3(0.2f, 0.55f, 0.2f);
+            pedestal.GetComponent<MeshRenderer>().sharedMaterial = pedestalMat;
+
+            var display = new GameObject("Display");
+            display.transform.SetParent(root.transform, false);
+            display.transform.localPosition = new Vector3(0f, 1.6f, 0f);
+            var orbit = display.AddComponent<OrbitDisplay>();
+
+            var globe = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            globe.name = "Globe";
+            Object.DestroyImmediate(globe.GetComponent<Collider>());
+            globe.transform.SetParent(display.transform, false);
+            globe.transform.localScale = Vector3.one * (orbit.globeRadius * 2f);
+            globe.GetComponent<MeshRenderer>().sharedMaterial = earth;
+            orbit.globe = globe.transform;
+
+            var pivot = new GameObject("Orbit");
+            pivot.transform.SetParent(display.transform, false);
+            orbit.ringPivot = pivot.transform;
+            var ring = pivot.AddComponent<LineRenderer>();
+            ring.sharedMaterial = line;
+            ring.widthMultiplier = 0.008f;
+            ring.useWorldSpace = false;
+            ring.loop = true;
+            ring.shadowCastingMode = ShadowCastingMode.Off;
+            orbit.ring = ring;
+
+            var dot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            dot.name = "Satellite Marker";
+            Object.DestroyImmediate(dot.GetComponent<Collider>());
+            dot.transform.SetParent(pivot.transform, false);
+            dot.transform.localScale = Vector3.one * 0.045f;
+            dot.GetComponent<MeshRenderer>().sharedMaterial = marker;
+            orbit.marker = dot.transform;
+            orbit.stationMaterial = station;
+
+            Caption(root, new Vector3(0f, 1.0f, -0.12f), "Your orbit\n<size=70%>height shown 8 times higher; orange: ground stations</size>");
+            return root;
+        }
+
+        /// <summary>A small text plate facing -z (towards the player coming from the spawn point).</summary>
+        static void Caption(GameObject parent, Vector3 position, string text)
+        {
+            var holder = new GameObject("Caption");
+            holder.transform.SetParent(parent.transform, false);
+            holder.transform.localPosition = position;
+            var canvas = WorldCanvas(holder, new Vector2(600f, 140f));
+            Panel("Background", canvas, new Color(0.04f, 0.06f, 0.1f, 0.9f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            Label("Text", canvas, 40, FontStyles.Bold, TextAlignmentOptions.Center, TextColor, Vector2.zero, Vector2.one,
+                new Vector2(12, 6), new Vector2(-12, -6)).text = text;
+        }
+
+        // ---------- space outside ----------
+
+        static GameObject BuildSpaceOutside(Material earthMat, Material starMat)
+        {
+            var root = new GameObject("SpaceOutside");
+            // A big Earth below and to the left: it fills the bottom of the left windows and the front window's corner.
+            var earth = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            earth.name = "Earth";
+            Object.DestroyImmediate(earth.GetComponent<Collider>());
+            earth.transform.SetParent(root.transform, false);
+            earth.transform.localPosition = new Vector3(-500f, -150f, 60f);
+            earth.transform.localRotation = Quaternion.Euler(0f, 200f, 23.4f);
+            earth.transform.localScale = Vector3.one * 600f;
+            earth.GetComponent<MeshRenderer>().sharedMaterial = earthMat;
+            earth.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
+
+            var stars = new GameObject("Stars");
+            stars.transform.SetParent(root.transform, false);
+            stars.AddComponent<MeshFilter>().sharedMesh = Starfield();
+            var renderer = stars.AddComponent<MeshRenderer>();
+            renderer.sharedMaterial = starMat;
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            return root;
+        }
+
+        /// <summary>1500 small quads on a sphere 800 m out, from a fixed seed so every rerun writes the same mesh.</summary>
+        static Mesh Starfield()
+        {
+            EnsureFolder(Root + "/Art/Meshes");
+            var mesh = AssetDatabase.LoadAssetAtPath<Mesh>(StarfieldPath);
+            if (mesh == null)
+            {
+                mesh = new Mesh { name = "Starfield" };
+                AssetDatabase.CreateAsset(mesh, StarfieldPath);
+            }
+            var random = new System.Random(20261114);
+            const int count = 1500;
+            const float radius = 800f;
+            var vertices = new Vector3[count * 4];
+            var triangles = new int[count * 6];
+            for (int i = 0; i < count; i++)
+            {
+                // Uniform direction on the sphere.
+                float y = (float)(random.NextDouble() * 2.0 - 1.0);
+                float a = (float)(random.NextDouble() * Mathf.PI * 2.0);
+                float r = Mathf.Sqrt(1f - y * y);
+                var dir = new Vector3(r * Mathf.Cos(a), y, r * Mathf.Sin(a));
+                float size = 1.2f + 2.4f * (float)(random.NextDouble() * random.NextDouble());
+                var right = Vector3.Cross(dir, Mathf.Abs(dir.y) > 0.9f ? Vector3.forward : Vector3.up).normalized * size;
+                var up = Vector3.Cross(right, dir).normalized * size;
+                var c = dir * radius;
+                vertices[i * 4] = c - right - up;
+                vertices[i * 4 + 1] = c - right + up;
+                vertices[i * 4 + 2] = c + right + up;
+                vertices[i * 4 + 3] = c + right - up;
+                int v = i * 4, t = i * 6;
+                triangles[t] = v; triangles[t + 1] = v + 1; triangles[t + 2] = v + 2;
+                triangles[t + 3] = v; triangles[t + 4] = v + 2; triangles[t + 5] = v + 3;
+            }
+            mesh.Clear();
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+            mesh.RecalculateBounds();
+            EditorUtility.SetDirty(mesh);
+            return mesh;
+        }
+
         // ---------- desktop rig ----------
 
         static GameObject BuildDesktopRig()
@@ -405,13 +643,13 @@ namespace SpaceApps.Ship.Editor
 
         // ---------- UI helpers ----------
 
-        static RectTransform WorldCanvas(GameObject parent, Vector2 sizePx)
+        static RectTransform WorldCanvas(GameObject parent, Vector2 sizePx, float metresPerPixel = 0.001f)
         {
             var go = new GameObject("Canvas", typeof(RectTransform));
             go.transform.SetParent(parent.transform, false);
             var rt = (RectTransform)go.transform;
             rt.sizeDelta = sizePx;
-            rt.localScale = Vector3.one * 0.001f; // 1 px = 1 mm
+            rt.localScale = Vector3.one * metresPerPixel;
             go.AddComponent<Canvas>().renderMode = RenderMode.WorldSpace;
             // Walls and doors in front of a screen block both the mouse and the XR ray.
             go.AddComponent<GraphicRaycaster>().blockingObjects = GraphicRaycaster.BlockingObjects.ThreeD;
@@ -477,7 +715,22 @@ namespace SpaceApps.Ship.Editor
 
         // ---------- assets ----------
 
-        static Material Mat(string name, Color color, Color? emission = null)
+        static Material Unlit(string name, Color color, bool doubleSided = false)
+        {
+            string path = $"{MaterialsDir}/{name}.mat";
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null)
+            {
+                mat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                AssetDatabase.CreateAsset(mat, path);
+            }
+            mat.SetColor("_BaseColor", color);
+            mat.SetFloat("_Cull", doubleSided ? 0f : 2f);
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        static Material Mat(string name, Color color, Color? emission = null, Texture2D texture = null)
         {
             string path = $"{MaterialsDir}/{name}.mat";
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
@@ -488,6 +741,7 @@ namespace SpaceApps.Ship.Editor
             }
             mat.SetColor("_BaseColor", color);
             mat.SetFloat("_Smoothness", 0.35f);
+            mat.SetTexture("_BaseMap", texture);
             if (emission.HasValue)
             {
                 mat.EnableKeyword("_EMISSION");

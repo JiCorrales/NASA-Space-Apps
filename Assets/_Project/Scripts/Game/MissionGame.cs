@@ -41,6 +41,9 @@ namespace SpaceApps.Game
                 selector.RigChanged += xr => ShowWelcome(sign, xr);
             }
 
+            foreach (var model in FindObjectsByType<SatelliteModel>(FindObjectsSortMode.None)) model.Bind(Session);
+            foreach (var orbit in FindObjectsByType<OrbitDisplay>(FindObjectsSortMode.None)) orbit.Bind(Session);
+
             var dashboard = new DashboardViewModel(Session);
             foreach (var d in FindObjectsByType<ResourceDashboard>(FindObjectsSortMode.None)) d.Bind(dashboard);
 
