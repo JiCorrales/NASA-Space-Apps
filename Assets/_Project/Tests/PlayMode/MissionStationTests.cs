@@ -127,10 +127,7 @@ namespace SpaceApps.Tests.PlayMode
         {
             yield return PlayGoodPath();
             var control = Ui.Screen("Mission Control");
-            Ui.LookAt(control);
-            yield return null;
-            Ui.Click(control.actionButton);
-            yield return null;
+            yield return Ui.Action(control, "Reset design");
 
             var d = session.Design;
             Assert.IsTrue(new[] { d.objective, d.format, d.power, d.radio, d.groundStation, d.launch, d.orbit }.All(string.IsNullOrEmpty));
