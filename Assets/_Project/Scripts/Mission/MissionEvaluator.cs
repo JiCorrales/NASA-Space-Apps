@@ -188,11 +188,13 @@ namespace SpaceApps.Mission
                     $"{t.name} is missing. {t.summary}");
 
             // Science: instruments that match the objective, boosted in the preferred orbit, cut by lost data.
+            // Only instruments that serve the objective count; before an objective is chosen, all of them do.
+            var serving = objective == null ? instruments : instruments.Where(i => i.tags.Intersect(objective.requiredTags).Any()).ToList();
             float bonus = objective != null && orbit != null && objective.preferredOrbits.Contains(orbit.id) ? c.preferredOrbitBonus.value : 1f;
-            report.science = instruments.Sum(i => i.science.value) * bonus * (radio != null && station != null ? downlinkFraction : 1f);
+            report.science = serving.Sum(i => i.science.value) * bonus * (radio != null && station != null ? downlinkFraction : 1f);
             if (objective != null && instruments.Count > 0)
             {
-                if (!instruments.Any(i => i.tags.Intersect(objective.requiredTags).Any()))
+                if (serving.Count == 0)
                     Add(report, "missing-instrument", ResourceKind.Data, Severity.Blocking,
                         $"No instrument can measure what the {objective.name} objective needs ({string.Join(", ", objective.requiredTags)}).");
                 else if (missing.Count == 0 && report.science < objective.minScience)
@@ -206,13 +208,16 @@ namespace SpaceApps.Mission
             return report;
         }
 
+        // A failed mission scores at most FailedScoreCap; a successful one always scores more.
+        const int FailedScoreCap = 25;
+
         // Success is worth most; science and a healthy margin on each resource add to it; reliability scales it.
         static int Score(MissionReport r, CatalogConstants c)
         {
-            if (!r.success) return (int)Math.Round(r.science);
+            if (!r.success) return Math.Min(FailedScoreCap, (int)Math.Round(r.science * 0.5f));
             float efficiency = r.resources.Sum(b =>
                 b.Margin < 0f ? 0f : b.Margin < c.reserveFraction ? 5f : b.Margin <= c.healthyMarginMax ? 10f : 6f);
-            return (int)Math.Round((100f + r.science * 2f + efficiency) * r.reliability);
+            return Math.Max(FailedScoreCap + 1, (int)Math.Round((100f + r.science * 2f + efficiency) * r.reliability));
         }
 
         static void Resource(MissionReport r, ResourceKind kind, string unit, float used, float available) =>
