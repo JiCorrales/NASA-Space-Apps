@@ -66,12 +66,12 @@ namespace SpaceApps.Tests.PlayMode
         {
             var rig = Find<DesktopRig>();
             float radius = rig.GetComponent<CharacterController>().radius;
-            float wallInside = GameObject.Find("Wall_Right").GetComponent<Collider>().bounds.min.x;
+            float wallInside = GameObject.Find("Wall_Right").GetComponentsInChildren<Collider>().Min(c => c.bounds.min.x);
             for (int i = 0; i < 100; i++) { rig.Move(Vector2.right, 0.1f); yield return null; }
             Assert.LessOrEqual(rig.transform.position.x + radius, wallInside + 0.05f);
             Assert.Greater(rig.transform.position.x, wallInside - radius - 0.5f, "rig never reached the wall");
 
-            float backInside = GameObject.Find("Wall_Back").GetComponent<Collider>().bounds.max.z;
+            float backInside = GameObject.Find("Wall_Back").GetComponentsInChildren<Collider>().Max(c => c.bounds.max.z);
             for (int i = 0; i < 100; i++) { rig.Move(Vector2.down, 0.1f); yield return null; }
             Assert.GreaterOrEqual(rig.transform.position.z - radius, backInside - 0.05f);
         }
