@@ -82,8 +82,18 @@ namespace SpaceApps.Ship.Editor
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             RenderSettings.skybox = null;
-            RenderSettings.ambientMode = AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.28f, 0.3f, 0.35f);
+            // Lighting that every quality level renders, including WebGL's, where additional (point) lights are off:
+            // a gradient ambient plus one shadowless directional light. The point lights only add accents where supported.
+            RenderSettings.ambientMode = AmbientMode.Trilight;
+            RenderSettings.ambientSkyColor = new Color(0.62f, 0.66f, 0.74f);
+            RenderSettings.ambientEquatorColor = new Color(0.42f, 0.46f, 0.54f);
+            RenderSettings.ambientGroundColor = new Color(0.22f, 0.24f, 0.28f);
+            var sun = new GameObject("Key Light").AddComponent<Light>();
+            sun.type = LightType.Directional;
+            sun.shadows = LightShadows.None;
+            sun.intensity = 0.7f;
+            sun.color = new Color(1f, 0.97f, 0.92f);
+            sun.transform.rotation = Quaternion.Euler(55f, 35f, 0f);
 
             Place(hullPrefab, "Ship Interior", Vector3.zero, 0f);
 
@@ -142,10 +152,24 @@ namespace SpaceApps.Ship.Editor
             float midZ = length / 2f;
             float t = WallThickness;
 
-            Box("Floor", root, new Vector3(0f, -t / 2f, midZ), new Vector3(w, t, length + 2f * t), floor);
-            Box("Ceiling", root, new Vector3(0f, Height + t / 2f, midZ), new Vector3(w, t, length + 2f * t), hull);
-            Box("Wall_Left", root, new Vector3(-HalfWidth - t / 2f, Height / 2f, midZ), new Vector3(t, Height, length + 2f * t), hull);
-            Box("Wall_Right", root, new Vector3(HalfWidth + t / 2f, Height / 2f, midZ), new Vector3(t, Height, length + 2f * t), hull);
+            // Floor, ceiling and side walls in pieces one station long, so no single object needs more lights than
+            // the per-object limit allows.
+            var floorRoot = Group("Floor", root);
+            var ceilingRoot = Group("Ceiling", root);
+            var leftRoot = Group("Wall_Left", root);
+            var rightRoot = Group("Wall_Right", root);
+            int pieces = Mathf.CeilToInt(length / StationSpacing);
+            for (int i = 0; i < pieces; i++)
+            {
+                float z = (i + 0.5f) * StationSpacing;
+                float depth = StationSpacing + (i == 0 || i == pieces - 1 ? t : 0f);
+                float zc = z + (i == 0 ? -t / 2f : 0f) + (i == pieces - 1 ? t / 2f : 0f);
+                Box($"Floor {i}", floorRoot, new Vector3(0f, -t / 2f, zc), new Vector3(w, t, depth), floor);
+                Box($"Ceiling {i}", ceilingRoot, new Vector3(0f, Height + t / 2f, zc), new Vector3(w, t, depth), hull);
+                Box($"Wall_Left {i}", leftRoot, new Vector3(-HalfWidth - t / 2f, Height / 2f, zc), new Vector3(t, Height, depth), hull);
+                Box($"Wall_Right {i}", rightRoot, new Vector3(HalfWidth + t / 2f, Height / 2f, zc), new Vector3(t, Height, depth), hull);
+            }
+
             Box("Wall_Back", root, new Vector3(0f, Height / 2f, -t / 2f), new Vector3(w, Height, t), hull);
             Box("Wall_Front", root, new Vector3(0f, Height / 2f, length + t / 2f), new Vector3(w, Height, t), hull);
 
@@ -160,10 +184,17 @@ namespace SpaceApps.Ship.Editor
                 light.transform.localPosition = new Vector3(0f, Height - 0.3f, z);
                 light.type = LightType.Point;
                 light.range = 7f;
-                light.intensity = 2.5f;
+                light.intensity = 1.5f;
                 light.color = new Color(0.9f, 0.95f, 1f);
             }
             return root;
+        }
+
+        static GameObject Group(string name, GameObject parent)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent.transform, false);
+            return go;
         }
 
         static GameObject Box(string name, GameObject parent, Vector3 position, Vector3 scale, Material mat, bool collider = true)
