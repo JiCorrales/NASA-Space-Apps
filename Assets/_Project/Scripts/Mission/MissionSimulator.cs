@@ -93,10 +93,23 @@ namespace SpaceApps.Mission
                 return Stop(run, buildEnd + delay, "out-of-money", "The money ran out",
                     MissionEvaluator.Inv($"Surprise costs took the mission to ${run.totalCostUsd:N0}, over the ${budget:N0} budget, before it could launch."));
 
-            run.launchMonth = buildEnd + delay + launch.waitMonths;
-            if (run.launchMonth > objective.deadlineMonths)
-                return Stop(run, run.launchMonth, "missed-launch", "The rocket left without it",
-                    MissionEvaluator.Inv($"Delays added {delay:0.#} months, so the satellite was not ready by month {objective.deadlineMonths.value:0}. A launch is never delayed for a CubeSat."));
+            // The rocket never waits for a CubeSat (CubeSat 101 section 2.15 p.28). A delay inside the delivery
+            // slack keeps the planned ride; a longer one misses it, and the satellite waits for the next ride.
+            float plannedLaunch = buildEnd + launch.waitMonths;
+            run.launchMonth = plannedLaunch;
+            float slack = c.deliverySlackMonths;
+            if (delay > slack)
+            {
+                float wait = Math.Max(1f, launch.waitMonths);
+                int missed = (int)Math.Ceiling((delay - slack) / wait);
+                run.launchMonth = plannedLaunch + missed * wait;
+                Add(run, buildEnd + delay, MissionPhase.Delivery, "missed-ride", "The rocket left without it",
+                    MissionEvaluator.Inv($"Delays added {delay:0.#} months, more than the {slack:0.#} months of delivery slack, so the planned rocket left without the satellite. The next ride is at month {run.launchMonth:0.#}."));
+            }
+            float deadline = objective.deadlineMonths;
+            if (run.launchMonth > deadline)
+                return Stop(run, run.launchMonth, "missed-launch", "No ride before the deadline",
+                    MissionEvaluator.Inv($"The next ride is at month {run.launchMonth:0.#}, after the month-{deadline:0} deadline, so the mission cannot fly in time."));
 
             Add(run, run.launchMonth, MissionPhase.Launch, "launch", MissionEvaluator.Inv($"Launch on the {launch.name}"), "The satellite is released into orbit.");
             foreach (var card in Phase(cards, MissionPhase.Launch))

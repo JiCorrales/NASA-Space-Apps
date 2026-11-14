@@ -28,6 +28,8 @@ namespace SpaceApps.Mission
         public Num nasaLaunchCoverUsd, reserveFraction, minDevelopmentMonths, baselineMonths;
         public Num busMassKg, busUnits, busPowerW, busCostUsd, batteryDepthOfDischarge;
         public Num baseReliability, maxReliability, preferredOrbitBonus, healthyMarginMax;
+        /// <summary>How late delivery can be and still make the planned rocket.</summary>
+        public Num deliverySlackMonths;
     }
 
     [Serializable]

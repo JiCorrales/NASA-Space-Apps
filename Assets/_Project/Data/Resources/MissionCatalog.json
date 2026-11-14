@@ -60,6 +60,11 @@
    "source": "Game balance value chosen by the team, not NASA data",
    "status": "game-balance"
   },
+  "deliverySlackMonths": {
+   "value": 3,
+   "source": "Game balance value chosen by the team; CubeSat 101 ch.2 p.9: delivery is due 4 weeks to 6 months before launch",
+   "status": "game-balance"
+  },
   "healthyMarginMax": {
    "value": 0.4,
    "source": "Game balance value from general engineering knowledge, not NASA data; typical conceptual margins 20-30%",

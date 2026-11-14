@@ -32,6 +32,49 @@ namespace SpaceApps.Mission.Tests
             return c;
         }
 
+        static MissionCatalog OnlyEvents(params string[] ids)
+        {
+            var c = MissionCatalog.Load();
+            foreach (var e in c.events)
+            {
+                e.baseChance.value = ids.Contains(e.id) ? 1f : 0f;
+                e.modifiers = new EventModifier[0];
+            }
+            return c;
+        }
+
+        [Test]
+        public void SmallDelayIsAbsorbedByTheDeliverySlack()
+        {
+            var design = MissionEvaluatorTests.CloudIceFromStation();
+            var calm = MissionSimulator.Run(OnlyEvent("none"), design, 0);
+            var r = MissionSimulator.Run(OnlyEvent("vibration-break"), design, 0); // 2 months, inside the slack
+            Assert.AreEqual(calm.launchMonth, r.launchMonth, 1e-4f, "the rocket does not move for a CubeSat");
+            Assert.IsFalse(r.timeline.Any(e => e.code == "missed-ride"));
+        }
+
+        [Test]
+        public void LongDelayMissesTheRideAndWaitsForTheNext()
+        {
+            var design = MissionEvaluatorTests.CloudIceFromStation(); // space station rides every couple of months
+            var calm = MissionSimulator.Run(OnlyEvent("none"), design, 0);
+            var r = MissionSimulator.Run(OnlyEvents("vibration-break", "late-delivery"), design, 0); // 5 months late
+            var wait = MissionCatalog.Find(catalog.launches, design.launch).waitMonths.value;
+            Assert.IsTrue(r.timeline.Any(e => e.code == "missed-ride"));
+            Assert.IsTrue(r.Launched);
+            Assert.AreEqual(calm.launchMonth + wait, r.launchMonth, 1e-4f);
+        }
+
+        [Test]
+        public void MissedRideAfterTheDeadlineStopsTheMission()
+        {
+            var design = MissionEvaluatorTests.DesignA(); // NASA rideshare: the next ride is 9 months later
+            var r = MissionSimulator.Run(OnlyEvents("vibration-break", "late-delivery"), design, 0);
+            Assert.IsFalse(r.Launched);
+            var stop = r.timeline.Single(e => e.code == "stopped:missed-launch");
+            StringAssert.Contains("next ride", stop.explanation);
+        }
+
         [Test]
         public void SameSeedGivesTheSameRun()
         {
@@ -110,10 +153,11 @@ namespace SpaceApps.Mission.Tests
                     continue;
                 }
                 Assert.AreEqual(calm.totalCostUsd + card.costUsd, r.totalCostUsd, 1f, card.id);
-                if (r.Launched)
-                    Assert.AreEqual(calm.launchMonth + card.delayMonths, r.launchMonth, 1e-4f, card.id);
+                float slack = catalog.constants.deliverySlackMonths;
+                if (card.delayMonths <= slack)
+                    Assert.AreEqual(calm.launchMonth, r.launchMonth, 1e-4f, card.id + ": a delay inside the slack keeps the ride");
                 else
-                    Assert.IsTrue(r.timeline.Any(e => e.code == "stopped:missed-launch"), card.id);
+                    Assert.IsTrue(r.timeline.Any(e => e.code == "missed-ride"), card.id);
                 if (r.Launched)
                     Assert.AreEqual(calm.scienceReturned * (1f - card.scienceLoss), r.scienceReturned, 1e-3f, card.id);
             }
