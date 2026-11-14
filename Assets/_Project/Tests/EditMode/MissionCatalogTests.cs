@@ -11,6 +11,7 @@ namespace SpaceApps.Mission.Tests
         static readonly string[] Statuses = { "nasa-verified", "derived", "game-balance" };
         static readonly string[] NasaPrefixes = { "CubeSat 101", "NASA ", "CubeSat Design Specification" };
 
+        // Walks every catalog class (arrays included) and yields each Num with its path.
         static IEnumerable<(string path, Num num)> Numbers(object node, string path)
         {
             if (node == null) yield break;
@@ -19,14 +20,13 @@ namespace SpaceApps.Mission.Tests
                 var value = f.GetValue(node);
                 var p = $"{path}.{f.Name}";
                 if (f.FieldType == typeof(Num)) yield return (p, (Num)value);
-                else if (value is Entry[] || value is CatalogConstants)
+                else if (value is IList list && !(value is string))
                 {
-                    if (value is IList list)
-                        for (int i = 0; i < list.Count; i++)
-                            foreach (var n in Numbers(list[i], $"{p}[{((Entry)list[i]).id}]")) yield return n;
-                    else
-                        foreach (var n in Numbers(value, p)) yield return n;
+                    for (int i = 0; i < list.Count; i++)
+                        foreach (var n in Numbers(list[i], $"{p}[{(list[i] as Entry)?.id ?? i.ToString()}]")) yield return n;
                 }
+                else if (f.FieldType.Namespace == typeof(Num).Namespace && f.FieldType.IsClass)
+                    foreach (var n in Numbers(value, p)) yield return n;
             }
         }
 
@@ -53,7 +53,7 @@ namespace SpaceApps.Mission.Tests
         public void EveryListIsFilledAndIdsAreUnique()
         {
             var c = MissionCatalog.Load();
-            var lists = new Entry[][] { c.objectives, c.formats, c.instruments, c.power, c.radios, c.groundStations, c.launches, c.orbits, c.tests, c.licences };
+            var lists = new Entry[][] { c.objectives, c.formats, c.instruments, c.power, c.radios, c.groundStations, c.launches, c.orbits, c.tests, c.licences, c.events };
             foreach (var list in lists)
             {
                 Assert.IsNotEmpty(list);
@@ -86,6 +86,21 @@ namespace SpaceApps.Mission.Tests
             {
                 Assert.IsNotEmpty(l.vehicle, l.id);
                 Assert.GreaterOrEqual(l.vehicleCapacityKg.value, l.maxMassKg.value, $"{l.id}: the rocket must lift at least what its dispenser holds");
+            }
+        }
+    
+        [Test]
+        public void EveryEventCardIsUsable()
+        {
+            var phases = System.Enum.GetNames(typeof(MissionPhase)).Select(n => n.ToLowerInvariant()).ToList();
+            foreach (var e in MissionCatalog.Load().events)
+            {
+                CollectionAssert.Contains(phases, e.phase, e.id);
+                CollectionAssert.Contains(new[] { "", "launch-lost", "mission-lost" }, e.outcome, e.id);
+                CollectionAssert.Contains(Statuses, e.descriptionStatus, e.id);
+                if (e.descriptionStatus == "nasa-verified") StringAssert.StartsWith("CubeSat 101", e.descriptionSource, e.id);
+                Assert.IsNotEmpty(e.description, e.id);
+                Assert.IsNotEmpty(e.mitigation, e.id);
             }
         }
     }
