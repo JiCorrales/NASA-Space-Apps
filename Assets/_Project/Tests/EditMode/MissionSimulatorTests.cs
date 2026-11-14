@@ -205,13 +205,28 @@ namespace SpaceApps.Mission.Tests
         }
 
         [Test]
-        public void CarefulDesignSucceedsClearlyMoreOften()
+        public void CarefulDesignWinsMoreOftenForEveryDesign()
         {
+            // Careful = every optional test AND a budget reserve. The lesson of the game must hold for every design,
+            // and clearly (at least 15 points) for at least one design of every objective.
             const int runs = 400;
             int Wins(MissionDesign d) => Enumerable.Range(0, runs)
                 .Count(s => MissionSimulator.Run(catalog, d, s).outcome == MissionOutcome.FullSuccess);
-            int careful = Wins(Careful()), careless = Wins(MissionEvaluatorTests.DesignA());
-            Assert.Greater(careful - careless, runs / 10, $"careful {careful}/{runs}, careless {careless}/{runs}");
+            var bestGap = new Dictionary<string, int>();
+            var report = new List<string>();
+            foreach (var careless in MissionEvaluatorTests.AllWorking())
+            {
+                var careful = careless.Clone();
+                careful.tests.AddRange(new[] { "etu", "flatsat", "tvac-cycling" });
+                var check = MissionEvaluator.Evaluate(catalog, careful);
+                Assert.IsTrue(check.success && !check.Has("no-reserve"), $"{careless.objective}: the careful variant must fly and keep its reserve");
+                int a = Wins(careful), b = Wins(careless);
+                report.Add($"{careless.objective}/{careless.launch}: careful {a}, careless {b}");
+                Assert.Greater(a, b, string.Join("; ", report));
+                UnityEngine.Debug.Log($"[careful-vs-careless] {report[report.Count - 1]}");
+                bestGap[careless.objective] = System.Math.Max(bestGap.TryGetValue(careless.objective, out var g) ? g : int.MinValue, a - b);
+            }
+            foreach (var kv in bestGap) Assert.GreaterOrEqual(kv.Value, runs * 15 / 100, $"{kv.Key}: {string.Join("; ", report)}");
         }
 
         [Test]

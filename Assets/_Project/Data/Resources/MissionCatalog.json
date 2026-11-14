@@ -98,7 +98,7 @@
     "status": "game-balance"
    },
    "budgetUsd": {
-    "value": 500000,
+    "value": 550000,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
@@ -134,7 +134,7 @@
     "status": "game-balance"
    },
    "budgetUsd": {
-    "value": 250000,
+    "value": 270000,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
@@ -170,7 +170,7 @@
     "status": "game-balance"
    },
    "budgetUsd": {
-    "value": 450000,
+    "value": 500000,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
@@ -1213,7 +1213,7 @@
    "mandatory": false,
    "summary": "Optional internal test of hot and cold cycles; it does not replace the bakeout.",
    "costUsd": {
-    "value": 25000,
+    "value": 15000,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
@@ -1235,7 +1235,7 @@
    "mandatory": false,
    "summary": "A copy of the flight unit that never flies, used for practice.",
    "costUsd": {
-    "value": 40000,
+    "value": 25000,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
@@ -1257,7 +1257,7 @@
    "mandatory": false,
    "summary": "All the electronics on a table, without the structure, to test early.",
    "costUsd": {
-    "value": 10000,
+    "value": 5000,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
@@ -1621,6 +1621,63 @@
    "baseChancePerYear": false
   },
   {
+   "id": "orbit-fault",
+   "name": "Hardware fault in orbit",
+   "phase": "operations",
+   "description": "Early in the mission, a part that was never tested hot and cold fails and the instrument works only part time.",
+   "descriptionSource": "Team proposal; testing advice from CubeSat 101 (NASA CSLI, 2017) section 6.9",
+   "descriptionStatus": "game-balance",
+   "baseChance": {
+    "value": 0.1,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "skipped:tvac-cycling",
+     "chance": {
+      "value": 0.1,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    },
+    {
+     "condition": "skipped:etu",
+     "chance": {
+      "value": 0.1,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    },
+    {
+     "condition": "skipped:flatsat",
+     "chance": {
+      "value": 0.05,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0.5,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "",
+   "mitigation": "Run the optional tests: thermal vacuum cycling, an engineering test unit and a FlatSat.",
+   "baseChancePerYear": false
+  },
+  {
    "id": "team-turnover",
    "name": "Team members leave",
    "phase": "operations",
@@ -1733,63 +1790,6 @@
    "outcome": "",
    "mitigation": "Leave power margin so the satellite can ride out safe mode.",
    "baseChancePerYear": true
-  },
-  {
-   "id": "orbit-fault",
-   "name": "Hardware fault in orbit",
-   "phase": "operations",
-   "description": "A part that was never tested hot and cold fails in orbit and the instrument works only part time.",
-   "descriptionSource": "Team proposal; testing advice from CubeSat 101 (NASA CSLI, 2017) section 6.9",
-   "descriptionStatus": "game-balance",
-   "baseChance": {
-    "value": 0.1,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
-   },
-   "modifiers": [
-    {
-     "condition": "skipped:tvac-cycling",
-     "chance": {
-      "value": 0.1,
-      "source": "Game balance value chosen by the team, not NASA data",
-      "status": "game-balance"
-     }
-    },
-    {
-     "condition": "skipped:etu",
-     "chance": {
-      "value": 0.1,
-      "source": "Game balance value chosen by the team, not NASA data",
-      "status": "game-balance"
-     }
-    },
-    {
-     "condition": "skipped:flatsat",
-     "chance": {
-      "value": 0.05,
-      "source": "Game balance value chosen by the team, not NASA data",
-      "status": "game-balance"
-     }
-    }
-   ],
-   "delayMonths": {
-    "value": 0,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
-   },
-   "costUsd": {
-    "value": 0,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
-   },
-   "scienceLoss": {
-    "value": 0.5,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
-   },
-   "outcome": "",
-   "mitigation": "Run the optional tests: thermal vacuum cycling, an engineering test unit and a FlatSat.",
-   "baseChancePerYear": false
   }
  ],
  "conditions": [
