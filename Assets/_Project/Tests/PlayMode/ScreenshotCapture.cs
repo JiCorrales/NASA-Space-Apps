@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
+using Object = UnityEngine.Object;
 using NUnit.Framework;
+using SpaceApps.Game;
 using SpaceApps.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,24 +29,38 @@ namespace SpaceApps.Tests.PlayMode
             SceneManager.LoadScene("Ship");
             yield return null;
             yield return null;
-            var cam = Camera.main;
-            var screens = UnityEngine.Object.FindObjectsByType<StationScreen>(FindObjectsSortMode.None)
-                .OrderBy(s => s.transform.position.z).ToArray();
-            screens[1].ViewModel.Select(1);
+            var session = Object.FindFirstObjectByType<MissionGame>().Session;
 
-            yield return Shot(cam, Path.Combine(dir, "corridor.png"));
+            yield return Shot(Path.Combine(dir, "corridor.png"));
 
-            var s = screens[1].transform;
-            cam.transform.SetPositionAndRotation(s.position - s.forward * 1.6f, Quaternion.LookRotation(s.forward));
-            yield return Shot(cam, Path.Combine(dir, "station-screen.png"));
+            // A failing design: an S-band radio the amateur UHF ground station cannot hear.
+            session.Change(d =>
+            {
+                d.objective = "earth-imaging"; d.format = "3u"; d.power = "body-3u"; d.radio = "s-band";
+                d.groundStation = "amateur-uhf"; d.launch = "nasa-rideshare"; d.orbit = "sso-550";
+                d.instruments.Add("camera-basic");
+                d.tests.AddRange(session.Catalog.tests.Where(t => t.mandatory).Select(t => t.id));
+            });
+            yield return ShotOf(Ui.Screen("Instruments"), Path.Combine(dir, "station-instruments.png"));
+            yield return ShotOf(Ui.Screen("Communications"), Path.Combine(dir, "station-communications-problem.png"));
+            yield return ShotOf(Ui.Screen("Requirements"), Path.Combine(dir, "station-requirements.png"));
+            yield return ShotOf(Object.FindObjectsByType<ResourceDashboard>(FindObjectsSortMode.None).First(), Path.Combine(dir, "dashboard.png"), 1.4f);
+            yield return ShotOf(Ui.Screen("Mission Control"), Path.Combine(dir, "mission-control-fail.png"));
 
-            var d = UnityEngine.Object.FindFirstObjectByType<ResourceDashboard>().transform;
-            cam.transform.SetPositionAndRotation(d.position - d.forward * 1.7f, Quaternion.LookRotation(d.forward));
-            yield return Shot(cam, Path.Combine(dir, "dashboard.png"));
+            session.Change(d => d.groundStation = "university-sband");
+            yield return ShotOf(Ui.Screen("Mission Control"), Path.Combine(dir, "mission-control-pass.png"));
         }
 
-        static IEnumerator Shot(Camera cam, string path)
+        static IEnumerator ShotOf(Component target, string path, float distance = 1.9f)
         {
+            var t = target.transform;
+            Camera.main.transform.SetPositionAndRotation(t.position - t.forward * distance, Quaternion.LookRotation(t.forward));
+            yield return Shot(path);
+        }
+
+        static IEnumerator Shot(string path)
+        {
+            var cam = Camera.main;
             var rt = new RenderTexture(1600, 900, 24);
             cam.targetTexture = rt;
             yield return null;
