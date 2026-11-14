@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using NUnit.Framework;
 
 namespace SpaceApps.Mission.Tests
@@ -249,6 +251,10 @@ namespace SpaceApps.Mission.Tests
         public void GetNeverThrows() => Assert.AreEqual(ResourceKind.Data, new MissionReport().Get(ResourceKind.Data).kind);
 
         [Test]
+        public void InstrumentsOffTheObjectiveAddNoScience() =>
+            Assert.AreEqual(Eval(DesignA()).science, EvalWith(DesignA(), d => d.instruments.Add("dosimeter")).science, 1e-4f);
+
+        [Test]
         public void OptionalTestsRaiseReliabilityAndScore()
         {
             var a = Eval(DesignA());
@@ -269,8 +275,16 @@ namespace SpaceApps.Mission.Tests
         [Test]
         public void FailedMissionScoresBelowAnySuccess()
         {
-            var failed = EvalWith(DesignB(), d => d.tests.Clear());
-            Assert.Less(failed.score, Eval(DesignA()).score);
+            var failed = EvalWith(SpaceWeather(), d => d.instruments.AddRange(Enumerable.Repeat("plasma-probe", 9)));
+            Assert.IsFalse(failed.success);
+            var careful = DesignA().Clone();
+            careful.tests.AddRange(new[] { "etu", "flatsat", "tvac-cycling" });
+            foreach (var d in new[] { DesignA(), DesignB(), Radiation(), SpaceWeather(), SoilMoisture(), careful })
+            {
+                var ok = Eval(d);
+                Assert.IsTrue(ok.success, d.objective);
+                Assert.Less(failed.score, ok.score, d.objective);
+            }
         }
 
         [Test]
