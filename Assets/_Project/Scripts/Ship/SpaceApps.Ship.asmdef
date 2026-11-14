@@ -1,0 +1,6 @@
+{
+    "name": "SpaceApps.Ship",
+    "rootNamespace": "SpaceApps.Ship",
+    "references": ["Unity.InputSystem"],
+    "autoReferenced": true
+}
