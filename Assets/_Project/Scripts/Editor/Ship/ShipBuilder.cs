@@ -9,6 +9,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 
 namespace SpaceApps.Ship.Editor
@@ -170,6 +172,9 @@ namespace SpaceApps.Ship.Editor
                 Box($"Wall_Right {i}", rightRoot, new Vector3(HalfWidth + t / 2f, Height / 2f, zc), new Vector3(t, Height, depth), hull);
             }
 
+            // The template's teleport ray lands on the whole floor.
+            var teleport = floorRoot.AddComponent<TeleportationArea>();
+            teleport.interactionLayers = InteractionLayerMask.GetMask("Teleport");
             Box("Wall_Back", root, new Vector3(0f, Height / 2f, -t / 2f), new Vector3(w, Height, t), hull);
             Box("Wall_Front", root, new Vector3(0f, Height / 2f, length + t / 2f), new Vector3(w, Height, t), hull);
 
