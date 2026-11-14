@@ -26,6 +26,11 @@ namespace SpaceApps.Tests.PlayMode
             Assume.That(dir, Is.Not.Null.And.Not.Empty, "set SHIP_SCREENSHOT_DIR");
             Directory.CreateDirectory(dir);
 
+            // SHIP_QUALITY picks a quality level by name, e.g. "High" (the WebGL default) or "Ultra" (standalone).
+            string quality = Environment.GetEnvironmentVariable("SHIP_QUALITY");
+            if (!string.IsNullOrEmpty(quality))
+                QualitySettings.SetQualityLevel(Array.IndexOf(QualitySettings.names, quality), true);
+
             SceneManager.LoadScene("Ship");
             yield return null;
             yield return null;
