@@ -56,6 +56,7 @@ namespace SpaceApps.Mission
     [Serializable]
     public class PowerOption : Entry
     {
+        public bool deployable;
         public Num panelW, batteryWh, massKg, costUsd, minUnits;
     }
 
@@ -111,6 +112,24 @@ namespace SpaceApps.Mission
         public Num months, costUsd;
     }
 
+    /// <summary>Raises an event's chance when the named condition holds for the design (see MissionSimulator).</summary>
+    [Serializable]
+    public class EventModifier
+    {
+        public string condition;
+        public Num chance;
+    }
+
+    /// <summary>A random event card. Phase: development, testing, licensing, delivery, launch or operations.
+    /// Outcome: empty, launch-lost or mission-lost.</summary>
+    [Serializable]
+    public class EventCard : Entry
+    {
+        public string phase, description, descriptionSource, descriptionStatus, outcome, mitigation;
+        public Num baseChance, delayMonths, costUsd, scienceLoss;
+        public EventModifier[] modifiers;
+    }
+
     /// <summary>Every option the player can pick, loaded from Resources/MissionCatalog.json.</summary>
     [Serializable]
     public class MissionCatalog
@@ -126,6 +145,7 @@ namespace SpaceApps.Mission
         public Orbit[] orbits;
         public VerificationTest[] tests;
         public Licence[] licences;
+        public EventCard[] events;
 
         public const string ResourcePath = "MissionCatalog";
 
