@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 
 namespace SpaceApps.Mission
 {
@@ -79,7 +80,7 @@ namespace SpaceApps.Mission
             if (orbit == null) missing.Add("orbit");
             if (missing.Count > 0)
                 Add(report, "incomplete-design", ResourceKind.Time, Severity.Blocking,
-                    $"Still to choose: {string.Join(", ", missing)}.");
+                    Inv($"Still to choose: {string.Join(", ", missing)}."));
 
             // Mass: the format sets the limit, and the launcher may set a lower one.
             float mass = c.busMassKg + (format?.structureMassKg.value ?? 0f) + (power?.massKg.value ?? 0f) +
@@ -89,18 +90,18 @@ namespace SpaceApps.Mission
             Resource(report, ResourceKind.Mass, "kg", mass, massLimit);
             if (format != null && mass > format.maxMassKg)
                 Add(report, "mass-over-format", ResourceKind.Mass, Severity.Blocking,
-                    $"The satellite weighs {mass:0.##} kg but a {format.name} may weigh at most {format.maxMassKg.value:0.##} kg, so the launch provider will not accept it.");
+                    Inv($"The satellite weighs {mass:0.##} kg but a {format.name} may weigh at most {format.maxMassKg.value:0.##} kg, so the launch provider will not accept it."));
             else if (launch != null && mass > launch.maxMassKg)
                 Add(report, "mass-over-launcher", ResourceKind.Mass, Severity.Blocking,
-                    $"The {launch.name} can carry at most {launch.maxMassKg.value:0.##} kg per satellite, and this one weighs {mass:0.##} kg.");
+                    Inv($"The {launch.name} can carry at most {launch.maxMassKg.value:0.##} kg per satellite, and this one weighs {mass:0.##} kg."));
 
             float units = c.busUnits + instruments.Sum(i => i.units.value);
             if (format != null && units > format.units)
                 Add(report, "volume-over-format", ResourceKind.Mass, Severity.Blocking,
-                    $"The parts need {units:0.##}U of space but a {format.name} has {format.units.value:0}U. If it does not fit, it does not fly.");
+                    Inv($"The parts need {units:0.##}U of space but a {format.name} has {format.units.value:0}U. If it does not fit, it does not fly."));
             if (format != null && power != null && format.units < power.minUnits)
                 Add(report, "power-needs-bigger-format", ResourceKind.Power, Severity.Blocking,
-                    $"{power.name} need at least a {power.minUnits.value:0}U body to mount on.");
+                    Inv($"{power.name} need at least a {power.minUnits.value:0}U body to mount on."));
 
             // Communications: minutes of contact per day with the ground station.
             bool bandMatch = radio != null && station != null && station.bands.Contains(radio.band);
@@ -111,14 +112,14 @@ namespace SpaceApps.Mission
             Resource(report, ResourceKind.Communications, "min/day", neededMinutes, bandMatch ? contactMinutes : 0f);
             if (radio != null && station != null && !bandMatch)
                 Add(report, "station-band-mismatch", ResourceKind.Communications, Severity.Blocking,
-                    $"The {station.name} cannot listen on the {radio.name}'s band. Launching with an inadequate ground station is a mission killer.");
+                    Inv($"The {station.name} cannot listen on the {radio.name}'s band. Launching with an inadequate ground station is a mission killer."));
 
             // Data: what the instruments produce against what the link can bring down each day.
             Resource(report, ResourceKind.Data, "MB/day", dataMb, downlinkMb);
             float downlinkFraction = dataMb <= 0f ? 1f : Math.Min(1f, downlinkMb / dataMb);
             if (bandMatch && dataMb > downlinkMb)
                 Add(report, "data-overflow", ResourceKind.Data, Severity.Warning,
-                    $"The instruments make {dataMb:0.#} MB a day but only {downlinkMb:0.#} MB can be sent down, so {1f - downlinkFraction:P0} of the science never reaches Earth. A faster radio or more ground stations would help.");
+                    Inv($"The instruments make {dataMb:0.#} MB a day but only {downlinkMb:0.#} MB can be sent down, so {(1f - downlinkFraction) * 100f:0}% of the science never reaches Earth. A faster radio or more ground stations would help."));
 
             // Power: orbit-average generation against the average load, and the battery through eclipse.
             // Before an orbit is chosen the panels show their full sunlit output.
@@ -130,12 +131,12 @@ namespace SpaceApps.Mission
             {
                 if (load > generated)
                     Add(report, "power-deficit", ResourceKind.Power, Severity.Blocking,
-                        $"The satellite needs {load:0.##} W on average but its panels give {generated:0.##} W over an orbit, because the Sun is hidden {1f - orbit.sunlitFraction.value:P0} of the time. The batteries would drain and the satellite would shut down.");
+                        Inv($"The satellite needs {load:0.##} W on average but its panels give {generated:0.##} W over an orbit, because the Sun is hidden {(1f - orbit.sunlitFraction.value) * 100f:0}% of the time. The batteries would drain and the satellite would shut down."));
                 float eclipseWh = load * orbit.eclipseMinutes / 60f;
                 float batteryWh = power.batteryWh * c.batteryDepthOfDischarge;
                 if (eclipseWh > batteryWh)
                     Add(report, "battery-eclipse", ResourceKind.Power, Severity.Blocking,
-                        $"Each eclipse uses {eclipseWh:0.##} Wh but the battery can safely give {batteryWh:0.##} Wh, so the satellite browns out in Earth's shadow.");
+                        Inv($"Each eclipse uses {eclipseWh:0.##} Wh but the battery can safely give {batteryWh:0.##} Wh, so the satellite browns out in Earth's shadow."));
             }
 
             // Budget: NASA pays launch up to the cover; the team pays everything else and keeps a reserve.
@@ -150,11 +151,11 @@ namespace SpaceApps.Mission
             Resource(report, ResourceKind.Budget, "USD", cost, budget);
             if (objective != null && cost > budget)
                 Add(report, "over-budget", ResourceKind.Budget, Severity.Blocking,
-                    $"The mission costs ${cost:N0} but the budget is ${budget:N0}." +
-                    (launchToTeam > 0 ? $" NASA covers launch only up to ${c.nasaLaunchCoverUsd.value:N0}, so the team pays ${launchToTeam:N0} of it." : ""));
+                    Inv($"The mission costs ${cost:N0} but the budget is ${budget:N0}.") +
+                    (launchToTeam > 0 ? Inv($" NASA covers launch only up to ${c.nasaLaunchCoverUsd.value:N0}, so the team pays ${launchToTeam:N0} of it.") : ""));
             else if (objective != null && cost > budget * (1f - c.reserveFraction))
                 Add(report, "no-reserve", ResourceKind.Budget, Severity.Warning,
-                    $"Less than {c.reserveFraction.value:P0} of the budget is left in reserve. NASA advises keeping at least that much for surprises.");
+                    Inv($"Less than {c.reserveFraction.value * 100f:0}% of the budget is left in reserve. NASA advises keeping at least that much for surprises."));
 
             // Time: hardware, licences and the ground station run in parallel, then the launch wait.
             float hardware = Math.Max(format?.devMonths.value ?? 0f, instruments.Count > 0 ? instruments.Max(i => i.devMonths.value) : 0f) +
@@ -166,26 +167,26 @@ namespace SpaceApps.Mission
             Resource(report, ResourceKind.Time, "months", months, deadline);
             if (objective != null && months > deadline)
                 Add(report, "schedule-overrun", ResourceKind.Time, Severity.Blocking,
-                    $"The mission reaches orbit after {months:0.#} months, later than the {deadline:0}-month deadline." +
+                    Inv($"The mission reaches orbit after {months:0.#} months, later than the {deadline:0}-month deadline.") +
                     (licenceMonths >= development ? " The licences are the slowest step: a camera needs a NOAA licence before the FCC can finish the radio one." : ""));
             if (objective != null && orbit != null && orbit.lifetimeMonths < objective.missionMonths)
                 Add(report, "orbit-lifetime", ResourceKind.Time, Severity.Blocking,
-                    $"In {orbit.name} air drag brings the satellite down after about {orbit.lifetimeMonths.value:0} months, but the mission needs {objective.missionMonths.value:0}.");
+                    Inv($"In {orbit.name} air drag brings the satellite down after about {orbit.lifetimeMonths.value:0} months, but the mission needs {objective.missionMonths.value:0}."));
 
             // Compatibility between the launcher, the orbit and the objective.
             if (launch != null && orbit != null && !launch.orbits.Contains(orbit.id))
                 Add(report, "launcher-orbit", ResourceKind.Mass, Severity.Blocking,
-                    $"The {launch.name} does not go to {orbit.name}.");
+                    Inv($"The {launch.name} does not go to {orbit.name}."));
             if (launch != null && format != null && !launch.dispensers.Intersect(format.dispensers).Any())
                 Add(report, "launcher-dispenser", ResourceKind.Mass, Severity.Blocking,
-                    $"The {launch.name} has no dispenser that holds a {format.name}.");
+                    Inv($"The {launch.name} has no dispenser that holds a {format.name}."));
             if (objective != null && orbit != null && !objective.allowedOrbits.Contains(orbit.id))
                 Add(report, "orbit-objective", ResourceKind.Data, Severity.Blocking,
-                    $"{orbit.name} cannot serve the {objective.name} objective.");
+                    Inv($"{orbit.name} cannot serve the {objective.name} objective."));
 
             foreach (var t in catalog.tests.Where(t => t.mandatory && !tests.Contains(t)))
                 Add(report, "missing-test", ResourceKind.Time, Severity.Blocking,
-                    $"{t.name} is missing. {t.summary}");
+                    Inv($"{t.name} is missing. {t.summary}"));
 
             // Science: instruments that match the objective, boosted in the preferred orbit, cut by lost data.
             // Only instruments that serve the objective count; before an objective is chosen, all of them do.
@@ -196,10 +197,10 @@ namespace SpaceApps.Mission
             {
                 if (serving.Count == 0)
                     Add(report, "missing-instrument", ResourceKind.Data, Severity.Blocking,
-                        $"No instrument can measure what the {objective.name} objective needs ({string.Join(", ", objective.requiredTags)}).");
+                        Inv($"No instrument can measure what the {objective.name} objective needs ({string.Join(", ", objective.requiredTags)})."));
                 else if (missing.Count == 0 && report.science < objective.minScience)
                     Add(report, "science-short", ResourceKind.Data, Severity.Blocking,
-                        $"The mission returns {report.science:0} science points but the objective needs {objective.minScience.value:0}.");
+                        Inv($"The mission returns {report.science:0} science points but the objective needs {objective.minScience.value:0}."));
             }
 
             report.reliability = Math.Min(c.maxReliability.value, c.baseReliability + tests.Sum(t => t.reliabilityBonus.value));
@@ -219,6 +220,9 @@ namespace SpaceApps.Mission
                 b.Margin < 0f ? 0f : b.Margin < c.reserveFraction ? 5f : b.Margin <= c.healthyMarginMax ? 10f : 6f);
             return Math.Max(FailedScoreCap + 1, (int)Math.Round((100f + r.science * 2f + efficiency) * r.reliability));
         }
+
+        /// <summary>Formats with the invariant culture, so messages read the same on every machine and in WebGL.</summary>
+        internal static string Inv(FormattableString s) => s.ToString(CultureInfo.InvariantCulture);
 
         static void Resource(MissionReport r, ResourceKind kind, string unit, float used, float available) =>
             r.resources.Add(new ResourceBudget { kind = kind, unit = unit, used = used, available = available });
