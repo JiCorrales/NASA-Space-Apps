@@ -39,6 +39,10 @@ namespace SpaceApps.Mission.Tests
                 Assert.IsNotNull(num, path);
                 Assert.IsFalse(string.IsNullOrWhiteSpace(num.source), $"{path} has no source");
                 CollectionAssert.Contains(Statuses, num.status, $"{path} has status '{num.status}'");
+                StringAssert.DoesNotContain(".md", num.source, $"{path}: sources are for players, not repo paths");
+                StringAssert.DoesNotContain("POR DEFINIR", num.source, path);
+                Assert.LessOrEqual(num.source.Length, 160, $"{path}: source too long to read on screen");
+                Assert.IsTrue(num.source.All(ch => ch < 128), $"{path}: source must be plain English text");
                 if (num.status == "nasa-verified")
                     StringAssert.StartsWith("CubeSat 101", num.source, $"{path} is nasa-verified but does not cite the PDF");
             }
