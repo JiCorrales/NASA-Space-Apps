@@ -33,6 +33,9 @@ grep -c "error CS" import.log   # 0 means no compile errors
 
 ## Working on the project
 
+What the game must do, where each requirement comes from and what the team still has to decide is in
+[docs/requirements-specification.md](docs/requirements-specification.md).
+
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before the first commit. In short: branch from `develop`, open a
 pull request into `develop`, always commit `.meta` files, and record every external asset in
 [CREDITS.md](CREDITS.md).
