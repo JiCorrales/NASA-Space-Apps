@@ -8,6 +8,8 @@ namespace SpaceApps.Mission
     public class MissionDesign
     {
         public string objective, format, power, radio, groundStation, launch, orbit;
+        /// <summary>Optional difficulty id (easy, normal, hard). Null keeps the catalog values.</summary>
+        public string difficulty;
         public List<string> instruments = new List<string>();
         public List<string> tests = new List<string>();
 
