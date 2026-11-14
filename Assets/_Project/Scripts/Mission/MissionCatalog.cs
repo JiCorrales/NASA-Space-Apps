@@ -136,6 +136,8 @@ namespace SpaceApps.Mission
     public class EventCard : Entry
     {
         public string phase, description, descriptionSource, descriptionStatus, outcome, mitigation;
+        /// <summary>When true, baseChance is a yearly rate and the chance grows with the mission's length.</summary>
+        public bool baseChancePerYear;
         public Num baseChance, delayMonths, costUsd, scienceLoss;
         public EventModifier[] modifiers;
     }

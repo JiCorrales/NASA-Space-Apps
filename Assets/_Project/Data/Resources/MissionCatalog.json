@@ -1305,37 +1305,6 @@
  ],
  "events": [
   {
-   "id": "proposal-rejected",
-   "name": "Proposal not compliant",
-   "phase": "development",
-   "description": "The proposal missed something the call asked for, so it waits for next year's call.",
-   "descriptionSource": "CubeSat 101 (NASA CSLI, 2017), section 2.5 p.17",
-   "descriptionStatus": "nasa-verified",
-   "baseChance": {
-    "value": 0.03,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
-   },
-   "modifiers": [],
-   "delayMonths": {
-    "value": 12,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
-   },
-   "costUsd": {
-    "value": 0,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
-   },
-   "scienceLoss": {
-    "value": 0,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
-   },
-   "outcome": "",
-   "mitigation": "Follow the call's instructions to the letter and get a review before submitting."
-  },
-  {
    "id": "budget-slip",
    "name": "Budget slip",
    "phase": "development",
@@ -1373,7 +1342,8 @@
     "status": "game-balance"
    },
    "outcome": "",
-   "mitigation": "Keep at least 10% of the budget in reserve for surprises."
+   "mitigation": "Keep at least 10% of the budget in reserve for surprises.",
+   "baseChancePerYear": false
   },
   {
    "id": "vibration-break",
@@ -1421,7 +1391,8 @@
     "status": "game-balance"
    },
    "outcome": "",
-   "mitigation": "Build an engineering test unit and a FlatSat, and keep key parts near the outside."
+   "mitigation": "Build an engineering test unit and a FlatSat, and keep key parts near the outside.",
+   "baseChancePerYear": false
   },
   {
    "id": "battery-retest",
@@ -1461,7 +1432,8 @@
     "status": "game-balance"
    },
    "outcome": "",
-   "mitigation": "Use UL-listed batteries and test the electronics early on a FlatSat."
+   "mitigation": "Use UL-listed batteries and test the electronics early on a FlatSat.",
+   "baseChancePerYear": false
   },
   {
    "id": "licence-late",
@@ -1501,7 +1473,8 @@
     "status": "game-balance"
    },
    "outcome": "launch-lost",
-   "mitigation": "Leave schedule slack so the licences finish before delivery; a camera also needs NOAA's licence first."
+   "mitigation": "Leave schedule slack so the licences finish before delivery; a camera also needs NOAA's licence first.",
+   "baseChancePerYear": false
   },
   {
    "id": "envelope-misfit",
@@ -1523,14 +1496,6 @@
       "source": "Game balance value chosen by the team, not NASA data",
       "status": "game-balance"
      }
-    },
-    {
-     "condition": "tight-mass",
-     "chance": {
-      "value": 0.05,
-      "source": "Game balance value chosen by the team, not NASA data",
-      "status": "game-balance"
-     }
     }
    ],
    "delayMonths": {
@@ -1549,7 +1514,8 @@
     "status": "game-balance"
    },
    "outcome": "",
-   "mitigation": "Do not design to the limits of the envelope; leave spare volume and mass."
+   "mitigation": "Do not design to the limits of the envelope; leave spare volume and mass.",
+   "baseChancePerYear": false
   },
   {
    "id": "late-delivery",
@@ -1597,7 +1563,8 @@
     "status": "game-balance"
    },
    "outcome": "",
-   "mitigation": "Plan schedule slack so a slip does not cost the launch."
+   "mitigation": "Plan schedule slack so a slip does not cost the launch.",
+   "baseChancePerYear": false
   },
   {
    "id": "burn-wire",
@@ -1645,7 +1612,8 @@
     "status": "game-balance"
    },
    "outcome": "mission-lost",
-   "mitigation": "Use two separate burn wires on every deployable, and rehearse deployment on a test unit."
+   "mitigation": "Use two separate burn wires on every deployable, and rehearse deployment on a test unit.",
+   "baseChancePerYear": false
   },
   {
    "id": "team-turnover",
@@ -1659,16 +1627,7 @@
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
-   "modifiers": [
-    {
-     "condition": "long-schedule",
-     "chance": {
-      "value": 0.1,
-      "source": "Game balance value chosen by the team, not NASA data",
-      "status": "game-balance"
-     }
-    }
-   ],
+   "modifiers": [],
    "delayMonths": {
     "value": 0,
     "source": "Game balance value chosen by the team, not NASA data",
@@ -1685,7 +1644,8 @@
     "status": "game-balance"
    },
    "outcome": "",
-   "mitigation": "Keep photos and detailed records of everything the team does."
+   "mitigation": "Keep photos and detailed records of everything the team does.",
+   "baseChancePerYear": false
   },
   {
    "id": "weak-ground-station",
@@ -1725,7 +1685,8 @@
     "status": "game-balance"
    },
    "outcome": "",
-   "mitigation": "Pick a ground station with spare contact time and test it early by tracking other satellites."
+   "mitigation": "Pick a ground station with spare contact time and test it early by tracking other satellites.",
+   "baseChancePerYear": false
   },
   {
    "id": "solar-storm",
@@ -1735,8 +1696,8 @@
    "descriptionSource": "NASA DONKI space weather database, storm of 10 May 2024 (Kp 9)",
    "descriptionStatus": "nasa-verified",
    "baseChance": {
-    "value": 0.39,
-    "source": "NASA DONKI 2024-2025: 1 storm at Kp 9 in 2 years (solar maximum), so 1 - e^-0.5 = 39% in a 12-month mission",
+    "value": 0.5,
+    "source": "NASA DONKI 2024-2025: 1 storm at Kp 9 in 2 years (solar maximum), so 0.5 a year; chance grows with mission length",
     "status": "derived"
    },
    "modifiers": [
@@ -1765,7 +1726,8 @@
     "status": "game-balance"
    },
    "outcome": "",
-   "mitigation": "Leave power margin so the satellite can ride out safe mode."
+   "mitigation": "Leave power margin so the satellite can ride out safe mode.",
+   "baseChancePerYear": true
   },
   {
    "id": "orbit-fault",
@@ -1821,7 +1783,8 @@
     "status": "game-balance"
    },
    "outcome": "",
-   "mitigation": "Run the optional tests: thermal vacuum cycling, an engineering test unit and a FlatSat."
+   "mitigation": "Run the optional tests: thermal vacuum cycling, an engineering test unit and a FlatSat.",
+   "baseChancePerYear": false
   }
  ],
  "conditions": [

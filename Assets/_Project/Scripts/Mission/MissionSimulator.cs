@@ -60,6 +60,7 @@ namespace SpaceApps.Mission
             var objective = MissionCatalog.Find(catalog.objectives, design.objective);
             var launch = MissionCatalog.Find(catalog.launches, design.launch);
             var conditions = Conditions(catalog, design, report);
+            float months = objective.missionMonths;
             var random = new Random(seed);
             var cards = catalog.events ?? new EventCard[0];
 
@@ -80,12 +81,12 @@ namespace SpaceApps.Mission
                 float month = c.baselineMonths + (buildEnd - c.baselineMonths) * p / (BuildPhases.Length - 1f) + delay;
                 foreach (var card in Phase(cards, BuildPhases[p]))
                 {
-                    if (!Fires(random, card, conditions)) continue;
+                    if (!Fires(random, card, conditions, months)) continue;
                     var e = Fire(run, catalog, card, conditions, month);
                     delay += e.delayMonths;
                     run.totalCostUsd += e.extraCostUsd;
                     if (card.outcome == "launch-lost")
-                        return Stop(run, month, "launch-lost", "Removed from the launch", card.description);
+                        return Stop(run, month, "launch-lost", "Removed from the launch", card.description, BuildPhases[p]);
                 }
             }
 
@@ -114,7 +115,7 @@ namespace SpaceApps.Mission
             Add(run, run.launchMonth, MissionPhase.Launch, "launch", MissionEvaluator.Inv($"Launch on the {launch.name}"), "The satellite is released into orbit.");
             foreach (var card in Phase(cards, MissionPhase.Launch))
             {
-                if (!Fires(random, card, conditions)) continue;
+                if (!Fires(random, card, conditions, months)) continue;
                 Fire(run, catalog, card, conditions, run.launchMonth);
                 if (card.outcome == "mission-lost") return Lose(run, run.launchMonth, 0f);
             }
@@ -123,7 +124,7 @@ namespace SpaceApps.Mission
             var ops = Phase(cards, MissionPhase.Operations).ToList();
             for (int i = 0; i < ops.Count; i++)
             {
-                if (!Fires(random, ops[i], conditions)) continue;
+                if (!Fires(random, ops[i], conditions, months)) continue;
                 float fraction = (i + 1f) / (ops.Count + 1f);
                 float month = run.launchMonth + objective.missionMonths * fraction;
                 if (ops[i].outcome == "mission-lost")
@@ -131,7 +132,7 @@ namespace SpaceApps.Mission
                     Fire(run, catalog, ops[i], conditions, month);
                     return Lose(run, month, science * fraction);
                 }
-                float lost = science * Math.Min(1f, ops[i].scienceLoss);
+                float lost = Math.Min(science, run.scienceExpected * (1f - fraction) * Math.Min(1f, ops[i].scienceLoss));
                 science -= lost;
                 Fire(run, catalog, ops[i], conditions, month).scienceLost = lost;
             }
@@ -152,7 +153,8 @@ namespace SpaceApps.Mission
         {
             var card = MissionCatalog.Find(catalog.events, eventId);
             if (card == null) return 0f;
-            return Chance(card, Conditions(catalog, design, MissionEvaluator.Evaluate(catalog, design)));
+            float months = MissionCatalog.Find(catalog.objectives, design.objective)?.missionMonths.value ?? 12f;
+            return Chance(card, Conditions(catalog, design, MissionEvaluator.Evaluate(catalog, design)), months);
         }
 
         // The design decisions the event deck reacts to. Names match EventModifier.condition in the JSON.
@@ -185,16 +187,17 @@ namespace SpaceApps.Mission
             return set;
         }
 
-        static float Chance(EventCard card, HashSet<string> conditions)
+        static float Chance(EventCard card, HashSet<string> conditions, float missionMonths)
         {
-            float chance = card.baseChance + (card.modifiers ?? new EventModifier[0])
+            float b = card.baseChancePerYear ? 1f - (float)Math.Exp(-card.baseChance * missionMonths / 12f) : card.baseChance.value;
+            float chance = b + (card.modifiers ?? new EventModifier[0])
                 .Where(m => conditions.Contains(m.condition)).Sum(m => m.chance.value);
             return Math.Max(0f, Math.Min(1f, chance));
         }
 
         // Always draws one number per card so a card's chance never shifts the rolls of the cards after it.
-        static bool Fires(Random random, EventCard card, HashSet<string> conditions) =>
-            random.NextDouble() < Chance(card, conditions);
+        static bool Fires(Random random, EventCard card, HashSet<string> conditions, float missionMonths) =>
+            random.NextDouble() < Chance(card, conditions, missionMonths);
 
         static IEnumerable<EventCard> Phase(EventCard[] cards, MissionPhase phase) =>
             cards.Where(e => string.Equals(e.phase, phase.ToString(), StringComparison.OrdinalIgnoreCase));
@@ -221,9 +224,9 @@ namespace SpaceApps.Mission
             return e;
         }
 
-        static MissionRun Stop(MissionRun run, float month, string reason, string title, string why)
+        static MissionRun Stop(MissionRun run, float month, string reason, string title, string why, MissionPhase phase = MissionPhase.Delivery)
         {
-            Add(run, month, MissionPhase.Delivery, "stopped:" + reason, title, why);
+            Add(run, month, phase, "stopped:" + reason, title, why);
             run.outcome = MissionOutcome.StoppedBeforeLaunch;
             run.launchMonth = -1f;
             return run;

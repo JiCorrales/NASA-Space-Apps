@@ -126,6 +126,63 @@ namespace SpaceApps.Mission.Tests
         }
 
         [Test]
+        public void StormChanceGrowsWithMissionLength()
+        {
+            float sixMonths = MissionSimulator.EventChance(catalog, MissionEvaluatorTests.RadiationOn3U(), "solar-storm");
+            float twelveMonths = MissionSimulator.EventChance(catalog, MissionEvaluatorTests.DesignA(), "solar-storm");
+            Assert.AreEqual(1f - (float)System.Math.Exp(-0.5 * 6 / 12), sixMonths, 1e-4f);
+            Assert.AreEqual(1f - (float)System.Math.Exp(-0.5 * 12 / 12), twelveMonths, 1e-4f);
+        }
+
+        [Test]
+        public void LostLicenceIsReportedInTheLicensingPhase()
+        {
+            var r = MissionSimulator.Run(OnlyEvent("licence-late"), MissionEvaluatorTests.DesignA(), 0);
+            Assert.AreEqual(MissionPhase.Licensing, r.timeline.Single(e => e.code == "stopped:launch-lost").phase);
+        }
+
+        [Test]
+        public void NullListsDoNotThrow()
+        {
+            var d = MissionEvaluatorTests.DesignA();
+            d.tests = null;
+            Assert.DoesNotThrow(() => MissionSimulator.Run(catalog, d, 0));
+            Assert.DoesNotThrow(() => MissionSimulator.EventChance(catalog, d, "vibration-break"));
+        }
+
+        [Test]
+        public void EveryModifierConditionChangesTheChance()
+        {
+            // Flip each condition on and off for the same design and check the card's chance moves by the modifier.
+            foreach (var card in catalog.events)
+                foreach (var m in card.modifiers)
+                {
+                    float on = ChanceWith(card.id, m.condition, true), off = ChanceWith(card.id, m.condition, false);
+                    Assert.AreEqual(System.Math.Min(1f, off + m.chance), on, 1e-5f, $"{card.id} / {m.condition}");
+                }
+        }
+
+        static float ChanceWith(string cardId, string condition, bool holds)
+        {
+            var c = MissionCatalog.Load();
+            var d = MissionEvaluatorTests.DesignA();
+            d.tests.AddRange(new[] { "etu", "flatsat", "tvac-cycling" });
+            var rule = MissionCatalog.Find(c.conditions, condition);
+            if (condition.StartsWith("skipped:")) { if (holds) d.tests.Remove(condition.Substring(8)); }
+            else if (condition == "deployables") d.power = holds ? "deployable-3u" : "body-3u";
+            else if (condition == "full-volume") rule.threshold.value = holds ? 0f : 2f;
+            else rule.threshold.value = holds ? 2f : -2f; // margin conditions: below 2 always holds, below -2 never
+            return MissionSimulator.EventChance(c, d, cardId);
+        }
+
+        [Test]
+        public void GoldenTraceForOneSeed()
+        {
+            // Catches a platform difference in random numbers or float formatting that two runs in one process cannot.
+            Assert.AreEqual("0.00:approved|23.00:launch|23.00:burn-wire|23.00:end#Lost#0", Trace(MissionSimulator.Run(catalog, MissionEvaluatorTests.DesignA(), 7)));
+        }
+
+        [Test]
         public void SameSeedGivesTheSameRun()
         {
             for (int seed = 0; seed < 50; seed++)
@@ -211,8 +268,14 @@ namespace SpaceApps.Mission.Tests
                     Assert.AreEqual(calm.launchMonth, r.launchMonth, 1e-4f, card.id + ": a delay inside the slack keeps the ride");
                 else
                     Assert.IsTrue(r.timeline.Any(e => e.code == "missed-ride"), card.id);
-                if (r.Launched)
-                    Assert.AreEqual(calm.scienceReturned * (1f - card.scienceLoss), r.scienceReturned, 1e-3f, card.id);
+                if (r.Launched && card.scienceLoss > 0f)
+                {
+                    // A loss takes its share of the science still to come, not of the whole mission.
+                    var objective = MissionCatalog.Find(catalog.objectives, design.objective);
+                    float elapsed = (entry.month - r.launchMonth) / objective.missionMonths;
+                    Assert.Greater(elapsed, 0f, card.id);
+                    Assert.AreEqual(calm.scienceReturned * (1f - (1f - elapsed) * card.scienceLoss), r.scienceReturned, 1e-3f, card.id);
+                }
             }
         }
 
