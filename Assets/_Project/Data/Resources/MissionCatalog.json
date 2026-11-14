@@ -176,18 +176,17 @@
    }
   },
   {
-   "id": "soil-moisture",
-   "name": "Soil moisture map",
-   "summary": "Map how wet the soil is to help farmers plan for drought.",
+   "id": "cloud-ice",
+   "name": "Cloud ice survey",
+   "summary": "Measure the ice high in clouds at every hour of the day to improve weather and climate models.",
    "requiredTags": [
-    "soil-moisture"
+    "cloud-ice"
    ],
    "allowedOrbits": [
-    "sso-550"
+    "leo-iss",
+    "leo-500"
    ],
-   "preferredOrbits": [
-    "sso-550"
-   ],
+   "preferredOrbits": [],
    "minScience": {
     "value": 45,
     "source": "Game balance value chosen by the team, not NASA data",
@@ -204,7 +203,7 @@
     "status": "game-balance"
    },
    "missionMonths": {
-    "value": 24,
+    "value": 12,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
@@ -220,14 +219,14 @@
     "status": "nasa-verified"
    },
    "maxMassKg": {
-    "value": 1.33,
-    "source": "CubeSat 101 (NASA CSLI, 2017), section 1.1 p.4: 1U mass of approximately 1 to 1.33 kg",
+    "value": 2.0,
+    "source": "CubeSat Design Specification rev 14.1 (Cal Poly, on nasa.gov), Table 1: 1U at most 2.00 kg",
     "status": "nasa-verified"
    },
    "structureMassKg": {
-    "value": 0.1,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.118,
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 6-1: average 1U structure",
+    "status": "nasa-verified"
    },
    "costUsd": {
     "value": 10000,
@@ -253,14 +252,14 @@
     "status": "nasa-verified"
    },
    "maxMassKg": {
-    "value": 4.0,
-    "source": "3 x 1.33 kg per unit, from CubeSat 101 (NASA CSLI, 2017) section 1.1 p.4",
-    "status": "derived"
+    "value": 6.0,
+    "source": "CubeSat Design Specification rev 14.1 (Cal Poly, on nasa.gov), Table 1: 3U at most 6.00 kg",
+    "status": "nasa-verified"
    },
    "structureMassKg": {
-    "value": 0.3,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.352,
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 6-1: average 3U structure",
+    "status": "nasa-verified"
    },
    "costUsd": {
     "value": 30000,
@@ -286,14 +285,14 @@
     "status": "nasa-verified"
    },
    "maxMassKg": {
-    "value": 8.0,
-    "source": "6 x 1.33 kg per unit, from CubeSat 101 (NASA CSLI, 2017) section 1.1 p.4",
-    "status": "derived"
+    "value": 12.0,
+    "source": "CubeSat Design Specification rev 14.1 (Cal Poly, on nasa.gov), Table 1: 6U at most 12.00 kg",
+    "status": "nasa-verified"
    },
    "structureMassKg": {
-    "value": 0.6,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.92,
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 6-1: 6U structure, low end of 0.916-1.94 kg",
+    "status": "nasa-verified"
    },
    "costUsd": {
     "value": 60000,
@@ -409,25 +408,25 @@
   },
   {
    "id": "dosimeter",
-   "name": "Radiation dosimeter",
+   "name": "Radiation detector (scintillator)",
    "tags": [
     "radiation"
    ],
    "isImager": false,
    "massKg": {
-    "value": 0.1,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.075,
+    "source": "NASA Ames radiation-shielding payload (NTRS 20240015811): CsI scintillator module",
+    "status": "nasa-verified"
    },
    "units": {
-    "value": 0.25,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.05,
+    "source": "28 x 28 x 40 mm module plus board (NTRS 20240015811)",
+    "status": "derived"
    },
    "powerW": {
-    "value": 0.4,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.15,
+    "source": "NASA Ames radiation-shielding payload (NTRS 20240015811): 150 mW per module",
+    "status": "nasa-verified"
    },
    "dutyCycle": {
     "value": 1.0,
@@ -463,19 +462,19 @@
    ],
    "isImager": false,
    "massKg": {
-    "value": 0.15,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.24,
+    "source": "NASA GSFC Mini-mag poster, SmallSat 2017: 40 g sensor plus 200 g electronics",
+    "status": "derived"
    },
    "units": {
     "value": 0.25,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "source": "NASA GSFC Mini-mag poster, SmallSat 2017: 60 plus 200 cm3",
+    "status": "derived"
    },
    "powerW": {
-    "value": 0.6,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 1.0,
+    "source": "NASA GSFC Mini-mag poster, SmallSat 2017: under 1 W, upper bound used",
+    "status": "nasa-verified"
    },
    "dutyCycle": {
     "value": 1.0,
@@ -505,25 +504,25 @@
   },
   {
    "id": "plasma-probe",
-   "name": "Plasma probe",
+   "name": "Ion and neutral mass spectrometer",
    "tags": [
     "space-weather"
    ],
    "isImager": false,
    "massKg": {
-    "value": 0.3,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.6,
+    "source": "NASA GSFC mini ion and neutral mass spectrometer (NTRS 20160010304): 600 g",
+    "status": "nasa-verified"
    },
    "units": {
-    "value": 0.5,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 1.1,
+    "source": "NASA GSFC mini ion and neutral mass spectrometer (NTRS 20160010304): 13.5 x 9 x 9 cm",
+    "status": "derived"
    },
    "powerW": {
-    "value": 1.5,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 1.8,
+    "source": "NASA GSFC mini ion and neutral mass spectrometer (NTRS 20160010304): 1.8 W",
+    "status": "nasa-verified"
    },
    "dutyCycle": {
     "value": 1.0,
@@ -531,9 +530,9 @@
     "status": "game-balance"
    },
    "dataMbPerDay": {
-    "value": 20,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 14,
+    "source": "NASA GSFC mini ion and neutral mass spectrometer (NTRS 20160010304): 1.3 kbps for 24 hours",
+    "status": "derived"
    },
    "costUsd": {
     "value": 70000,
@@ -553,15 +552,15 @@
   },
   {
    "id": "radiometer",
-   "name": "Microwave radiometer",
+   "name": "Cloud-ice radiometer (883 GHz)",
    "tags": [
-    "soil-moisture"
+    "cloud-ice"
    ],
    "isImager": false,
    "massKg": {
-    "value": 1.5,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 1.3,
+    "source": "NASA IceCube 3U CubeSat (NTRS 20210012947), Table 1: radiometer 1.3 kg",
+    "status": "nasa-verified"
    },
    "units": {
     "value": 2.0,
@@ -569,19 +568,19 @@
     "status": "game-balance"
    },
    "powerW": {
-    "value": 10.0,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 5.6,
+    "source": "NASA IceCube 3U CubeSat (NTRS 20210012947), Table 1: 5.6 W at 50% LO cycle",
+    "status": "nasa-verified"
    },
    "dutyCycle": {
-    "value": 0.5,
+    "value": 1.0,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dataMbPerDay": {
-    "value": 300,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 48,
+    "source": "NASA IceCube 3U CubeSat (NTRS 20210012947), Table 1: 48 MB per full day",
+    "status": "nasa-verified"
    },
    "costUsd": {
     "value": 300000,
@@ -605,9 +604,9 @@
    "id": "body-1u",
    "name": "Body-mounted cells (small)",
    "panelW": {
-    "value": 2.5,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 2.3,
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 3-2: 1U body-mounted panels, 2.0-2.4 W",
+    "status": "nasa-verified"
    },
    "batteryWh": {
     "value": 10,
@@ -615,9 +614,9 @@
     "status": "game-balance"
    },
    "massKg": {
-    "value": 0.1,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.11,
+    "source": "Panels and battery at SOA 2026 W/kg and Wh/kg, Tables 3-2 and 3-5",
+    "status": "derived"
    },
    "costUsd": {
     "value": 8000,
@@ -634,9 +633,9 @@
    "id": "body-3u",
    "name": "Body-mounted cells",
    "panelW": {
-    "value": 7.0,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 8.1,
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 3-2: 3U body-mounted panels, 8.0-8.4 W",
+    "status": "nasa-verified"
    },
    "batteryWh": {
     "value": 20,
@@ -644,9 +643,9 @@
     "status": "game-balance"
    },
    "massKg": {
-    "value": 0.25,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.28,
+    "source": "Panels and battery at SOA 2026 W/kg and Wh/kg, Tables 3-2 and 3-5",
+    "status": "derived"
    },
    "costUsd": {
     "value": 20000,
@@ -663,19 +662,19 @@
    "id": "deployable-3u",
    "name": "Deployable panels",
    "panelW": {
-    "value": 14.0,
-    "source": "2 x body-3u: CubeSat 101 (NASA CSLI, 2017) ChargerSat-1 sidebar in the table of contents, deployable panels nearly double the power input",
-    "status": "derived"
+    "value": 14.4,
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 3-2: 3U deployable panels, 14.4 W",
+    "status": "nasa-verified"
    },
    "batteryWh": {
     "value": 40,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "source": "NASA IceCube 3U CubeSat (NTRS 20210012947), Table 2: 40 Wh battery",
+    "status": "nasa-verified"
    },
    "massKg": {
-    "value": 0.5,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.47,
+    "source": "Panels and battery at SOA 2026 W/kg and Wh/kg, Tables 3-2 and 3-5",
+    "status": "derived"
    },
    "costUsd": {
     "value": 50000,
@@ -692,9 +691,9 @@
    "id": "deployable-lite",
    "name": "Deployable panels, small battery",
    "panelW": {
-    "value": 14.0,
-    "source": "2 x body-3u: CubeSat 101 (NASA CSLI, 2017) ChargerSat-1 sidebar in the table of contents, deployable panels nearly double the power input",
-    "status": "derived"
+    "value": 14.4,
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 3-2: 3U deployable panels, 14.4 W",
+    "status": "nasa-verified"
    },
    "batteryWh": {
     "value": 5,
@@ -702,9 +701,9 @@
     "status": "game-balance"
    },
    "massKg": {
-    "value": 0.4,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.25,
+    "source": "Panels and battery at SOA 2026 W/kg and Wh/kg, Tables 3-2 and 3-5",
+    "status": "derived"
    },
    "costUsd": {
     "value": 35000,
@@ -721,9 +720,9 @@
    "id": "deployable-6u",
    "name": "Large deployable panels",
    "panelW": {
-    "value": 30.0,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 28,
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 3-2: 6U single-wing deployable, 28 W",
+    "status": "nasa-verified"
    },
    "batteryWh": {
     "value": 80,
@@ -731,9 +730,9 @@
     "status": "game-balance"
    },
    "massKg": {
-    "value": 1.0,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.92,
+    "source": "Panels and battery at SOA 2026 W/kg and Wh/kg, Tables 3-2 and 3-5",
+    "status": "derived"
    },
    "costUsd": {
     "value": 100000,
@@ -759,18 +758,18 @@
    },
    "rateKbps": {
     "value": 9.6,
-    "source": "Game balance value from general engineering knowledge, not NASA data",
-    "status": "game-balance"
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 9-3: UHF radios, 9.6 kbps",
+    "status": "nasa-verified"
    },
    "txPowerW": {
     "value": 2.0,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 9-3: UHF radios, 0.5-4 W",
+    "status": "nasa-verified"
    },
    "massKg": {
     "value": 0.1,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 9-3: UHF radio, 100 g",
+    "status": "nasa-verified"
    },
    "costUsd": {
     "value": 10000,
@@ -784,23 +783,23 @@
    "band": "s-band",
    "frequencyMHz": {
     "value": 2200,
-    "source": "Game balance value from general engineering knowledge, not NASA data",
-    "status": "game-balance"
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 9-3: S-band 2200-2290 MHz",
+    "status": "nasa-verified"
    },
    "rateKbps": {
     "value": 1000,
-    "source": "Game balance value from general engineering knowledge, not NASA data",
-    "status": "game-balance"
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 9-3: S-band radio, 1,000 kbps",
+    "status": "nasa-verified"
    },
    "txPowerW": {
-    "value": 5.0,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 2.0,
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 9-3: S-band 33 dBm, 2 W",
+    "status": "nasa-verified"
    },
    "massKg": {
-    "value": 0.2,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.25,
+    "source": "NASA SmallSat SOA 2026 (NASA/TP-20260003140), Table 9-3: S-band radio, 246 g",
+    "status": "nasa-verified"
    },
    "costUsd": {
     "value": 40000,
@@ -897,9 +896,9 @@
     "status": "game-balance"
    },
    "maxMassKg": {
-    "value": 6.0,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 12.0,
+    "source": "Station deployers take up to 6U (SOA 2026, 10.6.1); 6U at most 12 kg (CDS rev 14.1)",
+    "status": "derived"
    },
    "waitMonths": {
     "value": 2,
@@ -924,8 +923,8 @@
     "status": "derived"
    },
    "maxMassKg": {
-    "value": 4.0,
-    "source": "P-POD holds up to 3U (CubeSat 101 (NASA CSLI, 2017) section 1.2.1 p.5) at 1.33 kg per unit",
+    "value": 6.0,
+    "source": "P-POD holds up to 3U (CubeSat 101 section 1.2.1), 3U at most 6 kg (CDS rev 14.1)",
     "status": "derived"
    },
    "waitMonths": {
