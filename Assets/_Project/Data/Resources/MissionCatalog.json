@@ -93,8 +93,8 @@
     "status": "game-balance"
    },
    "deadlineMonths": {
-    "value": 24,
-    "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9: typical development is 18-24 months; game uses the upper end",
+    "value": 30,
+    "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9: typical development is 18-24 months, plus launch wait",
     "status": "game-balance"
    },
    "missionMonths": {
@@ -165,7 +165,7 @@
     "status": "game-balance"
    },
    "deadlineMonths": {
-    "value": 24,
+    "value": 30,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
@@ -602,6 +602,7 @@
  "power": [
   {
    "id": "body-1u",
+   "deployable": false,
    "name": "Body-mounted cells (small)",
    "panelW": {
     "value": 2.3,
@@ -631,6 +632,7 @@
   },
   {
    "id": "body-3u",
+   "deployable": false,
    "name": "Body-mounted cells",
    "panelW": {
     "value": 8.1,
@@ -660,6 +662,7 @@
   },
   {
    "id": "deployable-3u",
+   "deployable": true,
    "name": "Deployable panels",
    "panelW": {
     "value": 14.4,
@@ -689,6 +692,7 @@
   },
   {
    "id": "deployable-lite",
+   "deployable": true,
    "name": "Deployable panels, small battery",
    "panelW": {
     "value": 14.4,
@@ -718,6 +722,7 @@
   },
   {
    "id": "deployable-6u",
+   "deployable": true,
    "name": "Large deployable panels",
    "panelW": {
     "value": 28,
@@ -1291,6 +1296,535 @@
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
+  }
+ ],
+ "events": [
+  {
+   "id": "proposal-rejected",
+   "name": "Proposal not compliant",
+   "phase": "development",
+   "description": "The proposal missed something the call asked for, so it waits for next year's call.",
+   "descriptionSource": "CubeSat 101 (NASA CSLI, 2017), section 2.5 p.17",
+   "descriptionStatus": "nasa-verified",
+   "baseChance": {
+    "value": 0.03,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [],
+   "delayMonths": {
+    "value": 12,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "",
+   "mitigation": "Follow the call's instructions to the letter and get a review before submitting."
+  },
+  {
+   "id": "budget-slip",
+   "name": "Budget slip",
+   "phase": "development",
+   "description": "Travel to reviews and delivery was not in the plan, and the bill arrives.",
+   "descriptionSource": "CubeSat 101 (NASA CSLI, 2017), section 2.2 p.13",
+   "descriptionStatus": "nasa-verified",
+   "baseChance": {
+    "value": 0.1,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "no-reserve",
+     "chance": {
+      "value": 0.3,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 30000,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "",
+   "mitigation": "Keep at least 10% of the budget in reserve for surprises."
+  },
+  {
+   "id": "vibration-break",
+   "name": "Something breaks in vibration",
+   "phase": "testing",
+   "description": "Something almost always breaks in vibration testing; parts near the outside are quicker to fix.",
+   "descriptionSource": "CubeSat 101 (NASA CSLI, 2017), section 2.4 free advice box, p.16",
+   "descriptionStatus": "nasa-verified",
+   "baseChance": {
+    "value": 0.25,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "skipped:etu",
+     "chance": {
+      "value": 0.2,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    },
+    {
+     "condition": "skipped:flatsat",
+     "chance": {
+      "value": 0.1,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 2,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 15000,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "",
+   "mitigation": "Build an engineering test unit and a FlatSat, and keep key parts near the outside."
+  },
+  {
+   "id": "battery-retest",
+   "name": "Battery needs extra tests",
+   "phase": "testing",
+   "description": "The launch provider asks for extra battery tests to prove the battery is safe.",
+   "descriptionSource": "CubeSat 101 (NASA CSLI, 2017), section 2.4 free advice box, p.16",
+   "descriptionStatus": "nasa-verified",
+   "baseChance": {
+    "value": 0.05,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "skipped:flatsat",
+     "chance": {
+      "value": 0.05,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 1,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 10000,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "",
+   "mitigation": "Use UL-listed batteries and test the electronics early on a FlatSat."
+  },
+  {
+   "id": "licence-late",
+   "name": "Licence not ready",
+   "phase": "licensing",
+   "description": "The radio licence is not granted before delivery, so the satellite is removed from the launch.",
+   "descriptionSource": "CubeSat 101 (NASA CSLI, 2017), section 2.8 p.20-21",
+   "descriptionStatus": "nasa-verified",
+   "baseChance": {
+    "value": 0.03,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "imager",
+     "chance": {
+      "value": 0.07,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    },
+    {
+     "condition": "tight-schedule",
+     "chance": {
+      "value": 0.1,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "launch-lost",
+   "mitigation": "File licences within 30 days of the launch assignment; a camera also needs NOAA's licence first."
+  },
+  {
+   "id": "envelope-misfit",
+   "name": "Does not fit the dispenser",
+   "phase": "delivery",
+   "description": "The satellite is slightly too big for the dispenser. If it does not fit, it does not fly.",
+   "descriptionSource": "CubeSat 101 (NASA CSLI, 2017), section 2.4 free advice box, p.16",
+   "descriptionStatus": "nasa-verified",
+   "baseChance": {
+    "value": 0.02,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "full-volume",
+     "chance": {
+      "value": 0.15,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    },
+    {
+     "condition": "tight-mass",
+     "chance": {
+      "value": 0.05,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 3,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 20000,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "",
+   "mitigation": "Do not design to the limits of the envelope; leave spare volume and mass."
+  },
+  {
+   "id": "late-delivery",
+   "name": "Delivery slips",
+   "phase": "delivery",
+   "description": "The satellite is not ready on time; the rocket will leave without it if the slip is too long.",
+   "descriptionSource": "CubeSat 101 (NASA CSLI, 2017), section 2.15 p.28",
+   "descriptionStatus": "nasa-verified",
+   "baseChance": {
+    "value": 0.05,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "tight-schedule",
+     "chance": {
+      "value": 0.15,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    },
+    {
+     "condition": "no-reserve",
+     "chance": {
+      "value": 0.05,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 3,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "",
+   "mitigation": "Plan schedule slack so a slip does not cost the launch."
+  },
+  {
+   "id": "burn-wire",
+   "name": "Deployable comes loose",
+   "phase": "launch",
+   "description": "The fishing line holding an antenna or panel came loose during ascent, and the deployment fails.",
+   "descriptionSource": "CubeSat 101 (NASA CSLI, 2017), section 2.4 free advice box, p.16",
+   "descriptionStatus": "nasa-verified",
+   "baseChance": {
+    "value": 0.03,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "deployables",
+     "chance": {
+      "value": 0.07,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    },
+    {
+     "condition": "skipped:etu",
+     "chance": {
+      "value": 0.05,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "mission-lost",
+   "mitigation": "Use two separate burn wires on every deployable, and rehearse deployment on a test unit."
+  },
+  {
+   "id": "team-turnover",
+   "name": "Team members leave",
+   "phase": "operations",
+   "description": "Experienced members graduate and the new team loses know-how, so operations go slower.",
+   "descriptionSource": "CubeSat 101 (NASA CSLI, 2017), section 2.11 p.24",
+   "descriptionStatus": "nasa-verified",
+   "baseChance": {
+    "value": 0.1,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "long-schedule",
+     "chance": {
+      "value": 0.1,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0.15,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "",
+   "mitigation": "Keep photos and detailed records of everything the team does."
+  },
+  {
+   "id": "weak-ground-station",
+   "name": "Ground station falls short",
+   "phase": "operations",
+   "description": "The ground station misses passes, so data stays on board and is lost.",
+   "descriptionSource": "CubeSat 101 (NASA CSLI, 2017), section 2.10 p.22",
+   "descriptionStatus": "nasa-verified",
+   "baseChance": {
+    "value": 0.05,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "weak-station",
+     "chance": {
+      "value": 0.25,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0.3,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "",
+   "mitigation": "Pick a ground station with spare contact time and test it early by tracking other satellites."
+  },
+  {
+   "id": "solar-storm",
+   "name": "Solar storm",
+   "phase": "operations",
+   "description": "A burst of solar protons forces the satellite into safe mode for days.",
+   "descriptionSource": "Team idea based on NOAA GOES solar proton alerts; not in CubeSat 101 (NASA CSLI, 2017)",
+   "descriptionStatus": "game-balance",
+   "baseChance": {
+    "value": 0.15,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "tight-power",
+     "chance": {
+      "value": 0.1,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0.2,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "",
+   "mitigation": "Leave power margin so the satellite can ride out safe mode."
+  },
+  {
+   "id": "orbit-fault",
+   "name": "Hardware fault in orbit",
+   "phase": "operations",
+   "description": "A part that was never tested hot and cold fails in orbit and the instrument works only part time.",
+   "descriptionSource": "Team proposal; testing advice from CubeSat 101 (NASA CSLI, 2017) section 6.9",
+   "descriptionStatus": "game-balance",
+   "baseChance": {
+    "value": 0.1,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "modifiers": [
+    {
+     "condition": "skipped:tvac-cycling",
+     "chance": {
+      "value": 0.1,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    },
+    {
+     "condition": "skipped:etu",
+     "chance": {
+      "value": 0.1,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    },
+    {
+     "condition": "skipped:flatsat",
+     "chance": {
+      "value": 0.05,
+      "source": "Game balance value chosen by the team, not NASA data",
+      "status": "game-balance"
+     }
+    }
+   ],
+   "delayMonths": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 0,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "scienceLoss": {
+    "value": 0.5,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "outcome": "",
+   "mitigation": "Run the optional tests: thermal vacuum cycling, an engineering test unit and a FlatSat."
   }
  ]
 }
