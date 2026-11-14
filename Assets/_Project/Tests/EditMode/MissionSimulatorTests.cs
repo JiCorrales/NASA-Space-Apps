@@ -76,6 +76,21 @@ namespace SpaceApps.Mission.Tests
         }
 
         [Test]
+        public void LicenceRiskFollowsScheduleSlackNotTheCamera()
+        {
+            var camera = MissionEvaluatorTests.DesignA();
+            var noCamera = MissionEvaluatorTests.DesignA();
+            noCamera.objective = "space-weather";
+            noCamera.instruments = new List<string> { "magnetometer" };
+            Assert.AreEqual(MissionSimulator.EventChance(catalog, noCamera, "licence-late"),
+                            MissionSimulator.EventChance(catalog, camera, "licence-late"), 1e-6f, "choosing a camera is not a schedule mistake");
+
+            MissionCatalog.Find(catalog.objectives, "earth-imaging").deadlineMonths.value = 24f; // 23 of 24 months: tight
+            Assert.Greater(MissionSimulator.EventChance(catalog, camera, "licence-late"),
+                           MissionSimulator.EventChance(catalog, noCamera, "licence-late"));
+        }
+
+        [Test]
         public void SameSeedGivesTheSameRun()
         {
             for (int seed = 0; seed < 50; seed++)

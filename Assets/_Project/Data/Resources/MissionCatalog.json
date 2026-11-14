@@ -1477,14 +1477,6 @@
    },
    "modifiers": [
     {
-     "condition": "imager",
-     "chance": {
-      "value": 0.07,
-      "source": "Game balance value chosen by the team, not NASA data",
-      "status": "game-balance"
-     }
-    },
-    {
      "condition": "tight-schedule",
      "chance": {
       "value": 0.1,
@@ -1509,7 +1501,7 @@
     "status": "game-balance"
    },
    "outcome": "launch-lost",
-   "mitigation": "File licences within 30 days of the launch assignment; a camera also needs NOAA's licence first."
+   "mitigation": "Leave schedule slack so the licences finish before delivery; a camera also needs NOAA's licence first."
   },
   {
    "id": "envelope-misfit",
