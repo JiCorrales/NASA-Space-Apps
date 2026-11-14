@@ -86,7 +86,7 @@ namespace SpaceApps.Mission.Tests
         [Test]
         public void EveryEventAppliesItsEffect()
         {
-            var design = MissionEvaluatorTests.SoilMoisture();
+            var design = MissionEvaluatorTests.CloudIce();
             var calm = MissionSimulator.Run(OnlyEvent("none"), design, 0);
             Assert.AreEqual(MissionOutcome.FullSuccess, calm.outcome);
 
@@ -132,8 +132,7 @@ namespace SpaceApps.Mission.Tests
         [Test]
         public void ScienceReturnedNeverExceedsTheEvaluator()
         {
-            var designs = new[] { MissionEvaluatorTests.DesignA(), MissionEvaluatorTests.DesignB(), MissionEvaluatorTests.Radiation(),
-                                  MissionEvaluatorTests.SpaceWeather(), MissionEvaluatorTests.SoilMoisture(), Careful() };
+            var designs = MissionEvaluatorTests.AllWorking().Append(Careful());
             foreach (var d in designs)
             {
                 float max = MissionEvaluator.Evaluate(catalog, d).science;

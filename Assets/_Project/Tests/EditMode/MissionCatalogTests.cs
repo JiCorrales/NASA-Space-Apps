@@ -98,7 +98,7 @@ namespace SpaceApps.Mission.Tests
                 CollectionAssert.Contains(phases, e.phase, e.id);
                 CollectionAssert.Contains(new[] { "", "launch-lost", "mission-lost" }, e.outcome, e.id);
                 CollectionAssert.Contains(Statuses, e.descriptionStatus, e.id);
-                if (e.descriptionStatus == "nasa-verified") StringAssert.StartsWith("CubeSat 101", e.descriptionSource, e.id);
+                if (e.descriptionStatus == "nasa-verified") Assert.IsTrue(NasaPrefixes.Any(e.descriptionSource.StartsWith), e.id);
                 Assert.IsNotEmpty(e.description, e.id);
                 Assert.IsNotEmpty(e.mitigation, e.id);
             }
