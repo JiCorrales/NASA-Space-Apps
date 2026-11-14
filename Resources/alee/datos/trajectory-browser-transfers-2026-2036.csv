@@ -1,0 +1,41 @@
+destination,mission_class,mission_type,traj_id,launch_date,end_date,duration_days,injection_dv_kms,post_injection_dv_kms,total_dv_kms,route
+Bennu,oneway,rendezvous,59808042,2026-10-07,2028-05-05,576,4.254,2.871,7.125,Earth > 101955 Bennu (1999 RQ36)
+Bennu,oneway,rendezvous,59808142,2032-10-07,2034-04-20,560,4.24,2.825,7.065,Earth > 101955 Bennu (1999 RQ36)
+Didymos,oneway,rendezvous,59620544,2027-11-11,2031-01-22,1168,4.139,1.612,5.751,Earth > 65803 Didymos (1996 GT)
+Didymos,oneway,rendezvous,59620669,2032-09-21,2036-06-28,1376,4.812,4.961,9.772,Earth > 65803 Didymos (1996 GT)
+Didymos,oneway,rendezvous,59620702,2033-11-11,2035-04-23,528,4.043,1.87,5.913,Earth > 65803 Didymos (1996 GT)
+Didymos,oneway,rendezvous,59620730,2034-10-13,2036-10-18,736,5.111,4.719,9.83,Earth > 65803 Didymos (1996 GT)
+Jupiter,oneway,rendezvous,428,2026-10-23,2028-02-15,480,8.037,1.656,9.693,Earth > Jupiter
+Jupiter,oneway,rendezvous,517,2030-01-19,2031-05-30,496,7.562,1.541,9.103,Earth > Jupiter
+Jupiter,oneway,rendezvous,542,2031-02-23,2032-05-16,448,7.919,1.93,9.849,Earth > Jupiter
+Jupiter,oneway,rendezvous,589,2033-05-03,2034-08-10,464,7.586,1.456,9.042,Earth > Jupiter
+Jupiter,oneway,rendezvous,613,2034-06-07,2035-11-01,512,7.278,1.033,8.311,Earth > Jupiter
+Mars,oneway,rendezvous,20597,2026-10-23,2027-08-07,288,3.622,0.815,4.437,Earth > Mars
+Mars,oneway,rendezvous,20630,2028-11-29,2029-08-28,272,3.71,1.009,4.719,Earth > Mars
+Mars,oneway,rendezvous,21260,2030-02-20,2030-12-21,304,4.809,3.743,8.552,Earth > Venus > Mars
+Mars,oneway,rendezvous,20682,2033-04-17,2033-10-10,176,3.597,1.207,4.804,Earth > Mars
+Mars,oneway,rendezvous,21272,2034-08-10,2035-07-12,336,3.974,2.772,6.746,Earth > Venus > Mars
+Mars,oneway,rendezvous,20702,2035-06-26,2036-01-04,192,3.641,0.687,4.328,Earth > Mars
+Mars,roundtrip,rendezvous,22016,2026-11-08,2029-05-08,912,3.629,1.511,5.139,Earth > Mars > Earth
+Mars,roundtrip,rendezvous,22098,2028-12-15,2031-05-30,896,3.676,2.108,5.783,Earth > Mars > Earth
+Mars,roundtrip,rendezvous,22188,2031-02-23,2033-07-22,880,3.877,2.217,6.094,Earth > Mars > Earth
+Mars,roundtrip,rendezvous,22310,2033-05-03,2035-08-13,832,3.712,3.156,6.868,Earth > Mars > Earth
+Mars,roundtrip,rendezvous,22401,2035-06-26,2037-09-19,816,3.651,3.302,6.953,Earth > Mars > Earth
+Saturn,oneway,rendezvous,7885,2026-06-01,2029-05-24,1088,8.335,1.593,9.927,Earth > Saturn
+Saturn,oneway,rendezvous,7946,2027-06-20,2030-05-11,1056,8.236,1.655,9.891,Earth > Saturn
+Saturn,oneway,rendezvous,8003,2028-07-08,2031-05-14,1040,8.255,1.657,9.912,Earth > Saturn
+Saturn,oneway,rendezvous,8059,2029-07-11,2032-04-30,1024,8.264,1.724,9.988,Earth > Saturn
+Saturn,oneway,rendezvous,8121,2030-07-30,2033-05-03,1008,8.159,1.754,9.913,Earth > Saturn
+Saturn,oneway,rendezvous,8165,2031-08-18,2034-05-22,1008,8.149,1.721,9.869,Earth > Saturn
+Saturn,oneway,rendezvous,8225,2032-09-05,2035-06-10,1008,8.273,1.704,9.978,Earth > Saturn
+Saturn,oneway,rendezvous,8262,2033-09-08,2036-06-28,1024,8.271,1.685,9.956,Earth > Saturn
+Saturn,oneway,rendezvous,8302,2034-09-27,2037-07-17,1024,8.288,1.7,9.988,Earth > Saturn
+Saturn,oneway,rendezvous,8338,2035-10-16,2038-09-06,1056,8.326,1.585,9.911,Earth > Saturn
+Venus,oneway,rendezvous,17530,2026-06-17,2026-12-10,176,3.885,0.415,4.299,Earth > Venus
+Venus,oneway,rendezvous,17540,2028-01-14,2028-07-24,192,4.106,0.564,4.67,Earth > Venus
+Venus,oneway,rendezvous,17549,2029-10-31,2030-02-20,112,3.89,0.683,4.573,Earth > Venus
+Venus,oneway,rendezvous,17556,2031-05-30,2031-10-05,128,3.754,0.395,4.15,Earth > Venus
+Venus,oneway,rendezvous,17565,2032-12-10,2033-05-03,144,3.62,0.427,4.047,Earth > Venus
+Venus,oneway,rendezvous,17576,2034-06-07,2034-11-30,176,3.822,0.428,4.25,Earth > Venus
+Venus,roundtrip,flyby,20238,2030-10-02,2031-09-19,352,5.933,0.015,5.948,Earth > Venus > Earth
+Venus,roundtrip,flyby,20261,2032-06-01,2033-04-01,304,5.804,0.051,5.855,Earth > Venus > Earth

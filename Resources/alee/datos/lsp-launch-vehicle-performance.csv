@@ -1,0 +1,65 @@
+query_id,orbit_class,inclination_deg,altitude_km,c3_km2s2,vehicle,launch_site,capability_kg,fairing
+LEO-28.5-400,LEO Circular,28.5,400,,Pegasus (XL),CCSFS,400,50in (1.3m)
+LEO-28.5-400,LEO Circular,28.5,400,,Vulcan (VC0),CCSFS,9470,5.4m
+LEO-28.5-400,LEO Circular,28.5,400,,"Falcon 9 (Full Thrust, RTLS)",CCSFS,11660,5.2m
+LEO-28.5-400,LEO Circular,28.5,400,,"Falcon 9 (Full Thrust, ASDS)",CCSFS,15520,5.2m
+LEO-28.5-400,LEO Circular,28.5,400,,Vulcan (VC2),CCSFS,16810,5.4m
+LEO-28.5-400,LEO Circular,28.5,400,,Vulcan (VC4),CCSFS,22310,5.4m
+LEO-28.5-400,LEO Circular,28.5,400,,Vulcan (VC6),CCSFS,26450,5.4m
+LEO-28.5-400,LEO Circular,28.5,400,,New Glenn,CCSFS,36290,7m
+LEO-51.6-400,LEO Circular,51.6,400,,Pegasus (XL),WFF,365,50in (1.3m)
+LEO-51.6-400,LEO Circular,51.6,400,,Vulcan (VC0),CCSFS,8720,5.4m
+LEO-51.6-400,LEO Circular,51.6,400,,"Falcon 9 (Full Thrust, RTLS)",CCSFS,10860,5.2m
+LEO-51.6-400,LEO Circular,51.6,400,,"Falcon 9 (Full Thrust, ASDS)",CCSFS,14460,5.2m
+LEO-51.6-400,LEO Circular,51.6,400,,Vulcan (VC2),CCSFS,15660,5.4m
+LEO-51.6-400,LEO Circular,51.6,400,,Vulcan (VC4),CCSFS,20800,5.4m
+LEO-51.6-400,LEO Circular,51.6,400,,Vulcan (VC6),CCSFS,24730,5.4m
+LEO-51.6-400,LEO Circular,51.6,400,,New Glenn,CCSFS,34110,7m
+SSO-500,LEO Circular,98 (Sun Synchronous),500,,Pegasus (XL w/HAPS),VSFB,250,50in (1.3m)
+SSO-500,LEO Circular,98 (Sun Synchronous),500,,Pegasus (XL),VSFB,260,50in (1.3m)
+SSO-500,LEO Circular,98 (Sun Synchronous),500,,"Falcon 9 (Full Thrust, RTLS)",VSFB,8630,5.2m
+SSO-500,LEO Circular,98 (Sun Synchronous),500,,"Falcon 9 (Full Thrust, ASDS)",VSFB,11740,5.2m
+SSO-700,LEO Circular,98 (Sun Synchronous),700,,Pegasus (XL),VSFB,215,50in (1.3m)
+SSO-700,LEO Circular,98 (Sun Synchronous),700,,Pegasus (XL w/HAPS),VSFB,225,50in (1.3m)
+SSO-700,LEO Circular,98 (Sun Synchronous),700,,"Falcon 9 (Full Thrust, RTLS)",VSFB,7960,5.2m
+SSO-700,LEO Circular,98 (Sun Synchronous),700,,"Falcon 9 (Full Thrust, ASDS)",VSFB,11030,5.2m
+GTO-27-35786,Elliptical (apogee),27,35786,,"Falcon 9 (Full Thrust, RTLS - 2000 km perigee)",CCSFS,2375,5.2m
+GTO-27-35786,Elliptical (apogee),27,35786,,"Falcon 9 (Full Thrust, RTLS)",CCSFS,3490,5.2m
+GTO-27-35786,Elliptical (apogee),27,35786,,"Falcon 9 (Full Thrust, ASDS - 2000 km perigee)",CCSFS,4055,5.2m
+GTO-27-35786,Elliptical (apogee),27,35786,,"Falcon 9 (Full Thrust, ASDS)",CCSFS,5450,5.2m
+GTO-27-35786,Elliptical (apogee),27,35786,,Vulcan (VC2),CCSFS,7540,5.4m
+GTO-27-35786,Elliptical (apogee),27,35786,,New Glenn (2000 km perigee),CCSFS,8705,7m
+GTO-27-35786,Elliptical (apogee),27,35786,,Vulcan (VC4),CCSFS,10740,5.4m
+GTO-27-35786,Elliptical (apogee),27,35786,,New Glenn (250 km perigee),CCSFS,12025,7m
+GTO-27-35786,Elliptical (apogee),27,35786,,Vulcan (VC6),CCSFS,13570,5.4m
+C3--2,High Energy,,,-2,Vulcan (VC0),CCSFS,2280,5.4m
+C3--2,High Energy,,,-2,Vulcan (VC2),CCSFS,6185,5.4m
+C3--2,High Energy,,,-2,New Glenn,CCSFS,7085,7m
+C3--2,High Energy,,,-2,Vulcan (VC4),CCSFS,8855,5.4m
+C3--2,High Energy,,,-2,Vulcan (VC6),CCSFS,11215,5.4m
+C3-0,High Energy,,,0,"Falcon 9 (Full Thrust, RTLS)",CCSFS,1770,5.2m
+C3-0,High Energy,,,0,Vulcan (VC0),CCSFS,2100,5.4m
+C3-0,High Energy,,,0,"Falcon 9 (Full Thrust, ASDS)",CCSFS,3310,5.2m
+C3-0,High Energy,,,0,Vulcan (VC2),CCSFS,5920,5.4m
+C3-0,High Energy,,,0,Falcon Heavy (Recovery),KSC,6690,5.2m
+C3-0,High Energy,,,0,New Glenn,CCSFS,7180,7m
+C3-0,High Energy,,,0,Vulcan (VC4),CCSFS,8550,5.4m
+C3-0,High Energy,,,0,Vulcan (VC6),CCSFS,10850,5.4m
+C3-0,High Energy,,,0,Falcon Heavy (Expendable),KSC,15010,5.2m
+C3-10,High Energy,,,10,"Falcon 9 (Full Thrust, RTLS)",CCSFS,875,5.2m
+C3-10,High Energy,,,10,"Falcon 9 (Full Thrust, ASDS)",CCSFS,2220,5.2m
+C3-10,High Energy,,,10,Vulcan (VC2),CCSFS,4750,5.4m
+C3-10,High Energy,,,10,New Glenn,CCSFS,4930,7m
+C3-10,High Energy,,,10,Falcon Heavy (Recovery),KSC,5130,5.2m
+C3-10,High Energy,,,10,Vulcan (VC4),CCSFS,7140,5.4m
+C3-10,High Energy,,,10,Vulcan (VC6),CCSFS,9130,5.4m
+C3-10,High Energy,,,10,Falcon Heavy (Expendable),KSC,12345,5.2m
+C3-20,High Energy,,,20,New Glenn,CCSFS,2365,7m
+C3-20,High Energy,,,20,Vulcan (VC2),CCSFS,3710,5.4m
+C3-20,High Energy,,,20,Falcon Heavy (Recovery),KSC,3845,5.2m
+C3-20,High Energy,,,20,Vulcan (VC4),CCSFS,5880,5.4m
+C3-20,High Energy,,,20,Vulcan (VC6),CCSFS,7630,5.4m
+C3-20,High Energy,,,20,Falcon Heavy (Expendable),KSC,10115,5.2m
+C3-80,High Energy,,,80,Vulcan (VC4),CCSFS,830,5.4m
+C3-80,High Energy,,,80,Vulcan (VC6),CCSFS,1780,5.4m
+C3-80,High Energy,,,80,Falcon Heavy (Expendable),KSC,2195,5.2m

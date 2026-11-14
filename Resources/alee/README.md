@@ -1,16 +1,17 @@
 # Investigación de alee
 
-Investigación de los 9 recursos oficiales del reto, hecha el 2026-11-14, con los PDFs originales descargados. Complementa la base de conocimiento de `Resources/` (archivos `01`–`09` de la carpeta superior) sin modificarla.
+Investigación de los 9 recursos oficiales del reto y de fuentes de datos adicionales de NASA para los números del juego (componentes, lanzadores, trayectorias, comunicaciones, costes, clima espacial, misiones reales). Hecha el 2026-11-14, con los documentos y datos originales descargados. Complementa la base de conocimiento de `Resources/` (archivos `01`–`09` de la carpeta superior) sin modificarla.
 
-Empieza por **[00-sintesis-reto.md](00-sintesis-reto.md)**: qué pide el reto, qué aporta cada recurso, la cadena de compromisos que hay que modelar y una propuesta de estructura de juego.
+Empieza por **[00-sintesis-reto.md](00-sintesis-reto.md)**: qué pide el reto, qué aporta cada recurso, la cadena de compromisos que hay que modelar y una propuesta de estructura de juego. Los datos listos para usar están en **[datos/](datos/README.md)**.
 
 ## Estructura
 ```
 alee/
-├── README.md                    este índice
-├── 00-sintesis-reto.md          síntesis para el reto
+├── README.md                       este índice
+├── 00-sintesis-reto.md             síntesis para el reto
 ├── 01-pestana-recursos-oficial.md  copia del texto de la pestaña "Resources" del reto
-├── fuentes/                     un resumen por recurso, en el orden de la pestaña oficial
+├── fuentes/                        una ficha por fuente
+│   │  Recursos oficiales del reto (orden de la pestaña)
 │   ├── 01-design-and-develop-science-missions.md
 │   ├── 02-gmat.md
 │   ├── 03-concept-maturity-levels.md
@@ -19,20 +20,47 @@ alee/
 │   ├── 06-webb-build-it-yourself.md
 │   ├── 07-cubesat-101.md
 │   ├── 08-space-apps-2023-vr-challenge.md
-│   └── 09-csa-digital-games.md
-└── pdf/                         documentos originales (NASA / JPL)
+│   ├── 09-csa-digital-games.md
+│   │  Fuentes adicionales de NASA para los datos del juego
+│   ├── 10-small-spacecraft-soa-2026.md     catálogo de componentes por subsistema
+│   ├── 11-lsp-launch-vehicle-performance.md capacidad de lanzadores por órbita
+│   ├── 12-trajectory-browser.md            Δv y ventanas a planetas y asteroides
+│   ├── 13-dsn-link-design-handbook.md      comunicaciones de espacio profundo
+│   ├── 14-cost-estimating-handbook.md      cómo estima NASA los costes
+│   ├── 15-systems-engineering-handbook.md  fases, revisiones y TRL
+│   ├── 16-nssdca-master-catalog.md         misiones reales de referencia
+│   ├── 17-donki-space-weather.md           clima espacial real (eventos aleatorios)
+│   ├── 18-debris-assessment-software.md    basura orbital y regla de 25 años
+│   ├── 19-jpl-horizons.md                  posiciones de los planetas
+│   ├── 20-nasa-lessons-learned-llis.md     fallos reales (sin descarga)
+│   ├── 21-exoplanet-archive.md             exoplanetas como resultados científicos
+│   └── 22-recursos-visuales.md             modelos 3D, texturas e imágenes (sin descarga)
+├── datos/                          CSV/JSON listos para el juego (ver datos/README.md)
+│   ├── lsp-launch-vehicle-performance.csv
+│   ├── trajectory-browser-transfers-2026-2036.csv
+│   ├── nssdca-reference-missions.csv
+│   ├── horizons-elements-2026-11-14.csv
+│   ├── exoplanet-archive-pscomppars.csv
+│   └── donki/                      llamaradas, SEP, tormentas, CME y resumen
+└── pdf/                            documentos originales (NASA / JPL)
     ├── 250323-design-and-develop-science-mission.pdf
-    ├── 13-3547_A1b.pdf          paper CML (JPL, 2013)
+    ├── 13-3547_A1b.pdf                       paper CML (JPL, 2013)
     ├── nasa_csli_cubesat_101_508.pdf
-    ├── mission-viz/             4 PDFs de tutoriales y visión de Mission Viz
-    └── webb-build-it-yourself/  transcripción oficial del juego (flujo + resultados de los 3 niveles)
+    ├── small-spacecraft-soa-2026.pdf         State-of-the-Art (NASA/TP-20260003140)
+    ├── nasa-systems-engineering-handbook-rev2.pdf
+    ├── nasa-cost-estimating-handbook-v4-main-body.pdf
+    ├── das-3.2-users-guide.pdf
+    ├── dsn-810-005/                          10 módulos del manual de enlaces de la DSN
+    ├── mission-viz/                          4 PDFs de tutoriales y visión de Mission Viz
+    └── webb-build-it-yourself/               transcripción oficial del juego
 ```
 
 ## Pendientes de `../09-pendientes.md` que esta investigación resuelve
 | Pendiente | Resuelto en |
 |---|---|
-| Confirmar la lista de 9 recursos en la pestaña oficial | `01-pestana-recursos-oficial.md` |
+| Confirmar la lista de 9 recursos en la pestaña oficial | `01-pestana-recursos-oficial.md`. Comprobado de nuevo en la web oficial de 2026 el 2026-11-14: mismos 9 recursos |
 | PDF "Design and Develop Science Missions" no abierto (segmentos y fases sin verificar) | `fuentes/01` + PDF |
+| Fases del ciclo de vida de una misión [SIN VERIFICAR] | `fuentes/15` (Systems Engineering Handbook: Pre-Fase A a Fase F) |
 | CML: escala de 5 o 9 niveles, definiciones oficiales | `fuentes/03` + PDF (son 9 niveles; el paper se centra en 1–4) |
 | Licencia de GMAT | `fuentes/02`: Apache 2.0 (según SourceForge) |
 | README de Mission Viz | `fuentes/05` (la licencia sigue sin confirmar: el LICENSE da 404) |
@@ -40,7 +68,14 @@ alee/
 | CSA sin leer | `fuentes/09` |
 | PDFs de resultados del juego Webb | `fuentes/06` + PDFs: tabla completa combinación → misión real de los 3 niveles. La contradicción del nivel 3 (4 objetivos pero 3 longitudes de onda "una por objetivo") **sigue**: la transcripción lo dice así |
 | CubeSat 101: 437/140 MHz, 6,5 mm, ETU + FlatSat + 2 unidades de vuelo, LightSail-2 1,24 M$, NPSCul-Lite, entrega de 4 semanas a 6 meses | `fuentes/07` + PDF (aparecen en el documento completo) |
+| Regla de 25 años de desorbitado y límite de 100 objetos-año | `fuentes/18`: requisito 4.3-1 de NASA, citado en la guía de DAS |
+| Lanzadores y capacidades actuales (la lista de CubeSat 101 es de 2017) | `fuentes/11` + `datos/lsp-launch-vehicle-performance.csv`; lanzadores pequeños en `fuentes/10` (tabla 10-1) |
+
+## Lo que sigue faltando
+- **Precios** de lanzadores y componentes: ninguna fuente de NASA descargada los da. Marcarlos como [POR DEFINIR] o buscar otra fuente.
+- **Instrumentos científicos** (masa, potencia y tasa de datos por tipo): no hay un catálogo de NASA equivalente al State-of-the-Art; usar instrumentos de misiones reales de `datos/nssdca-reference-missions.csv` como analogía.
+- Licencia de Mission Viz.
 
 ## Notas
-- La sección 6 de la síntesis (datos de referencia de órbitas, Δv, potencia y comunicaciones) es **conocimiento general, no procede de los recursos**. Verificarla antes de presentarla como dato de NASA.
+- La sección 6 de la síntesis (datos de referencia de órbitas, Δv, potencia y comunicaciones) es **conocimiento general, no procede de los recursos**. Ahora puede sustituirse por los datos de `datos/` (lanzadores, Δv, misiones reales).
 - En el PDF CML, la matriz de 24 filas y la checklist CML 4 son imágenes; no hay transcripción.
