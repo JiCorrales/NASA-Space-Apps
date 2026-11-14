@@ -91,14 +91,14 @@ namespace SpaceApps.Mission
 
             if (run.totalCostUsd > budget)
                 return Stop(run, buildEnd + delay, "out-of-money", "The money ran out",
-                    $"Surprise costs took the mission to ${run.totalCostUsd:N0}, over the ${budget:N0} budget, before it could launch.");
+                    MissionEvaluator.Inv($"Surprise costs took the mission to ${run.totalCostUsd:N0}, over the ${budget:N0} budget, before it could launch."));
 
             run.launchMonth = buildEnd + delay + launch.waitMonths;
             if (run.launchMonth > objective.deadlineMonths)
                 return Stop(run, run.launchMonth, "missed-launch", "The rocket left without it",
-                    $"Delays added {delay:0.#} months, so the satellite was not ready by month {objective.deadlineMonths.value:0}. A launch is never delayed for a CubeSat.");
+                    MissionEvaluator.Inv($"Delays added {delay:0.#} months, so the satellite was not ready by month {objective.deadlineMonths.value:0}. A launch is never delayed for a CubeSat."));
 
-            Add(run, run.launchMonth, MissionPhase.Launch, "launch", $"Launch on the {launch.name}", "The satellite is released into orbit.");
+            Add(run, run.launchMonth, MissionPhase.Launch, "launch", MissionEvaluator.Inv($"Launch on the {launch.name}"), "The satellite is released into orbit.");
             foreach (var card in Phase(cards, MissionPhase.Launch))
             {
                 if (!Fires(random, card, conditions)) continue;
@@ -127,10 +127,10 @@ namespace SpaceApps.Mission
             run.outcome = science >= run.scienceNeeded ? MissionOutcome.FullSuccess : MissionOutcome.Partial;
             run.score = (int)Math.Round(report.score * (report.science > 0f ? science / report.science : 0f));
             if (run.outcome == MissionOutcome.Partial)
-                run.lessons.Add($"The mission returned {science:0} science points but needed {run.scienceNeeded:0}. More margin on the instruments or fewer risks would have covered the losses.");
+                run.lessons.Add(MissionEvaluator.Inv($"The mission returned {science:0} science points but needed {run.scienceNeeded:0}. More margin on the instruments or fewer risks would have covered the losses."));
             Add(run, run.launchMonth + objective.missionMonths, MissionPhase.End, "end",
                 run.outcome == MissionOutcome.FullSuccess ? "Mission accomplished" : "Mission ended short of its goal",
-                $"The mission returned {science:0} of the {run.scienceExpected:0} science points it could, against {run.scienceNeeded:0} needed.");
+                MissionEvaluator.Inv($"The mission returned {science:0} of the {run.scienceExpected:0} science points it could, against {run.scienceNeeded:0} needed."));
             return run;
         }
 
@@ -203,7 +203,7 @@ namespace SpaceApps.Mission
             run.scienceReturned = scienceSoFar;
             run.outcome = MissionOutcome.Lost;
             Add(run, month, MissionPhase.End, "end", "Mission lost",
-                $"Contact with the satellite was lost. It returned {scienceSoFar:0} of the {run.scienceNeeded:0} science points needed.");
+                MissionEvaluator.Inv($"Contact with the satellite was lost. It returned {scienceSoFar:0} of the {run.scienceNeeded:0} science points needed."));
             return run;
         }
 
