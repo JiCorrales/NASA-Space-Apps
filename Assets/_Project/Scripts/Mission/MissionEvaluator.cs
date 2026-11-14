@@ -151,7 +151,8 @@ namespace SpaceApps.Mission
             float cost = c.busCostUsd + (format?.costUsd.value ?? 0f) + (power?.costUsd.value ?? 0f) + (radio?.costUsd.value ?? 0f) +
                          (station?.costUsd.value ?? 0f) + launchToTeam + instruments.Sum(i => i.costUsd.value) +
                          tests.Sum(t => t.costUsd.value) + licences.Sum(l => l.costUsd.value);
-            float budget = objective?.budgetUsd.value ?? 0f;
+            var level = catalog.DifficultyOf(design);
+            float budget = (objective?.budgetUsd.value ?? 0f) * (level?.budgetScale.value ?? 1f);
             Resource(report, ResourceKind.Budget, "USD", cost, budget);
             if (objective != null && cost > budget)
                 Add(report, "over-budget", ResourceKind.Budget, Severity.Blocking,
@@ -169,7 +170,7 @@ namespace SpaceApps.Mission
             float licenceMonths = licences.Sum(l => l.months.value); // NOAA must finish before the FCC does.
             float development = Math.Max(Math.Max(c.minDevelopmentMonths.value, hardware), Math.Max(licenceMonths, station?.months.value ?? 0f));
             float months = c.baselineMonths + development + (launch?.waitMonths.value ?? 0f);
-            float deadline = objective?.deadlineMonths.value ?? 0f;
+            float deadline = (objective?.deadlineMonths.value ?? 0f) * (level?.deadlineScale.value ?? 1f);
             Resource(report, ResourceKind.Time, "months", months, deadline);
             if (objective != null && months > deadline)
                 Add(report, "schedule-overrun", ResourceKind.Time, Severity.Blocking,
