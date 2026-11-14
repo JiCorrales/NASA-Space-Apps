@@ -82,6 +82,11 @@ namespace SpaceApps.Mission.Tests
                 CollectionAssert.IsSubsetOf(l.dispensers, dispensers, l.id);
             }
             foreach (var g in c.groundStations) CollectionAssert.IsSubsetOf(g.bands, bands, g.id);
+            foreach (var l in c.launches)
+            {
+                Assert.IsNotEmpty(l.vehicle, l.id);
+                Assert.GreaterOrEqual(l.vehicleCapacityKg.value, l.maxMassKg.value, $"{l.id}: the rocket must lift at least what its dispenser holds");
+            }
         }
     }
 }
