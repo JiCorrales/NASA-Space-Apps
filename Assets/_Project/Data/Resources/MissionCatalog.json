@@ -1732,15 +1732,15 @@
   },
   {
    "id": "solar-storm",
-   "name": "Solar storm",
+   "name": "Extreme solar storm",
    "phase": "operations",
-   "description": "A burst of solar protons forces the satellite into safe mode for days.",
-   "descriptionSource": "Team idea based on NOAA GOES solar proton alerts; not in CubeSat 101 (NASA CSLI, 2017)",
-   "descriptionStatus": "game-balance",
+   "description": "An extreme geomagnetic storm, like the one of May 2024, upsets the electronics and the satellite spends days in safe mode.",
+   "descriptionSource": "NASA DONKI space weather database, storm of 10 May 2024 (Kp 9)",
+   "descriptionStatus": "nasa-verified",
    "baseChance": {
-    "value": 0.15,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.39,
+    "source": "NASA DONKI 2024-2025: 1 storm at Kp 9 in 2 years (solar maximum), so 1 - e^-0.5 = 39% in a 12-month mission",
+    "status": "derived"
    },
    "modifiers": [
     {
@@ -1763,7 +1763,7 @@
     "status": "game-balance"
    },
    "scienceLoss": {
-    "value": 0.2,
+    "value": 0.1,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
