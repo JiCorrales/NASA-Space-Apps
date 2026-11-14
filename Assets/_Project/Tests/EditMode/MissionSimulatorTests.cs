@@ -43,6 +43,41 @@ namespace SpaceApps.Mission.Tests
             return c;
         }
 
+        // Only the named card can fire, it always does, and its modifiers still decide the explanation.
+        static MissionCatalog ForceKeepingModifiers(string id)
+        {
+            var c = MissionCatalog.Load();
+            foreach (var e in c.events)
+            {
+                e.baseChance.value = e.id == id ? 1f : 0f;
+                if (e.id != id) e.modifiers = new EventModifier[0];
+            }
+            return c;
+        }
+
+        [Test]
+        public void PrecautionsTakenMeanBadLuckNotBlame()
+        {
+            var c = ForceKeepingModifiers("vibration-break");
+            var card = c.events.First(e => e.id == "vibration-break");
+            var r = MissionSimulator.Run(c, Careful(), 0);
+            var entry = r.timeline.Single(e => e.code == "vibration-break");
+            CollectionAssert.DoesNotContain(r.lessons, card.mitigation, "the design already built the ETU and the FlatSat");
+            Assert.IsTrue(r.lessons.Any(l => l.Contains("bad luck")), string.Join(" | ", r.lessons));
+            StringAssert.DoesNotContain("More likely because", entry.explanation);
+        }
+
+        [Test]
+        public void SkippedPrecautionIsNamedInTheTimeline()
+        {
+            var c = ForceKeepingModifiers("vibration-break");
+            var card = c.events.First(e => e.id == "vibration-break");
+            var r = MissionSimulator.Run(c, MissionEvaluatorTests.DesignA(), 0);
+            var entry = r.timeline.Single(e => e.code == "vibration-break");
+            StringAssert.Contains("engineering test unit was skipped", entry.explanation);
+            CollectionAssert.Contains(r.lessons, card.mitigation);
+        }
+
         [Test]
         public void SmallDelayIsAbsorbedByTheDeliverySlack()
         {
@@ -154,7 +189,10 @@ namespace SpaceApps.Mission.Tests
                 var entry = r.timeline.SingleOrDefault(e => e.code == card.id);
                 Assert.IsNotNull(entry, card.id);
                 Assert.AreEqual(card.delayMonths.value, entry.delayMonths, card.id);
-                CollectionAssert.Contains(r.lessons, card.mitigation, card.id);
+                if (entry.explanation.Contains("More likely because"))
+                    CollectionAssert.Contains(r.lessons, card.mitigation, card.id);
+                else
+                    Assert.IsTrue(r.lessons.Any(l => l.Contains("bad luck")), card.id);
 
                 if (card.outcome == "launch-lost")
                 {

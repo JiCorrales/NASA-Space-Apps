@@ -1823,5 +1823,88 @@
    "outcome": "",
    "mitigation": "Run the optional tests: thermal vacuum cycling, an engineering test unit and a FlatSat."
   }
+ ],
+ "conditions": [
+  {
+   "id": "no-reserve",
+   "name": "less than 10% of the budget was kept in reserve",
+   "threshold": {
+    "value": 0.1,
+    "source": "CubeSat 101 (NASA CSLI, 2017), section 2.2 p.13: reserves of at least 10% of the budget",
+    "status": "nasa-verified"
+   }
+  },
+  {
+   "id": "tight-schedule",
+   "name": "the schedule had less than 10% slack before the deadline",
+   "threshold": {
+    "value": 0.1,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "tight-power",
+   "name": "the power margin was under 20%",
+   "threshold": {
+    "value": 0.2,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "weak-station",
+   "name": "the radio needed more than half of the daily contact time",
+   "threshold": {
+    "value": 0.5,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "full-volume",
+   "name": "the parts filled more than 90% of the CubeSat",
+   "threshold": {
+    "value": 0.9,
+    "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "deployables",
+   "name": "the satellite has folding solar panels",
+   "threshold": {
+    "value": 0,
+    "source": "No threshold: true when the power system has deployable panels",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "skipped:etu",
+   "name": "the engineering test unit was skipped",
+   "threshold": {
+    "value": 0,
+    "source": "No threshold: true when the test is not in the design",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "skipped:flatsat",
+   "name": "the FlatSat was skipped",
+   "threshold": {
+    "value": 0,
+    "source": "No threshold: true when the test is not in the design",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "skipped:tvac-cycling",
+   "name": "thermal vacuum cycling was skipped",
+   "threshold": {
+    "value": 0,
+    "source": "No threshold: true when the test is not in the design",
+    "status": "game-balance"
+   }
+  }
  ]
 }

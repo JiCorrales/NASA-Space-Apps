@@ -81,7 +81,7 @@ namespace SpaceApps.Mission
                 foreach (var card in Phase(cards, BuildPhases[p]))
                 {
                     if (!Fires(random, card, conditions)) continue;
-                    var e = Fire(run, card, month);
+                    var e = Fire(run, catalog, card, conditions, month);
                     delay += e.delayMonths;
                     run.totalCostUsd += e.extraCostUsd;
                     if (card.outcome == "launch-lost")
@@ -115,7 +115,7 @@ namespace SpaceApps.Mission
             foreach (var card in Phase(cards, MissionPhase.Launch))
             {
                 if (!Fires(random, card, conditions)) continue;
-                Fire(run, card, run.launchMonth);
+                Fire(run, catalog, card, conditions, run.launchMonth);
                 if (card.outcome == "mission-lost") return Lose(run, run.launchMonth, 0f);
             }
 
@@ -128,12 +128,12 @@ namespace SpaceApps.Mission
                 float month = run.launchMonth + objective.missionMonths * fraction;
                 if (ops[i].outcome == "mission-lost")
                 {
-                    Fire(run, ops[i], month);
+                    Fire(run, catalog, ops[i], conditions, month);
                     return Lose(run, month, science * fraction);
                 }
                 float lost = science * Math.Min(1f, ops[i].scienceLoss);
                 science -= lost;
-                Fire(run, ops[i], month).scienceLost = lost;
+                Fire(run, catalog, ops[i], conditions, month).scienceLost = lost;
             }
 
             run.scienceReturned = science;
@@ -159,23 +159,28 @@ namespace SpaceApps.Mission
         static HashSet<string> Conditions(MissionCatalog catalog, MissionDesign design, MissionReport report)
         {
             var set = new HashSet<string>();
-            foreach (var t in catalog.tests.Where(t => !t.mandatory && !design.tests.Contains(t.id))) set.Add("skipped:" + t.id);
-            if (report.resources.Count == 0) return set;
+            var tests = design.tests ?? new List<string>();
+            foreach (var t in catalog.tests.Where(t => !t.mandatory && !tests.Contains(t.id))) set.Add("skipped:" + t.id);
+
+            // Thresholds live in the catalog's conditions table; a condition missing there never fires.
+            void Below(string id, ResourceKind kind)
+            {
+                var rule = MissionCatalog.Find(catalog.conditions, id);
+                if (rule != null && report.Get(kind).Margin < rule.threshold) set.Add(id);
+            }
+            Below("no-reserve", ResourceKind.Budget);
+            Below("tight-schedule", ResourceKind.Time);
+            Below("tight-power", ResourceKind.Power);
+            Below("weak-station", ResourceKind.Communications);
 
             var c = catalog.constants;
-            if (report.Get(ResourceKind.Budget).Margin < c.reserveFraction) set.Add("no-reserve");
-            if (report.Get(ResourceKind.Time).Margin < 0.1f) set.Add("tight-schedule");
-            if (report.Get(ResourceKind.Time).used > 20f) set.Add("long-schedule"); // ponytail: fixed 20-month turnover threshold
-            if (report.Get(ResourceKind.Mass).Margin < 0.1f) set.Add("tight-mass");
-            if (report.Get(ResourceKind.Power).Margin < 0.2f) set.Add("tight-power");
-            if (report.Get(ResourceKind.Communications).Margin < 0.5f) set.Add("weak-station");
 
             var format = MissionCatalog.Find(catalog.formats, design.format);
             var power = MissionCatalog.Find(catalog.power, design.power);
-            var instruments = design.instruments.Select(id => MissionCatalog.Find(catalog.instruments, id)).Where(i => i != null).ToList();
+            var instruments = (design.instruments ?? new List<string>()).Select(id => MissionCatalog.Find(catalog.instruments, id)).Where(i => i != null).ToList();
             float units = c.busUnits + instruments.Sum(i => i.units.value);
-            if (format != null && units > format.units * 0.9f) set.Add("full-volume");
-            if (instruments.Any(i => i.isImager)) set.Add("imager");
+            var fill = MissionCatalog.Find(catalog.conditions, "full-volume");
+            if (format != null && fill != null && units > format.units * fill.threshold) set.Add("full-volume");
             if (power != null && power.deployable) set.Add("deployables");
             return set;
         }
@@ -194,10 +199,23 @@ namespace SpaceApps.Mission
         static IEnumerable<EventCard> Phase(EventCard[] cards, MissionPhase phase) =>
             cards.Where(e => string.Equals(e.phase, phase.ToString(), StringComparison.OrdinalIgnoreCase));
 
-        static TimelineEntry Fire(MissionRun run, EventCard card, float month)
+        // Names the decisions that made this card more likely. The advice is given only when one of them held;
+        // otherwise the card was bad luck, and the lesson says so instead of blaming precautions the team took.
+        static TimelineEntry Fire(MissionRun run, MissionCatalog catalog, EventCard card, HashSet<string> conditions, float month)
         {
-            run.lessons.Add(card.mitigation);
-            var e = Add(run, month, (MissionPhase)Enum.Parse(typeof(MissionPhase), card.phase, true), card.id, card.name, card.description);
+            var reasons = (card.modifiers ?? new EventModifier[0]).Where(m => conditions.Contains(m.condition))
+                .Select(m => MissionCatalog.Find(catalog.conditions, m.condition)?.name ?? m.condition).ToList();
+            string explanation = card.description;
+            if (reasons.Count > 0)
+            {
+                explanation += " More likely because " + string.Join(" and ", reasons) + ".";
+                run.lessons.Add(card.mitigation);
+            }
+            else if (card.modifiers != null && card.modifiers.Length > 0)
+                run.lessons.Add(card.name + " was bad luck: the design already did what lowers this risk, and it can still happen.");
+            else
+                run.lessons.Add(card.name + " was bad luck: it can happen to any mission.");
+            var e = Add(run, month, (MissionPhase)Enum.Parse(typeof(MissionPhase), card.phase, true), card.id, card.name, explanation);
             e.delayMonths = card.delayMonths;
             e.extraCostUsd = card.costUsd;
             return e;

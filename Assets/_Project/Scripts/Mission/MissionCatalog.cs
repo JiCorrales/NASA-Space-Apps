@@ -122,6 +122,14 @@ namespace SpaceApps.Mission
         public Num chance;
     }
 
+    /// <summary>A design condition the event deck reacts to. Name is the reason shown to the player
+    /// ("the FlatSat was skipped"); threshold is the margin or fill level that triggers it, where one applies.</summary>
+    [Serializable]
+    public class ConditionRule : Entry
+    {
+        public Num threshold;
+    }
+
     /// <summary>A random event card. Phase: development, testing, licensing, delivery, launch or operations.
     /// Outcome: empty, launch-lost or mission-lost.</summary>
     [Serializable]
@@ -148,6 +156,7 @@ namespace SpaceApps.Mission
         public VerificationTest[] tests;
         public Licence[] licences;
         public EventCard[] events;
+        public ConditionRule[] conditions;
 
         public const string ResourcePath = "MissionCatalog";
 
