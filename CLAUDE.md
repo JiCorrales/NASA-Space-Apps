@@ -10,6 +10,8 @@ Agent-specific points:
 - Create and delete `.meta` files only through Unity, or together with their asset.
 - Everything written to the repo is in English.
 - Declare generated assets in `AI_USAGE.md` and external ones in `CREDITS.md` in the same commit.
+- Build WebGL with the command in the "Builds" section of `CONTRIBUTING.md`, then restore the settings files
+  it lists before committing.
 - Blender on the development PC is not on the PATH:
   `/home/isaac/Desktop/Trabajo/tooling/blender/blender-4.5.16-linux-x64/blender --background --python <script>`.
   Export FBX for Unity.

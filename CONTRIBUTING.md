@@ -58,6 +58,20 @@ that costs hours during a 48-hour hackathon.
 
 - Everything in the repo and in the submission is in English: code, comments, UI text, docs, commits.
 
+## Builds
+
+- WebGL, from the repo root:
+  `<Unity> -batchmode -quit -projectPath . -buildTarget WebGL -executeMethod SpaceApps.Editor.Build.WebGLBuild.Build -logFile build.log`.
+  It builds the scenes enabled in Build Settings and exits non-zero on failure.
+- The output goes to `Builds/WebGL/`, which is ignored by git. Serve the folder over HTTP to test it; opening
+  `index.html` from disk does not work.
+- Compression is disabled for this build only, because GitHub Pages cannot send `Content-Encoding` headers.
+- **A build or platform switch rewrites shared settings files.** Unity changes `ProjectSettings/ProjectSettings.asset`,
+  `GraphicsSettings.asset`, `EditorBuildSettings.asset`, `Assets/XR/Settings/OpenXRPackageSettings.asset`,
+  `Assets/DefaultVolumeProfile.asset` and the URP assets in `Assets/Settings/Project Configuration/`.
+  The `ProjectSettings.asset` change empties `preloadedAssets`, which breaks the VR build. Restore these files
+  with `git restore` after building and never commit them.
+
 ## Before you open a pull request
 
 1. The project opens in Unity with no errors in the Console.
