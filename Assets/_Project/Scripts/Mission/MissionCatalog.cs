@@ -130,6 +130,14 @@ namespace SpaceApps.Mission
         public EventModifier[] modifiers;
     }
 
+    /// <summary>A difficulty level: scales the objective's budget and deadline and the event deck's chances.</summary>
+    [Serializable]
+    public class Difficulty : Entry
+    {
+        public string summary;
+        public Num budgetScale, deadlineScale, eventChanceScale;
+    }
+
     /// <summary>Every option the player can pick, loaded from Resources/MissionCatalog.json.</summary>
     [Serializable]
     public class MissionCatalog
@@ -146,6 +154,7 @@ namespace SpaceApps.Mission
         public VerificationTest[] tests;
         public Licence[] licences;
         public EventCard[] events;
+        public Difficulty[] difficulties;
 
         public const string ResourcePath = "MissionCatalog";
 
@@ -159,6 +168,9 @@ namespace SpaceApps.Mission
         public static MissionCatalog FromJson(string json) => JsonUtility.FromJson<MissionCatalog>(json);
 
         /// <summary>Find an entry by id in one of the arrays above; null when missing.</summary>
+        /// <summary>The design's difficulty level, or null for the plain catalog values.</summary>
+        public Difficulty DifficultyOf(MissionDesign design) => Find(difficulties, design?.difficulty);
+
         public static T Find<T>(T[] items, string id) where T : Entry =>
             items?.FirstOrDefault(i => i.id == id);
     }

@@ -1826,5 +1826,67 @@
    "outcome": "",
    "mitigation": "Run the optional tests: thermal vacuum cycling, an engineering test unit and a FlatSat."
   }
+ ],
+ "difficulties": [
+  {
+   "id": "easy",
+   "name": "Cadet",
+   "summary": "A quarter more money and time, and half as many surprises.",
+   "budgetScale": {
+    "value": 1.25,
+    "source": "Game balance value chosen by the team, not NASA data; difficulty scaling",
+    "status": "game-balance"
+   },
+   "deadlineScale": {
+    "value": 1.25,
+    "source": "Game balance value chosen by the team, not NASA data; difficulty scaling",
+    "status": "game-balance"
+   },
+   "eventChanceScale": {
+    "value": 0.5,
+    "source": "Game balance value chosen by the team, not NASA data; difficulty scaling",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "normal",
+   "name": "Engineer",
+   "summary": "The catalog values as they are.",
+   "budgetScale": {
+    "value": 1.0,
+    "source": "Game balance value chosen by the team, not NASA data; difficulty scaling",
+    "status": "game-balance"
+   },
+   "deadlineScale": {
+    "value": 1.0,
+    "source": "Game balance value chosen by the team, not NASA data; difficulty scaling",
+    "status": "game-balance"
+   },
+   "eventChanceScale": {
+    "value": 1.0,
+    "source": "Game balance value chosen by the team, not NASA data; difficulty scaling",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "hard",
+   "name": "Flight director",
+   "summary": "Less money and time, and half again as many surprises.",
+   "budgetScale": {
+    "value": 0.85,
+    "source": "Game balance value chosen by the team, not NASA data; difficulty scaling",
+    "status": "game-balance"
+   },
+   "deadlineScale": {
+    "value": 0.9,
+    "source": "Game balance value chosen by the team, not NASA data; difficulty scaling",
+    "status": "game-balance"
+   },
+   "eventChanceScale": {
+    "value": 1.5,
+    "source": "Game balance value chosen by the team, not NASA data; difficulty scaling",
+    "status": "game-balance"
+   }
+  }
  ]
 }
