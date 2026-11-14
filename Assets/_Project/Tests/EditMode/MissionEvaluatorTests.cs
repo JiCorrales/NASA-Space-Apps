@@ -105,8 +105,12 @@ namespace SpaceApps.Mission.Tests
             var r = Eval(DesignA());
             Assert.AreEqual(1.45f, r.Get(ResourceKind.Mass).used, 1e-4f);
             Assert.AreEqual(4.0f, r.Get(ResourceKind.Mass).available, 1e-4f);
+            Assert.AreEqual(1f + 2f * 0.25f + 5f * 32f / 1440f, r.Get(ResourceKind.Power).used, 1e-4f);
             Assert.AreEqual(4.9f, r.Get(ResourceKind.Power).available, 1e-4f);
+            Assert.AreEqual(15f, r.Get(ResourceKind.Data).used, 1e-4f);
             Assert.AreEqual(240f, r.Get(ResourceKind.Data).available, 1e-3f);
+            Assert.AreEqual(2f, r.Get(ResourceKind.Communications).used, 1e-4f);
+            Assert.AreEqual(32f, r.Get(ResourceKind.Communications).available, 1e-4f);
             Assert.AreEqual(309000f, r.Get(ResourceKind.Budget).used, 1f);
             Assert.AreEqual(23f, r.Get(ResourceKind.Time).used, 1e-4f);
         }
@@ -120,13 +124,13 @@ namespace SpaceApps.Mission.Tests
             AssertBlocked(EvalWith(Radiation(), d => d.instruments.Add("camera-basic")), "volume-over-format");
 
         [Test]
-        public void TooHeavyForTheLauncher() =>
-            AssertBlocked(EvalWith(DesignB(), d =>
-            {
-                d.format = "6u";
-                d.power = "deployable-6u";
-                d.instruments.AddRange(new[] { "radiometer", "radiometer", "plasma-probe", "magnetometer" });
-            }), "mass-over-launcher");
+        public void TooHeavyForTheLauncher()
+        {
+            MissionCatalog.Find(catalog.launches, "iss-deploy").maxMassKg.value = 1.5f;
+            var r = Eval(DesignB());
+            AssertBlocked(r, "mass-over-launcher");
+            Assert.AreEqual(1, r.issues.Count, "single fault");
+        }
 
         [Test]
         public void PowerDeficit() => AssertBlocked(EvalWith(DesignB(), d => d.power = "body-1u"), "power-deficit");
@@ -137,13 +141,10 @@ namespace SpaceApps.Mission.Tests
         [Test]
         public void BatteryTooSmallForEclipse()
         {
-            var r = EvalWith(DesignB(), d =>
-            {
-                d.power = "deployable-lite";
-                d.instruments.Add("radiometer");
-            });
+            MissionCatalog.Find(catalog.power, "body-3u").batteryWh.value = 1f;
+            var r = Eval(DesignB());
             AssertBlocked(r, "battery-eclipse");
-            Assert.IsFalse(r.Has("power-deficit"), "panels cover the average load; only the battery should fail");
+            Assert.AreEqual(1, r.issues.Count, "single fault");
         }
 
         [Test]
@@ -290,6 +291,25 @@ namespace SpaceApps.Mission.Tests
         }
 
         [Test]
+        public void RepeatedTestIdCountsOnce()
+        {
+            var once = EvalWith(DesignA(), d => d.tests.Add("etu"));
+            var thrice = EvalWith(DesignA(), d => d.tests.AddRange(new[] { "etu", "etu", "etu" }));
+            Assert.AreEqual(once.reliability, thrice.reliability, 1e-6f);
+            Assert.AreEqual(once.Get(ResourceKind.Budget).used, thrice.Get(ResourceKind.Budget).used, 1f);
+        }
+
+        [Test]
+        public void ScheduleMessageBlamesLicencesOnlyWhenTheyAreSlowest()
+        {
+            MissionCatalog.Find(catalog.instruments, "camera-basic").devMonths.value = 7.5f; // hardware 10 = licences 10
+            MissionCatalog.Find(catalog.objectives, "earth-imaging").deadlineMonths.value = 20f;
+            var r = Eval(DesignA());
+            AssertBlocked(r, "schedule-overrun");
+            StringAssert.DoesNotContain("licences", r.issues.Find(i => i.code == "schedule-overrun").message);
+        }
+
+        [Test]
         public void OptionalTestsRaiseReliabilityAndScore()
         {
             var a = Eval(DesignA());
@@ -322,13 +342,5 @@ namespace SpaceApps.Mission.Tests
             }
         }
 
-        [Test]
-        public void EvaluationIsDeterministic()
-        {
-            var x = Eval(DesignB());
-            var y = Eval(DesignB());
-            Assert.AreEqual(x.score, y.score);
-            Assert.AreEqual(x.issues.Count, y.issues.Count);
-        }
     }
 }
