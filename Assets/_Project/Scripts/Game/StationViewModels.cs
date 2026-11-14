@@ -179,10 +179,20 @@ namespace SpaceApps.Game
             session.Changed += () => Changed?.Invoke();
         }
 
-        public IReadOnlyList<ResourceStatus> Resources => session.Report.resources.Select(r =>
-            r.unit == "USD"
-                ? new ResourceStatus(r.kind.ToString(), "k USD", r.used / 1000f, r.available / 1000f)
-                : new ResourceStatus(r.kind.ToString(), r.unit, r.used, r.available)).ToArray();
+        // While the design is unfinished, a zero limit means no choice has set it yet, not that it is exceeded.
+        public IReadOnlyList<ResourceStatus> Resources
+        {
+            get
+            {
+                bool unfinished = session.Report.Has("incomplete-design");
+                return session.Report.resources.Select(r =>
+                {
+                    bool set = !(unfinished && r.available <= 0f);
+                    float scale = r.unit == "USD" ? 1000f : 1f;
+                    return new ResourceStatus(r.kind.ToString(), r.unit == "USD" ? "k USD" : r.unit, r.used / scale, r.available / scale, set);
+                }).ToArray();
+            }
+        }
 
         public string Note => session.Report.issues.FirstOrDefault(i => i.code == "incomplete-design")?.message ?? "";
 
