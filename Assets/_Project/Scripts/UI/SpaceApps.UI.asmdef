@@ -1,0 +1,6 @@
+{
+    "name": "SpaceApps.UI",
+    "rootNamespace": "SpaceApps.UI",
+    "references": ["Unity.TextMeshPro", "UnityEngine.UI"],
+    "autoReferenced": true
+}
