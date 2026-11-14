@@ -146,6 +146,24 @@ namespace SpaceApps.Mission.Tests
         }
 
         [Test]
+        public void TimelineTextDoesNotDependOnTheMachineLanguage()
+        {
+            var broke = OnlyEvent("budget-slip");
+            broke.events.First(e => e.id == "budget-slip").costUsd.value = 1e7f;
+            string Text(MissionCatalog c, int seed) => string.Join("|", MissionSimulator.Run(c, MissionEvaluatorTests.DesignB(), seed).timeline.Select(e => e.explanation));
+            var saved = System.Globalization.CultureInfo.CurrentCulture;
+            try
+            {
+                System.Globalization.CultureInfo.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+                var invariant = Enumerable.Range(0, 20).Select(s => Text(catalog, s)).Append(Text(broke, 0)).ToList();
+                System.Globalization.CultureInfo.CurrentCulture = new System.Globalization.CultureInfo("es-ES");
+                var spanish = Enumerable.Range(0, 20).Select(s => Text(catalog, s)).Append(Text(broke, 0)).ToList();
+                CollectionAssert.AreEqual(invariant, spanish);
+            }
+            finally { System.Globalization.CultureInfo.CurrentCulture = saved; }
+        }
+
+        [Test]
         public void TimelineMovesForwardInTime()
         {
             for (int seed = 0; seed < 50; seed++)
