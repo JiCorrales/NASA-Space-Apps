@@ -67,7 +67,7 @@ namespace SpaceApps.Mission
             var launch = MissionCatalog.Find(catalog.launches, design.launch);
             var orbit = MissionCatalog.Find(catalog.orbits, design.orbit);
             var instruments = (design.instruments ?? new List<string>()).Select(id => MissionCatalog.Find(catalog.instruments, id)).Where(i => i != null).ToList();
-            var tests = (design.tests ?? new List<string>()).Select(id => MissionCatalog.Find(catalog.tests, id)).Where(t => t != null).ToList();
+            var tests = (design.tests ?? new List<string>()).Distinct().Select(id => MissionCatalog.Find(catalog.tests, id)).Where(t => t != null).ToList();
 
             var missing = new List<string>();
             if (objective == null) missing.Add("mission objective");
@@ -171,7 +171,7 @@ namespace SpaceApps.Mission
             if (objective != null && months > deadline)
                 Add(report, "schedule-overrun", ResourceKind.Time, Severity.Blocking,
                     Inv($"The mission reaches orbit after {months:0.#} months, later than the {deadline:0}-month deadline.") +
-                    (licenceMonths >= development ? " The licences are the slowest step: a camera needs a NOAA licence before the FCC can finish the radio one." : ""));
+                    (licenceMonths > Math.Max(Math.Max(c.minDevelopmentMonths.value, hardware), station?.months.value ?? 0f) ? " The licences are the slowest step: a camera needs a NOAA licence before the FCC can finish the radio one." : ""));
             if (objective != null && orbit != null && orbit.lifetimeMonths < objective.missionMonths)
                 Add(report, "orbit-lifetime", ResourceKind.Time, Severity.Blocking,
                     Inv($"In {orbit.name} air drag brings the satellite down after about {orbit.lifetimeMonths.value:0} months, but the mission needs {objective.missionMonths.value:0}."));
