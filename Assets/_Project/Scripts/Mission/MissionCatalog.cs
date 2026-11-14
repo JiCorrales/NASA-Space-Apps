@@ -130,6 +130,25 @@ namespace SpaceApps.Mission
         public EventModifier[] modifiers;
     }
 
+    /// <summary>One crew role: the decisions it owns and the goal it is scored on.
+    /// goalMetric: science-ratio, mass-power-margin, contact-margin or budget-schedule-margin.</summary>
+    [Serializable]
+    public class CrewRole : Entry
+    {
+        public string summary, goalMetric, goalText;
+        /// <summary>Decision groups, named as the MissionDesign fields (objective, format, instruments...).</summary>
+        public string[] decisions;
+        public Num goalTarget;
+    }
+
+    /// <summary>The roles and how the team score blends them.</summary>
+    [Serializable]
+    public class CrewSettings
+    {
+        public CrewRole[] roles;
+        public Num meanWeight, minWeight, allGoalsBonus, failedMissionFactor;
+    }
+
     /// <summary>A difficulty level: scales the objective's budget and deadline and the event deck's chances.</summary>
     [Serializable]
     public class Difficulty : Entry
@@ -154,6 +173,7 @@ namespace SpaceApps.Mission
         public VerificationTest[] tests;
         public Licence[] licences;
         public EventCard[] events;
+        public CrewSettings crew;
         public Difficulty[] difficulties;
 
         public const string ResourcePath = "MissionCatalog";

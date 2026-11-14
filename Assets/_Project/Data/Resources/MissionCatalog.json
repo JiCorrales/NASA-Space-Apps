@@ -1827,6 +1827,95 @@
    "mitigation": "Run the optional tests: thermal vacuum cycling, an engineering test unit and a FlatSat."
   }
  ],
+ "crew": {
+  "roles": [
+   {
+    "id": "pi",
+    "name": "Principal investigator",
+    "summary": "Owns the science: chooses the objective and the instruments.",
+    "decisions": [
+     "objective",
+     "instruments"
+    ],
+    "goalMetric": "science-ratio",
+    "goalText": "Return at least 1.5 times the science the objective needs.",
+    "goalTarget": {
+     "value": 1.5,
+     "source": "Game balance value chosen by the team, not NASA data; role goals await team approval",
+     "status": "game-balance"
+    }
+   },
+   {
+    "id": "spacecraft",
+    "name": "Spacecraft engineer",
+    "summary": "Builds the satellite: chooses the CubeSat size and the power system.",
+    "decisions": [
+     "format",
+     "power"
+    ],
+    "goalMetric": "mass-power-margin",
+    "goalText": "Keep at least 30% of the mass and of the power spare.",
+    "goalTarget": {
+     "value": 0.3,
+     "source": "Game balance value chosen by the team, not NASA data; role goals await team approval",
+     "status": "game-balance"
+    }
+   },
+   {
+    "id": "comms",
+    "name": "Communications and operations",
+    "summary": "Keeps contact with the satellite: chooses the radio and the ground station.",
+    "decisions": [
+     "radio",
+     "groundStation"
+    ],
+    "goalMetric": "contact-margin",
+    "goalText": "Need at most half of the daily contact time, so missed passes do not lose data.",
+    "goalTarget": {
+     "value": 0.5,
+     "source": "Game balance value chosen by the team, not NASA data; role goals await team approval",
+     "status": "game-balance"
+    }
+   },
+   {
+    "id": "systems",
+    "name": "Systems engineer and project manager",
+    "summary": "Holds the plan together: chooses the launch, the orbit and the tests.",
+    "decisions": [
+     "launch",
+     "orbit",
+     "tests"
+    ],
+    "goalMetric": "budget-schedule-margin",
+    "goalText": "Keep at least 15% of the budget and of the schedule in reserve.",
+    "goalTarget": {
+     "value": 0.15,
+     "source": "Game balance value chosen by the team, not NASA data; role goals await team approval",
+     "status": "game-balance"
+    }
+   }
+  ],
+  "meanWeight": {
+   "value": 0.5,
+   "source": "Game balance value chosen by the team, not NASA data; role goals await team approval",
+   "status": "game-balance"
+  },
+  "minWeight": {
+   "value": 0.5,
+   "source": "Game balance value chosen by the team, not NASA data; role goals await team approval",
+   "status": "game-balance"
+  },
+  "allGoalsBonus": {
+   "value": 20,
+   "source": "Game balance value chosen by the team, not NASA data; role goals await team approval",
+   "status": "game-balance"
+  },
+  "failedMissionFactor": {
+   "value": 0.5,
+   "source": "Game balance value chosen by the team, not NASA data; role goals await team approval",
+   "status": "game-balance"
+  }
+ },
  "difficulties": [
   {
    "id": "easy",
