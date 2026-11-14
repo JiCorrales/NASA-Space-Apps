@@ -883,6 +883,13 @@
    "id": "iss-deploy",
    "nasaCovered": true,
    "name": "Space station deployment",
+   "vehicle": "Falcon 9 cargo flight to the space station",
+   "summary": "Rides up as cargo; astronauts release it from the station 1 to 3 months later.",
+   "vehicleCapacityKg": {
+    "value": 10860,
+    "source": "NASA LSP Launch Vehicle Performance (elvperf.ksc.nasa.gov), LEO 51.6 deg 400 km, Falcon 9 RTLS: 10,860 kg",
+    "status": "nasa-verified"
+   },
    "orbits": [
     "leo-iss"
    ],
@@ -910,6 +917,13 @@
    "id": "nasa-rideshare",
    "nasaCovered": true,
    "name": "NASA rideshare",
+   "vehicle": "Falcon 9 (secondary payload)",
+   "summary": "Shares a NASA launch with a bigger mission; NASA pays and the main mission sets the date.",
+   "vehicleCapacityKg": {
+    "value": 11740,
+    "source": "NASA LSP Launch Vehicle Performance (elvperf.ksc.nasa.gov), SSO 500 km, Falcon 9 ASDS: 11,740 kg",
+    "status": "nasa-verified"
+   },
    "orbits": [
     "leo-500",
     "sso-550"
@@ -937,6 +951,13 @@
    "id": "commercial-broker",
    "nasaCovered": false,
    "name": "Commercial rideshare broker",
+   "vehicle": "Falcon 9 commercial rideshare",
+   "summary": "A broker sells the team a seat on a rideshare flight; the team pays.",
+   "vehicleCapacityKg": {
+    "value": 11740,
+    "source": "NASA LSP Launch Vehicle Performance (elvperf.ksc.nasa.gov), SSO 500 km, Falcon 9 ASDS: 11,740 kg",
+    "status": "nasa-verified"
+   },
    "orbits": [
     "leo-500",
     "sso-550"
@@ -965,6 +986,13 @@
    "id": "dedicated-small",
    "nasaCovered": false,
    "name": "Dedicated small launcher",
+   "vehicle": "Pegasus XL",
+   "summary": "A small rocket all to itself: the fastest launch, and the most expensive.",
+   "vehicleCapacityKg": {
+    "value": 260,
+    "source": "NASA LSP Launch Vehicle Performance (elvperf.ksc.nasa.gov), SSO 500 km, Pegasus XL: 260 kg",
+    "status": "nasa-verified"
+   },
    "orbits": [
     "leo-500",
     "sso-550"
@@ -1017,7 +1045,7 @@
    },
    "lifetimeMonths": {
     "value": 12,
-    "source": "Game balance value from general engineering knowledge, not NASA data",
+    "source": "Game balance value chosen by the team, not NASA data; NASA DAS 3.2 guide, section 3.1: below 600 km, re-entry within the 25-year limit",
     "status": "game-balance"
    },
    "contactMinutesPerDay": {
@@ -1029,7 +1057,7 @@
   {
    "id": "leo-500",
    "name": "Low orbit (500 km)",
-   "summary": "A little higher, so drag is weaker and the satellite lasts a few years.",
+   "summary": "A little higher, so drag is weaker and the satellite lasts a few years. Below 600 km it still falls back within the 25-year debris limit.",
    "altitudeKm": {
     "value": 500,
     "source": "Game balance value from general engineering knowledge, not NASA data",
@@ -1052,7 +1080,7 @@
    },
    "lifetimeMonths": {
     "value": 36,
-    "source": "Game balance value chosen by the team, not NASA data",
+    "source": "Game balance value chosen by the team, not NASA data; NASA DAS 3.2 guide, section 3.1: below 600 km, re-entry within the 25-year limit",
     "status": "game-balance"
    },
    "contactMinutesPerDay": {
@@ -1087,7 +1115,7 @@
    },
    "lifetimeMonths": {
     "value": 60,
-    "source": "Game balance value chosen by the team, not NASA data",
+    "source": "Game balance value chosen by the team, not NASA data; NASA DAS 3.2 guide, section 3.1: below 600 km, re-entry within the 25-year limit",
     "status": "game-balance"
    },
    "contactMinutesPerDay": {

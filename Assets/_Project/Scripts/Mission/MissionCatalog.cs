@@ -79,6 +79,9 @@ namespace SpaceApps.Mission
     {
         /// <summary>True when NASA's CubeSat Launch Initiative provides this launch, so NASA pays up to the launch cover.</summary>
         public bool nasaCovered;
+        /// <summary>The real rocket behind this option and what it can lift to orbit (NASA LSP data).</summary>
+        public string vehicle, summary;
+        public Num vehicleCapacityKg;
         public string[] orbits, dispensers;
         public Num pricePerUnitUsd, maxMassKg, waitMonths;
     }
