@@ -105,7 +105,10 @@ namespace SpaceApps.Mission
 
             // Communications: minutes of contact per day with the ground station.
             bool bandMatch = radio != null && station != null && station.bands.Contains(radio.band);
-            float contactMinutes = station != null ? station.passesPerDay * station.minutesPerPass : 0f;
+            // Contact depends on both: the orbit sets minutes per station, the station choice sets how many antennas.
+            // Before an orbit is chosen, the average over the catalog orbits is shown.
+            float minutesPerStation = orbit?.contactMinutesPerDay.value ?? catalog.orbits.Average(o => o.contactMinutesPerDay.value);
+            float contactMinutes = station != null ? minutesPerStation * station.stationCount : 0f;
             float downlinkMb = bandMatch ? radio.rateKbps * contactMinutes * 60f / 8f / 1000f : 0f;
             float dataMb = instruments.Sum(i => i.dataMbPerDay.value);
             float neededMinutes = radio != null && radio.rateKbps > 0 ? dataMb * 8f * 1000f / (radio.rateKbps * 60f) : 0f;

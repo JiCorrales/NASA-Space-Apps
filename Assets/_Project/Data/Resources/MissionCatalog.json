@@ -816,14 +816,9 @@
    "bands": [
     "uhf-437"
    ],
-   "passesPerDay": {
-    "value": 4,
+   "stationCount": {
+    "value": 1,
     "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
-   },
-   "minutesPerPass": {
-    "value": 8,
-    "source": "Game balance value from general engineering knowledge, not NASA data; 5-10 minutes per LEO pass",
     "status": "game-balance"
    },
    "costUsd": {
@@ -844,14 +839,9 @@
     "uhf-437",
     "s-band"
    ],
-   "passesPerDay": {
-    "value": 4,
+   "stationCount": {
+    "value": 1,
     "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
-   },
-   "minutesPerPass": {
-    "value": 8,
-    "source": "Game balance value from general engineering knowledge, not NASA data; 5-10 minutes per LEO pass",
     "status": "game-balance"
    },
    "costUsd": {
@@ -872,14 +862,9 @@
     "uhf-437",
     "s-band"
    ],
-   "passesPerDay": {
-    "value": 12,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
-   },
-   "minutesPerPass": {
-    "value": 8,
-    "source": "Game balance value from general engineering knowledge, not NASA data; 5-10 minutes per LEO pass",
+   "stationCount": {
+    "value": 3,
+    "source": "Game balance value chosen by the team, not NASA data; three stations 120 deg apart, as in the orbit script",
     "status": "game-balance"
    },
    "costUsd": {
@@ -1022,19 +1007,24 @@
     "status": "game-balance"
    },
    "sunlitFraction": {
-    "value": 0.62,
-    "source": "Game balance value from general engineering knowledge, not NASA data; about 35 of 92 minutes in eclipse",
-    "status": "game-balance"
+    "value": 0.61,
+    "source": "Computed by the team orbit script (Tools/orbits/orbits.py): worst case, 36.1 of 92.6 minutes in Earth's shadow",
+    "status": "derived"
    },
    "eclipseMinutes": {
-    "value": 35,
-    "source": "Game balance value from general engineering knowledge, not NASA data",
-    "status": "game-balance"
+    "value": 36.1,
+    "source": "Computed by the team orbit script (Tools/orbits/orbits.py): longest eclipse, cylindrical Earth shadow",
+    "status": "derived"
    },
    "lifetimeMonths": {
     "value": 12,
     "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
+   },
+   "contactMinutesPerDay": {
+    "value": 28.1,
+    "source": "Computed by the team orbit script (Tools/orbits/orbits.py): minutes per day above 10 deg for one station at 40 deg latitude",
+    "status": "derived"
    }
   },
   {
@@ -1052,25 +1042,30 @@
     "status": "game-balance"
    },
    "sunlitFraction": {
-    "value": 0.63,
-    "source": "Game balance value from general engineering knowledge, not NASA data",
-    "status": "game-balance"
+    "value": 0.62,
+    "source": "Computed by the team orbit script (Tools/orbits/orbits.py): worst case, 35.8 of 94.6 minutes in Earth's shadow",
+    "status": "derived"
    },
    "eclipseMinutes": {
-    "value": 35,
-    "source": "Game balance value from general engineering knowledge, not NASA data",
-    "status": "game-balance"
+    "value": 35.8,
+    "source": "Computed by the team orbit script (Tools/orbits/orbits.py): longest eclipse, cylindrical Earth shadow",
+    "status": "derived"
    },
    "lifetimeMonths": {
     "value": 36,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
+   },
+   "contactMinutesPerDay": {
+    "value": 37.8,
+    "source": "Computed by the team orbit script (Tools/orbits/orbits.py): minutes per day above 10 deg for one station at 40 deg latitude",
+    "status": "derived"
    }
   },
   {
    "id": "sso-550",
    "name": "Sun-synchronous orbit",
-   "summary": "Crosses each place at the same local time, so every image has the same lighting.",
+   "summary": "Crosses each place at the same local time, so every image has the same lighting, but passes over a mid-latitude station less often.",
    "altitudeKm": {
     "value": 550,
     "source": "Game balance value from general engineering knowledge, not NASA data; SSO 500-800 km",
@@ -1078,23 +1073,28 @@
    },
    "inclinationDeg": {
     "value": 97.6,
-    "source": "Game balance value from general engineering knowledge, not NASA data",
-    "status": "game-balance"
+    "source": "Computed by the team orbit script (Tools/orbits/orbits.py): inclination that keeps the orbit sun-synchronous at 550 km",
+    "status": "derived"
    },
    "sunlitFraction": {
-    "value": 0.7,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 0.63,
+    "source": "Computed by the team orbit script (Tools/orbits/orbits.py): worst case for a 10:30 orbit, 35.1 of 95.7 minutes in shadow",
+    "status": "derived"
    },
    "eclipseMinutes": {
-    "value": 30,
-    "source": "Game balance value chosen by the team, not NASA data",
-    "status": "game-balance"
+    "value": 35.1,
+    "source": "Computed by the team orbit script (Tools/orbits/orbits.py): longest eclipse over a year for a 10:30 orbit",
+    "status": "derived"
    },
    "lifetimeMonths": {
     "value": 60,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
+   },
+   "contactMinutesPerDay": {
+    "value": 20.6,
+    "source": "Computed by the team orbit script (Tools/orbits/orbits.py): minutes per day above 10 deg for one station at 40 deg latitude",
+    "status": "derived"
    }
   }
  ],
