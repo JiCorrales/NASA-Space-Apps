@@ -122,8 +122,8 @@ namespace SpaceApps.Game
             {
                 var g = (M.GroundStation)e;
                 return ($"Listens on: {string.Join(", ", g.bands)}.",
-                    new[] { S("Passes", N(g.passesPerDay) + "/day"), S("Pass", N(g.minutesPerPass) + " min"), S("Cost", Usd(g.costUsd)), S("Setup", N(g.months) + " mo") },
-                    Source(g.passesPerDay, g.minutesPerPass, g.costUsd, g.months));
+                    new[] { S("Antennas", N(g.stationCount)), S("Cost", Usd(g.costUsd)), S("Setup", N(g.months) + " mo") },
+                    Source(g.stationCount, g.costUsd, g.months));
             },
         };
 
@@ -135,7 +135,7 @@ namespace SpaceApps.Game
             Describe = (c, e) =>
             {
                 var l = (M.LaunchOption)e;
-                return ($"Goes to: {OrbitNames(c, l.orbits)}.",
+                return ($"Goes to: {OrbitNames(c, l.orbits)}." + (l.nasaCovered ? " NASA pays the launch up to its cover." : ""),
                     new[] { S("Price", Usd(l.pricePerUnitUsd) + "/U"), S("Max", N(l.maxMassKg) + " kg"), S("Wait", N(l.waitMonths) + " mo") },
                     Source(l.pricePerUnitUsd, l.maxMassKg, l.waitMonths));
             },
@@ -150,8 +150,8 @@ namespace SpaceApps.Game
             {
                 var o = (M.Orbit)e;
                 return (o.summary,
-                    new[] { S("Altitude", N(o.altitudeKm) + " km"), S("Sunlit", Pct(o.sunlitFraction)), S("Lifetime", N(o.lifetimeMonths) + " mo") },
-                    Source(o.altitudeKm, o.inclinationDeg, o.sunlitFraction, o.eclipseMinutes, o.lifetimeMonths));
+                    new[] { S("Altitude", N(o.altitudeKm) + " km"), S("Sunlit", Pct(o.sunlitFraction)), S("Contact", N(o.contactMinutesPerDay) + " min/d"), S("Lifetime", N(o.lifetimeMonths) + " mo") },
+                    Source(o.altitudeKm, o.inclinationDeg, o.sunlitFraction, o.eclipseMinutes, o.lifetimeMonths, o.contactMinutesPerDay));
             },
         };
 
