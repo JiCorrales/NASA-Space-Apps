@@ -22,47 +22,47 @@
   },
   "busMassKg": {
    "value": 0.5,
-   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "source": "Game balance value chosen by the team, not NASA data",
    "status": "game-balance"
   },
   "busUnits": {
    "value": 0.3,
-   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "source": "Game balance value chosen by the team, not NASA data",
    "status": "game-balance"
   },
   "busPowerW": {
    "value": 1.0,
-   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "source": "Game balance value chosen by the team, not NASA data",
    "status": "game-balance"
   },
   "busCostUsd": {
    "value": 50000,
-   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "source": "Game balance value chosen by the team, not NASA data",
    "status": "game-balance"
   },
   "batteryDepthOfDischarge": {
    "value": 0.6,
-   "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+   "source": "Game balance value from general engineering knowledge, not NASA data",
    "status": "game-balance"
   },
   "baseReliability": {
    "value": 0.65,
-   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "source": "Game balance value chosen by the team, not NASA data",
    "status": "game-balance"
   },
   "maxReliability": {
    "value": 0.95,
-   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "source": "Game balance value chosen by the team, not NASA data",
    "status": "game-balance"
   },
   "preferredOrbitBonus": {
    "value": 1.25,
-   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "source": "Game balance value chosen by the team, not NASA data",
    "status": "game-balance"
   },
   "healthyMarginMax": {
    "value": 0.4,
-   "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); typical conceptual margins 20-30%",
+   "source": "Game balance value from general engineering knowledge, not NASA data; typical conceptual margins 20-30%",
    "status": "game-balance"
   }
  },
@@ -84,12 +84,12 @@
    ],
    "minScience": {
     "value": 15,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "budgetUsd": {
     "value": 500000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "deadlineMonths": {
@@ -99,7 +99,7 @@
    },
    "missionMonths": {
     "value": 12,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -120,22 +120,22 @@
    ],
    "minScience": {
     "value": 10,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "budgetUsd": {
     "value": 250000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "deadlineMonths": {
     "value": 20,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "missionMonths": {
     "value": 6,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -156,22 +156,22 @@
    ],
    "minScience": {
     "value": 12,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "budgetUsd": {
     "value": 450000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "deadlineMonths": {
     "value": 24,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "missionMonths": {
     "value": 12,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -190,22 +190,22 @@
    ],
    "minScience": {
     "value": 45,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "budgetUsd": {
     "value": 900000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "deadlineMonths": {
     "value": 30,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "missionMonths": {
     "value": 24,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   }
@@ -226,17 +226,17 @@
    },
    "structureMassKg": {
     "value": 0.1,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 10000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "devMonths": {
     "value": 3,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dispensers": [
@@ -259,17 +259,17 @@
    },
    "structureMassKg": {
     "value": 0.3,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 30000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "devMonths": {
     "value": 4,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dispensers": [
@@ -292,17 +292,17 @@
    },
    "structureMassKg": {
     "value": 0.6,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 60000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "devMonths": {
     "value": 6,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dispensers": [
@@ -320,42 +320,42 @@
    "isImager": true,
    "massKg": {
     "value": 0.2,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "units": {
     "value": 0.5,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "powerW": {
     "value": 2.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dutyCycle": {
     "value": 0.25,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dataMbPerDay": {
     "value": 15,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 40000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "science": {
     "value": 15,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "devMonths": {
     "value": 2,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -368,42 +368,42 @@
    "isImager": true,
    "massKg": {
     "value": 0.5,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "units": {
     "value": 1.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "powerW": {
     "value": 5.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dutyCycle": {
     "value": 0.25,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dataMbPerDay": {
     "value": 200,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 150000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "science": {
     "value": 35,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "devMonths": {
     "value": 4,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -416,42 +416,42 @@
    "isImager": false,
    "massKg": {
     "value": 0.1,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "units": {
     "value": 0.25,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "powerW": {
     "value": 0.4,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dutyCycle": {
     "value": 1.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dataMbPerDay": {
     "value": 1,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 15000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "science": {
     "value": 10,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "devMonths": {
     "value": 1,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -464,42 +464,42 @@
    "isImager": false,
    "massKg": {
     "value": 0.15,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "units": {
     "value": 0.25,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "powerW": {
     "value": 0.6,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dutyCycle": {
     "value": 1.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dataMbPerDay": {
     "value": 1.5,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 30000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "science": {
     "value": 12,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "devMonths": {
     "value": 2,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -512,42 +512,42 @@
    "isImager": false,
    "massKg": {
     "value": 0.3,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "units": {
     "value": 0.5,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "powerW": {
     "value": 1.5,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dutyCycle": {
     "value": 1.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dataMbPerDay": {
     "value": 20,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 70000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "science": {
     "value": 22,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "devMonths": {
     "value": 3,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -560,42 +560,42 @@
    "isImager": false,
    "massKg": {
     "value": 1.5,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "units": {
     "value": 2.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "powerW": {
     "value": 10.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dutyCycle": {
     "value": 0.5,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "dataMbPerDay": {
     "value": 300,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 300000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "science": {
     "value": 45,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "devMonths": {
     "value": 6,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   }
@@ -606,27 +606,27 @@
    "name": "Body-mounted cells (small)",
    "panelW": {
     "value": 2.5,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "batteryWh": {
     "value": 10,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "massKg": {
     "value": 0.1,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 8000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "minUnits": {
     "value": 1,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -635,27 +635,27 @@
    "name": "Body-mounted cells",
    "panelW": {
     "value": 7.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "batteryWh": {
     "value": 20,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "massKg": {
     "value": 0.25,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 20000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "minUnits": {
     "value": 3,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -669,22 +669,22 @@
    },
    "batteryWh": {
     "value": 40,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "massKg": {
     "value": 0.5,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 50000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "minUnits": {
     "value": 3,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -698,22 +698,22 @@
    },
    "batteryWh": {
     "value": 5,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "massKg": {
     "value": 0.4,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 35000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "minUnits": {
     "value": 3,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -722,27 +722,27 @@
    "name": "Large deployable panels",
    "panelW": {
     "value": 30.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "batteryWh": {
     "value": 80,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "massKg": {
     "value": 1.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 100000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "minUnits": {
     "value": 6,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   }
@@ -759,22 +759,22 @@
    },
    "rateKbps": {
     "value": 9.6,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
    },
    "txPowerW": {
     "value": 2.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "massKg": {
     "value": 0.1,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 10000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -784,27 +784,27 @@
    "band": "s-band",
    "frequencyMHz": {
     "value": 2200,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
    },
    "rateKbps": {
     "value": 1000,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
    },
    "txPowerW": {
     "value": 5.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "massKg": {
     "value": 0.2,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 40000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   }
@@ -818,17 +818,17 @@
    ],
    "passesPerDay": {
     "value": 4,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "minutesPerPass": {
     "value": 8,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); 5-10 minutes per LEO pass",
+    "source": "Game balance value from general engineering knowledge, not NASA data; 5-10 minutes per LEO pass",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 15000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "months": {
@@ -846,17 +846,17 @@
    ],
    "passesPerDay": {
     "value": 4,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "minutesPerPass": {
     "value": 8,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); 5-10 minutes per LEO pass",
+    "source": "Game balance value from general engineering knowledge, not NASA data; 5-10 minutes per LEO pass",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 90000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "months": {
@@ -874,17 +874,17 @@
    ],
    "passesPerDay": {
     "value": 12,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "minutesPerPass": {
     "value": 8,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); 5-10 minutes per LEO pass",
+    "source": "Game balance value from general engineering knowledge, not NASA data; 5-10 minutes per LEO pass",
     "status": "game-balance"
    },
    "costUsd": {
     "value": 150000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "months": {
@@ -908,12 +908,12 @@
    ],
    "pricePerUnitUsd": {
     "value": 60000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "maxMassKg": {
     "value": 6.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "waitMonths": {
@@ -945,7 +945,7 @@
    },
    "waitMonths": {
     "value": 9,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -963,17 +963,17 @@
    ],
    "pricePerUnitUsd": {
     "value": 110000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "maxMassKg": {
     "value": 12.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "waitMonths": {
     "value": 6,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -991,17 +991,17 @@
    ],
    "pricePerUnitUsd": {
     "value": 180000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "maxMassKg": {
     "value": 12.0,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "waitMonths": {
     "value": 3,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   }
@@ -1013,27 +1013,27 @@
    "summary": "Easy to reach from the space station, but air drag brings the satellite down within about a year.",
    "altitudeKm": {
     "value": 400,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
    },
    "inclinationDeg": {
     "value": 51.6,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
    },
    "sunlitFraction": {
     "value": 0.62,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); about 35 of 92 minutes in eclipse",
+    "source": "Game balance value from general engineering knowledge, not NASA data; about 35 of 92 minutes in eclipse",
     "status": "game-balance"
    },
    "eclipseMinutes": {
     "value": 35,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
    },
    "lifetimeMonths": {
     "value": 12,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
    }
   },
@@ -1043,27 +1043,27 @@
    "summary": "A little higher, so drag is weaker and the satellite lasts a few years.",
    "altitudeKm": {
     "value": 500,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
    },
    "inclinationDeg": {
     "value": 45,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "sunlitFraction": {
     "value": 0.63,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
    },
    "eclipseMinutes": {
     "value": 35,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
    },
    "lifetimeMonths": {
     "value": 36,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -1073,27 +1073,27 @@
    "summary": "Crosses each place at the same local time, so every image has the same lighting.",
    "altitudeKm": {
     "value": 550,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); SSO 500-800 km",
+    "source": "Game balance value from general engineering knowledge, not NASA data; SSO 500-800 km",
     "status": "game-balance"
    },
    "inclinationDeg": {
     "value": 97.6,
-    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "source": "Game balance value from general engineering knowledge, not NASA data",
     "status": "game-balance"
    },
    "sunlitFraction": {
     "value": 0.7,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "eclipseMinutes": {
     "value": 30,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "lifetimeMonths": {
     "value": 60,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   }
@@ -1106,17 +1106,17 @@
    "summary": "Required for every launch; shows the satellite survives the ride up.",
    "costUsd": {
     "value": 20000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "months": {
     "value": 1,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "reliabilityBonus": {
     "value": 0.05,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) section 6.9.2"
@@ -1128,17 +1128,17 @@
    "summary": "Required on almost all missions; bakes out gases that could foul other payloads.",
    "costUsd": {
     "value": 15000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "months": {
     "value": 1,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "reliabilityBonus": {
     "value": 0.05,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) section 6.9.3"
@@ -1150,17 +1150,17 @@
    "summary": "Required; proves the timers and electrical inhibits work after release.",
    "costUsd": {
     "value": 2000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "months": {
     "value": 0.5,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "reliabilityBonus": {
     "value": 0.05,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) section 2.11"
@@ -1172,17 +1172,17 @@
    "summary": "Optional internal test of hot and cold cycles; it does not replace the bakeout.",
    "costUsd": {
     "value": 25000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "months": {
     "value": 1,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "reliabilityBonus": {
     "value": 0.05,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) section 6.9.3"
@@ -1194,17 +1194,17 @@
    "summary": "A copy of the flight unit that never flies, used for practice.",
    "costUsd": {
     "value": 40000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "months": {
     "value": 2,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "reliabilityBonus": {
     "value": 0.08,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) appendix B"
@@ -1216,17 +1216,17 @@
    "summary": "All the electronics on a table, without the structure, to test early.",
    "costUsd": {
     "value": 10000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "months": {
     "value": 1,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "reliabilityBonus": {
     "value": 0.05,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
    "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) appendix B"
@@ -1245,7 +1245,7 @@
    },
    "costUsd": {
     "value": 1000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   },
@@ -1261,7 +1261,7 @@
    },
    "costUsd": {
     "value": 1000,
-    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    }
   }
