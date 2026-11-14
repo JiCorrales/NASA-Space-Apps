@@ -1256,8 +1256,8 @@
    "summary": "A satellite with a camera needs NOAA's licence, and the FCC waits for it.",
    "months": {
     "value": 5,
-    "source": "CubeSat 101 (NASA CSLI, 2017) section 2.8 p.20-21: NOAA licence must come before the FCC one; game uses the same 4-6 month range",
-    "status": "derived"
+    "source": "CubeSat 101 (NASA CSLI, 2017) section 2.8 p.21 only calls the NOAA process lengthy; the team chose the duration",
+    "status": "game-balance"
    },
    "costUsd": {
     "value": 1000,
