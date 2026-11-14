@@ -30,6 +30,23 @@ Un **juego interactivo** para **diseñar, gestionar y simular una misión espaci
 | Reto VR Space Apps 2023 | [`fuentes/08`](fuentes/08-space-apps-2023-vr-challenge.md) | Patrón técnico de visualización y lista de librerías/recursos |
 | CSA – juegos digitales | [`fuentes/09`](fuentes/09-csa-digital-games.md) | Confirma que no hay juegos de *diseño* de misiones; inspiración para operaciones/uso de datos |
 
+### Fuentes adicionales de NASA para los números del juego
+| Necesidad del juego | Ficha | Datos |
+|---|---|---|
+| Catálogo de componentes (potencia, propulsión, ADCS, comunicaciones, aviónica, térmico, estructuras) | [`fuentes/10`](fuentes/10-small-spacecraft-soa-2026.md) | `pdf/small-spacecraft-soa-2026.pdf` |
+| Capacidad de lanzadores por órbita | [`fuentes/11`](fuentes/11-lsp-launch-vehicle-performance.md) | `datos/lsp-launch-vehicle-performance.csv` |
+| Δv, duración y ventanas a planetas y asteroides | [`fuentes/12`](fuentes/12-trajectory-browser.md) | `datos/trajectory-browser-transfers-2026-2036.csv` |
+| Comunicaciones de espacio profundo | [`fuentes/13`](fuentes/13-dsn-link-design-handbook.md) | `pdf/dsn-810-005/` |
+| Método de costes y reservas | [`fuentes/14`](fuentes/14-cost-estimating-handbook.md) | `pdf/nasa-cost-estimating-handbook-v4-main-body.pdf` |
+| Fases, revisiones y TRL | [`fuentes/15`](fuentes/15-systems-engineering-handbook.md) | `pdf/nasa-systems-engineering-handbook-rev2.pdf` |
+| Misiones reales para comparar y calibrar | [`fuentes/16`](fuentes/16-nssdca-master-catalog.md) | `datos/nssdca-reference-missions.csv` |
+| Eventos aleatorios de clima espacial | [`fuentes/17`](fuentes/17-donki-space-weather.md) | `datos/donki/` |
+| Fin de vida y basura orbital (regla de 25 años) | [`fuentes/18`](fuentes/18-debris-assessment-software.md) | `pdf/das-3.2-users-guide.pdf` |
+| Posiciones de los planetas | [`fuentes/19`](fuentes/19-jpl-horizons.md) | `datos/horizons-elements-2026-11-14.csv` |
+| Fallos reales para eventos | [`fuentes/20`](fuentes/20-nasa-lessons-learned-llis.md) | (búsqueda web) |
+| Resultados científicos de exoplanetas | [`fuentes/21`](fuentes/21-exoplanet-archive.md) | `datos/exoplanet-archive-pscomppars.csv` |
+| Modelos 3D, texturas e imágenes | [`fuentes/22`](fuentes/22-recursos-visuales.md) | (sin descargar) |
+
 ## 3. Conceptos que el juego debería enseñar (con su fuente)
 1. **Los requisitos científicos dirigen el diseño** (Webb game; "empezar por el final" en el webinar NASA).
 2. **Una misión = 4 segmentos** que deben funcionar juntos (webinar NASA).
@@ -74,6 +91,7 @@ Tiempo ─► fases de desarrollo (CubeSat 101: 18–24 meses típicos) ; vida o
 
 ## 6. Datos de referencia para balancear el juego
 > ⚠️ Esta sección **no** procede de los recursos del reto: son valores aproximados de conocimiento general de ingeniería espacial, para arrancar. Verificar o precalcular con GMAT antes de presentarlos como datos reales.
+> **Ya hay datos de NASA que sustituyen buena parte de esta sección**: capacidad de lanzadores ([`fuentes/11`](fuentes/11-lsp-launch-vehicle-performance.md)), Δv interplanetarios ([`fuentes/12`](fuentes/12-trajectory-browser.md)), elementos orbitales ([`fuentes/19`](fuentes/19-jpl-horizons.md)) y regla de reentrada ([`fuentes/18`](fuentes/18-debris-assessment-software.md)). Usar esos en el juego.
 
 **Órbitas**
 | Órbita | Altitud aprox. | Periodo | Características para el juego |

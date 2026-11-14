@@ -2,6 +2,7 @@
 
 > Copia en markdown del texto de la pestaña *Resources* de la página oficial del reto (antes `Resources.txt`), copiado a mano por el equipo el 2026-11-14. Texto original en inglés, sin cambios salvo el formato.
 > Confirma la lista de 9 recursos que `../02-recursos-nasa.md` marcaba como [SIN VERIFICAR] contra la fuente oficial.
+> **Comprobado en la web oficial** (https://www.spaceappschallenge.org/2026/challenges/space-mission-design-game/?tab=resources) el 2026-11-14: el contenido es idéntico; no se han añadido recursos.
 
 *NASA does not endorse any non-U.S. Government entity and is not responsible for information contained on non-U.S. Government websites. For non-U.S. Government websites, participants must comply with any data use parameters of that specific website.*
 
