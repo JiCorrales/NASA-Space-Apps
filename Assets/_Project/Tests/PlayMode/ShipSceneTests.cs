@@ -42,14 +42,15 @@ namespace SpaceApps.Tests.PlayMode
             Assert.AreEqual(selector.desktopRig.GetComponentInChildren<Camera>(), Camera.main);
         }
 
-        [Test]
-        public void SelectorEnablesOnlyTheXrRigWhenXrIsActive()
+        // One of each, in both modes: a second listener, camera or EventSystem is a classic VR template mix-up.
+        [UnityTest]
+        public IEnumerator ExactlyOneListenerCameraAndEventSystemInEitherMode([Values(false, true)] bool xr)
         {
-            var selector = Find<RigSelector>();
-            selector.Apply(true);
-            Assert.IsTrue(selector.xrRig.activeSelf);
-            Assert.IsFalse(selector.desktopRig.activeSelf);
-            selector.Apply(false);
+            Find<RigSelector>().Apply(xr);
+            yield return null;
+            Assert.AreEqual(1, UnityEngine.Object.FindObjectsByType<AudioListener>(FindObjectsSortMode.None).Count(l => l.isActiveAndEnabled), "audio listeners");
+            Assert.AreEqual(1, UnityEngine.Object.FindObjectsByType<EventSystem>(FindObjectsSortMode.None).Count(e => e.isActiveAndEnabled), "event systems");
+            Assert.AreEqual(1, UnityEngine.Object.FindObjectsByType<Camera>(FindObjectsSortMode.None).Count(c => c.isActiveAndEnabled && c.CompareTag("MainCamera")), "main cameras");
         }
 
         [UnityTest]
@@ -97,6 +98,38 @@ namespace SpaceApps.Tests.PlayMode
                                && Vector3.Dot(d.transform.forward, toDashboard) > 0f; // facing the viewer
                     }), $"no dashboard in view at {screen.stationTitle}");
             }
+        }
+
+        sealed class FakeStation : IStationViewModel
+        {
+            public string Title { get; set; }
+            public string Explanation => "";
+            public IReadOnlyList<string> Steps => Array.Empty<string>();
+            public int StepIndex => 0;
+            public IReadOnlyList<StationOption> Options => Array.Empty<StationOption>();
+            public bool MultiSelect => false;
+            public string Details => "";
+            public string Status => "";
+            public bool StatusIsProblem => false;
+            public string ActionLabel => null;
+            public event Action Changed;
+            public void Raise() => Changed?.Invoke();
+            public void SelectStep(int index) { }
+            public void Select(int index) { }
+            public void Act() { }
+        }
+
+        [Test]
+        public void RebindingStopsListeningToTheOldViewModel()
+        {
+            var screen = Ui.Screens().First();
+            var old = new FakeStation { Title = "Old" };
+            var current = new FakeStation { Title = "Current" };
+            screen.Bind(old);
+            screen.Bind(current);
+            old.Title = "Stale";
+            old.Raise();
+            Assert.AreEqual("Current", screen.titleText.text);
         }
 
         sealed class FakeResources : IResourceDashboardViewModel
