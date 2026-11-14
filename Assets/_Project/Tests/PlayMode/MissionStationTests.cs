@@ -156,6 +156,9 @@ namespace SpaceApps.Tests.PlayMode
                     screen.ViewModel.SelectStep(step);
                     yield return null; // layout
                     foreach (var row in screen.Rows.Where(r => r.gameObject.activeSelf))
+                        Assert.IsTrue(Inside(screen.optionsRoot, (RectTransform)row.transform),
+                            $"{screen.stationTitle}: option '{row.nameText.text}' falls outside the list");
+                    foreach (var row in screen.Rows.Where(r => r.gameObject.activeSelf))
                         foreach (var text in new[] { row.nameText, row.statsText })
                         {
                             text.ForceMeshUpdate();
@@ -163,6 +166,15 @@ namespace SpaceApps.Tests.PlayMode
                             Assert.IsFalse(text.isTextTruncated, $"{screen.stationTitle}: {text.name} '{text.text}' is cut off");
                         }
                 }
+        }
+
+        static bool Inside(RectTransform area, RectTransform child)
+        {
+            var corners = new Vector3[4];
+            child.GetWorldCorners(corners);
+            var r = area.rect;
+            return corners.Select(c => (Vector2)area.InverseTransformPoint(c))
+                .All(p => p.x >= r.xMin - 0.5f && p.x <= r.xMax + 0.5f && p.y >= r.yMin - 0.5f && p.y <= r.yMax + 0.5f);
         }
     }
 }
