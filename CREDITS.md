@@ -26,3 +26,6 @@ Every resource in this project that the team did not create. Add the entry befor
 
 | Asset | Author | Licence | Source | Location in the repo |
 |---|---|---|---|---|
+| Unity VR project template 10.0.0: sample scene, template assets and project settings | Unity Technologies | Unity Companion License | Unity Hub template `com.unity.template.vr` | `Assets/VRTemplateAssets`, `Assets/Scenes`, `Assets/Settings`, `Assets/XR`, `Assets/XRI`, `Assets/CompositionLayers` |
+| XR Interaction Toolkit 3.5.1 and XR Hands 1.8.1 package samples | Unity Technologies | Unity Companion License | Imported by the Unity VR project template | `Assets/Samples` |
+| TextMesh Pro essential resources, including the Liberation Sans font | Unity Technologies; font by the Liberation Fonts authors | Unity Companion License; font under the SIL Open Font License 1.1 (`Assets/TextMesh Pro/Fonts/LiberationSans - OFL.txt`) | Imported by the Unity VR project template | `Assets/TextMesh Pro` |
