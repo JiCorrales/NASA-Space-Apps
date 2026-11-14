@@ -1,0 +1,1265 @@
+{
+ "constants": {
+  "nasaLaunchCoverUsd": {
+   "value": 300000,
+   "source": "CubeSat 101 (NASA CSLI, 2017), section 2.2 p.11: NASA covers launch up to $300,000",
+   "status": "nasa-verified"
+  },
+  "reserveFraction": {
+   "value": 0.1,
+   "source": "CubeSat 101 (NASA CSLI, 2017), section 2.2 p.13: reserves of at least 10% of the budget",
+   "status": "nasa-verified"
+  },
+  "minDevelopmentMonths": {
+   "value": 9,
+   "source": "CubeSat 101 (NASA CSLI, 2017), chapter 2 p.9: designed, built, tested and delivered in as little as 9 months",
+   "status": "nasa-verified"
+  },
+  "baselineMonths": {
+   "value": 4,
+   "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9-17: concept development (1-6 months) and proposal (3-4 months), lower ends combined",
+   "status": "derived"
+  },
+  "busMassKg": {
+   "value": 0.5,
+   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "status": "game-balance"
+  },
+  "busUnits": {
+   "value": 0.3,
+   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "status": "game-balance"
+  },
+  "busPowerW": {
+   "value": 1.0,
+   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "status": "game-balance"
+  },
+  "busCostUsd": {
+   "value": 50000,
+   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "status": "game-balance"
+  },
+  "batteryDepthOfDischarge": {
+   "value": 0.6,
+   "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+   "status": "game-balance"
+  },
+  "baseReliability": {
+   "value": 0.65,
+   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "status": "game-balance"
+  },
+  "maxReliability": {
+   "value": 0.95,
+   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "status": "game-balance"
+  },
+  "preferredOrbitBonus": {
+   "value": 1.25,
+   "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+   "status": "game-balance"
+  },
+  "healthyMarginMax": {
+   "value": 0.4,
+   "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); typical conceptual margins 20-30%",
+   "status": "game-balance"
+  }
+ },
+ "objectives": [
+  {
+   "id": "earth-imaging",
+   "name": "Earth imaging",
+   "summary": "Photograph farmland and coastlines to track how land changes over a year.",
+   "requiredTags": [
+    "imaging"
+   ],
+   "allowedOrbits": [
+    "leo-iss",
+    "leo-500",
+    "sso-550"
+   ],
+   "preferredOrbits": [
+    "sso-550"
+   ],
+   "minScience": {
+    "value": 15,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "budgetUsd": {
+    "value": 500000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "deadlineMonths": {
+    "value": 24,
+    "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9: typical development is 18-24 months; game uses the upper end",
+    "status": "game-balance"
+   },
+   "missionMonths": {
+    "value": 12,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "radiation-survey",
+   "name": "Radiation survey",
+   "summary": "Measure the radiation dose a spacecraft receives in low Earth orbit.",
+   "requiredTags": [
+    "radiation"
+   ],
+   "allowedOrbits": [
+    "leo-iss",
+    "leo-500",
+    "sso-550"
+   ],
+   "preferredOrbits": [
+    "leo-500"
+   ],
+   "minScience": {
+    "value": 10,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "budgetUsd": {
+    "value": 250000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "deadlineMonths": {
+    "value": 20,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "missionMonths": {
+    "value": 6,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "space-weather",
+   "name": "Space weather watch",
+   "summary": "Track how solar storms disturb Earth's magnetic field.",
+   "requiredTags": [
+    "space-weather"
+   ],
+   "allowedOrbits": [
+    "leo-iss",
+    "leo-500",
+    "sso-550"
+   ],
+   "preferredOrbits": [
+    "sso-550"
+   ],
+   "minScience": {
+    "value": 12,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "budgetUsd": {
+    "value": 450000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "deadlineMonths": {
+    "value": 24,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "missionMonths": {
+    "value": 12,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "soil-moisture",
+   "name": "Soil moisture map",
+   "summary": "Map how wet the soil is to help farmers plan for drought.",
+   "requiredTags": [
+    "soil-moisture"
+   ],
+   "allowedOrbits": [
+    "sso-550"
+   ],
+   "preferredOrbits": [
+    "sso-550"
+   ],
+   "minScience": {
+    "value": 45,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "budgetUsd": {
+    "value": 1300000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "deadlineMonths": {
+    "value": 30,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "missionMonths": {
+    "value": 24,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  }
+ ],
+ "formats": [
+  {
+   "id": "1u",
+   "name": "1U CubeSat",
+   "units": {
+    "value": 1,
+    "source": "CubeSat 101 (NASA CSLI, 2017), section 1.1 p.4: the 1U unit, a 10 cm cube",
+    "status": "nasa-verified"
+   },
+   "maxMassKg": {
+    "value": 1.33,
+    "source": "CubeSat 101 (NASA CSLI, 2017), section 1.1 p.4: 1U mass of approximately 1 to 1.33 kg",
+    "status": "nasa-verified"
+   },
+   "structureMassKg": {
+    "value": 0.1,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 10000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "devMonths": {
+    "value": 3,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dispensers": [
+    "p-pod",
+    "6u-dispenser"
+   ]
+  },
+  {
+   "id": "3u",
+   "name": "3U CubeSat",
+   "units": {
+    "value": 3,
+    "source": "CubeSat 101 (NASA CSLI, 2017), section 1.1 p.4, figure 2: 3U, 10 x 10 x 34 cm",
+    "status": "nasa-verified"
+   },
+   "maxMassKg": {
+    "value": 4.0,
+    "source": "3 x 1.33 kg per unit, from CubeSat 101 (NASA CSLI, 2017) section 1.1 p.4",
+    "status": "derived"
+   },
+   "structureMassKg": {
+    "value": 0.3,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 30000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "devMonths": {
+    "value": 4,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dispensers": [
+    "p-pod",
+    "6u-dispenser"
+   ]
+  },
+  {
+   "id": "6u",
+   "name": "6U CubeSat",
+   "units": {
+    "value": 6,
+    "source": "CubeSat 101 (NASA CSLI, 2017), section 1.2.2 p.6: two 3U side by side",
+    "status": "nasa-verified"
+   },
+   "maxMassKg": {
+    "value": 8.0,
+    "source": "6 x 1.33 kg per unit, from CubeSat 101 (NASA CSLI, 2017) section 1.1 p.4",
+    "status": "derived"
+   },
+   "structureMassKg": {
+    "value": 0.6,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 60000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "devMonths": {
+    "value": 6,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dispensers": [
+    "6u-dispenser"
+   ]
+  }
+ ],
+ "instruments": [
+  {
+   "id": "camera-basic",
+   "name": "Basic camera",
+   "tags": [
+    "imaging"
+   ],
+   "isImager": true,
+   "massKg": {
+    "value": 0.2,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "units": {
+    "value": 0.5,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "powerW": {
+    "value": 2.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dutyCycle": {
+    "value": 0.25,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dataMbPerDay": {
+    "value": 15,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 40000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "science": {
+    "value": 15,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "devMonths": {
+    "value": 2,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "camera-multispectral",
+   "name": "Multispectral camera",
+   "tags": [
+    "imaging"
+   ],
+   "isImager": true,
+   "massKg": {
+    "value": 0.5,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "units": {
+    "value": 1.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "powerW": {
+    "value": 5.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dutyCycle": {
+    "value": 0.25,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dataMbPerDay": {
+    "value": 200,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 150000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "science": {
+    "value": 35,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "devMonths": {
+    "value": 4,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "dosimeter",
+   "name": "Radiation dosimeter",
+   "tags": [
+    "radiation"
+   ],
+   "isImager": false,
+   "massKg": {
+    "value": 0.1,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "units": {
+    "value": 0.25,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "powerW": {
+    "value": 0.4,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dutyCycle": {
+    "value": 1.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dataMbPerDay": {
+    "value": 1,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 15000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "science": {
+    "value": 10,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "devMonths": {
+    "value": 1,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "magnetometer",
+   "name": "Magnetometer",
+   "tags": [
+    "space-weather"
+   ],
+   "isImager": false,
+   "massKg": {
+    "value": 0.15,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "units": {
+    "value": 0.25,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "powerW": {
+    "value": 0.6,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dutyCycle": {
+    "value": 1.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dataMbPerDay": {
+    "value": 1.5,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 30000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "science": {
+    "value": 12,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "devMonths": {
+    "value": 2,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "plasma-probe",
+   "name": "Plasma probe",
+   "tags": [
+    "space-weather"
+   ],
+   "isImager": false,
+   "massKg": {
+    "value": 0.3,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "units": {
+    "value": 0.5,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "powerW": {
+    "value": 1.5,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dutyCycle": {
+    "value": 1.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dataMbPerDay": {
+    "value": 20,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 70000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "science": {
+    "value": 22,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "devMonths": {
+    "value": 3,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "radiometer",
+   "name": "Microwave radiometer",
+   "tags": [
+    "soil-moisture"
+   ],
+   "isImager": false,
+   "massKg": {
+    "value": 1.5,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "units": {
+    "value": 2.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "powerW": {
+    "value": 10.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dutyCycle": {
+    "value": 0.5,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "dataMbPerDay": {
+    "value": 300,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 300000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "science": {
+    "value": 45,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "devMonths": {
+    "value": 6,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  }
+ ],
+ "power": [
+  {
+   "id": "body-1u",
+   "name": "Body-mounted cells (small)",
+   "panelW": {
+    "value": 2.5,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "batteryWh": {
+    "value": 10,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "massKg": {
+    "value": 0.1,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 8000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "minUnits": {
+    "value": 1,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "body-3u",
+   "name": "Body-mounted cells",
+   "panelW": {
+    "value": 7.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "batteryWh": {
+    "value": 20,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "massKg": {
+    "value": 0.25,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 20000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "minUnits": {
+    "value": 3,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "deployable-3u",
+   "name": "Deployable panels",
+   "panelW": {
+    "value": 14.0,
+    "source": "2 x body-3u: CubeSat 101 (NASA CSLI, 2017) ChargerSat-1 sidebar in the table of contents, deployable panels nearly double the power input",
+    "status": "derived"
+   },
+   "batteryWh": {
+    "value": 40,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "massKg": {
+    "value": 0.5,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 50000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "minUnits": {
+    "value": 3,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "deployable-lite",
+   "name": "Deployable panels, small battery",
+   "panelW": {
+    "value": 14.0,
+    "source": "2 x body-3u: CubeSat 101 (NASA CSLI, 2017) ChargerSat-1 sidebar in the table of contents, deployable panels nearly double the power input",
+    "status": "derived"
+   },
+   "batteryWh": {
+    "value": 5,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "massKg": {
+    "value": 0.4,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 35000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "minUnits": {
+    "value": 3,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "deployable-6u",
+   "name": "Large deployable panels",
+   "panelW": {
+    "value": 30.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "batteryWh": {
+    "value": 80,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "massKg": {
+    "value": 1.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 100000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "minUnits": {
+    "value": 6,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  }
+ ],
+ "radios": [
+  {
+   "id": "uhf",
+   "name": "UHF amateur radio",
+   "band": "uhf-437",
+   "frequencyMHz": {
+    "value": 437,
+    "source": "CubeSat 101 (NASA CSLI, 2017), section 2.10 p.23: 437 MHz (70 cm) band used by many CubeSats",
+    "status": "nasa-verified"
+   },
+   "rateKbps": {
+    "value": 9.6,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "status": "game-balance"
+   },
+   "txPowerW": {
+    "value": 2.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "massKg": {
+    "value": 0.1,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 10000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "s-band",
+   "name": "S-band radio",
+   "band": "s-band",
+   "frequencyMHz": {
+    "value": 2200,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "status": "game-balance"
+   },
+   "rateKbps": {
+    "value": 1000,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "status": "game-balance"
+   },
+   "txPowerW": {
+    "value": 5.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "massKg": {
+    "value": 0.2,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 40000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  }
+ ],
+ "groundStations": [
+  {
+   "id": "amateur-uhf",
+   "name": "Amateur UHF station",
+   "bands": [
+    "uhf-437"
+   ],
+   "passesPerDay": {
+    "value": 4,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "minutesPerPass": {
+    "value": 8,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); 5-10 minutes per LEO pass",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 15000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "months": {
+    "value": 3,
+    "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9: ground station 2-12 months; value chosen in that range",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "university-sband",
+   "name": "University S-band dish",
+   "bands": [
+    "uhf-437",
+    "s-band"
+   ],
+   "passesPerDay": {
+    "value": 4,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "minutesPerPass": {
+    "value": 8,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); 5-10 minutes per LEO pass",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 90000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "months": {
+    "value": 6,
+    "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9: ground station 2-12 months; value chosen in that range",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "commercial-network",
+   "name": "Commercial station network",
+   "bands": [
+    "uhf-437",
+    "s-band"
+   ],
+   "passesPerDay": {
+    "value": 12,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "minutesPerPass": {
+    "value": 8,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); 5-10 minutes per LEO pass",
+    "status": "game-balance"
+   },
+   "costUsd": {
+    "value": 150000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "months": {
+    "value": 2,
+    "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9: ground station 2-12 months; value chosen in that range",
+    "status": "game-balance"
+   }
+  }
+ ],
+ "launches": [
+  {
+   "id": "iss-deploy",
+   "name": "Space station deployment",
+   "orbits": [
+    "leo-iss"
+   ],
+   "dispensers": [
+    "p-pod",
+    "6u-dispenser"
+   ],
+   "pricePerUnitUsd": {
+    "value": 60000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "maxMassKg": {
+    "value": 6.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "waitMonths": {
+    "value": 2,
+    "source": "CubeSat 101 (NASA CSLI, 2017) section 3.5 p.38: deployed 1-3 months after arrival; midpoint",
+    "status": "derived"
+   }
+  },
+  {
+   "id": "nasa-rideshare",
+   "name": "NASA rideshare",
+   "orbits": [
+    "leo-500",
+    "sso-550"
+   ],
+   "dispensers": [
+    "p-pod"
+   ],
+   "pricePerUnitUsd": {
+    "value": 100000,
+    "source": "CubeSat 101 (NASA CSLI, 2017) section 2.2 p.11: $300,000 is typically enough for a 3U to LEO, so about $100,000 per unit",
+    "status": "derived"
+   },
+   "maxMassKg": {
+    "value": 4.0,
+    "source": "P-POD holds up to 3U (CubeSat 101 (NASA CSLI, 2017) section 1.2.1 p.5) at 1.33 kg per unit",
+    "status": "derived"
+   },
+   "waitMonths": {
+    "value": 9,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "commercial-broker",
+   "name": "Commercial rideshare broker",
+   "orbits": [
+    "leo-500",
+    "sso-550"
+   ],
+   "dispensers": [
+    "p-pod",
+    "6u-dispenser"
+   ],
+   "pricePerUnitUsd": {
+    "value": 110000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "maxMassKg": {
+    "value": 12.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "waitMonths": {
+    "value": 6,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "dedicated-small",
+   "name": "Dedicated small launcher",
+   "orbits": [
+    "leo-500",
+    "sso-550"
+   ],
+   "dispensers": [
+    "p-pod",
+    "6u-dispenser"
+   ],
+   "pricePerUnitUsd": {
+    "value": 180000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "maxMassKg": {
+    "value": 12.0,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "waitMonths": {
+    "value": 3,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  }
+ ],
+ "orbits": [
+  {
+   "id": "leo-iss",
+   "name": "Low orbit (space station)",
+   "summary": "Easy to reach from the space station, but air drag brings the satellite down within about a year.",
+   "altitudeKm": {
+    "value": 400,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "status": "game-balance"
+   },
+   "inclinationDeg": {
+    "value": 51.6,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "status": "game-balance"
+   },
+   "sunlitFraction": {
+    "value": 0.62,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); about 35 of 92 minutes in eclipse",
+    "status": "game-balance"
+   },
+   "eclipseMinutes": {
+    "value": 35,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "status": "game-balance"
+   },
+   "lifetimeMonths": {
+    "value": 12,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "leo-500",
+   "name": "Low orbit (500 km)",
+   "summary": "A little higher, so drag is weaker and the satellite lasts a few years.",
+   "altitudeKm": {
+    "value": 500,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "status": "game-balance"
+   },
+   "inclinationDeg": {
+    "value": 45,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "sunlitFraction": {
+    "value": 0.63,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "status": "game-balance"
+   },
+   "eclipseMinutes": {
+    "value": 35,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "status": "game-balance"
+   },
+   "lifetimeMonths": {
+    "value": 36,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "sso-550",
+   "name": "Sun-synchronous orbit",
+   "summary": "Crosses each place at the same local time, so every image has the same lighting.",
+   "altitudeKm": {
+    "value": 550,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data); SSO 500-800 km",
+    "status": "game-balance"
+   },
+   "inclinationDeg": {
+    "value": 97.6,
+    "source": "Game balance: general engineering knowledge, Resources/alee/00-sintesis-reto.md section 6 (not NASA data)",
+    "status": "game-balance"
+   },
+   "sunlitFraction": {
+    "value": 0.7,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "eclipseMinutes": {
+    "value": 30,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "lifetimeMonths": {
+    "value": 60,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  }
+ ],
+ "tests": [
+  {
+   "id": "vibration",
+   "name": "Vibration test",
+   "mandatory": true,
+   "summary": "Required for every launch; shows the satellite survives the ride up.",
+   "costUsd": {
+    "value": 20000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "months": {
+    "value": 1,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "reliabilityBonus": {
+    "value": 0.05,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) section 6.9.2"
+  },
+  {
+   "id": "bakeout",
+   "name": "Thermal vacuum bakeout",
+   "mandatory": true,
+   "summary": "Required on almost all missions; bakes out gases that could foul other payloads.",
+   "costUsd": {
+    "value": 15000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "months": {
+    "value": 1,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "reliabilityBonus": {
+    "value": 0.05,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) section 6.9.3"
+  },
+  {
+   "id": "ditl",
+   "name": "Day in the life test",
+   "mandatory": true,
+   "summary": "Required; proves the timers and electrical inhibits work after release.",
+   "costUsd": {
+    "value": 2000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "months": {
+    "value": 0.5,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "reliabilityBonus": {
+    "value": 0.05,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) section 2.11"
+  },
+  {
+   "id": "tvac-cycling",
+   "name": "Thermal vacuum cycling",
+   "mandatory": false,
+   "summary": "Optional internal test of hot and cold cycles; it does not replace the bakeout.",
+   "costUsd": {
+    "value": 25000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "months": {
+    "value": 1,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "reliabilityBonus": {
+    "value": 0.05,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) section 6.9.3"
+  },
+  {
+   "id": "etu",
+   "name": "Engineering test unit",
+   "mandatory": false,
+   "summary": "A copy of the flight unit that never flies, used for practice.",
+   "costUsd": {
+    "value": 40000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "months": {
+    "value": 2,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "reliabilityBonus": {
+    "value": 0.08,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) appendix B"
+  },
+  {
+   "id": "flatsat",
+   "name": "FlatSat",
+   "mandatory": false,
+   "summary": "All the electronics on a table, without the structure, to test early.",
+   "costUsd": {
+    "value": 10000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "months": {
+    "value": 1,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "reliabilityBonus": {
+    "value": 0.05,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   },
+   "mandatorySource": "CubeSat 101 (NASA CSLI, 2017) appendix B"
+  }
+ ],
+ "licences": [
+  {
+   "id": "fcc-radio",
+   "name": "Radio licence (FCC)",
+   "imagerOnly": false,
+   "summary": "Every satellite that transmits needs a radio licence before delivery.",
+   "months": {
+    "value": 5,
+    "source": "CubeSat 101 (NASA CSLI, 2017) section 2.8 p.20: licensing takes 4-6 months; midpoint",
+    "status": "derived"
+   },
+   "costUsd": {
+    "value": 1000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  },
+  {
+   "id": "noaa-remote-sensing",
+   "name": "Remote sensing licence (NOAA)",
+   "imagerOnly": true,
+   "summary": "A satellite with a camera needs NOAA's licence, and the FCC waits for it.",
+   "months": {
+    "value": 5,
+    "source": "CubeSat 101 (NASA CSLI, 2017) section 2.8 p.20-21: NOAA licence must come before the FCC one; game uses the same 4-6 month range",
+    "status": "derived"
+   },
+   "costUsd": {
+    "value": 1000,
+    "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
+    "status": "game-balance"
+   }
+  }
+ ]
+}
