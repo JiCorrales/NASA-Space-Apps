@@ -26,12 +26,19 @@ Every resource in this project that the team did not create. Add the entry befor
 | Debris Assessment Software 3.2 User's Guide (NASA ODPO). Copy in `Resources/alee/pdf/` | Orbital debris rules (25-year rule) | https://orbitaldebris.jsc.nasa.gov/mitigation/debris-assessment-software.html |
 | JPL Horizons System. Extract in `Resources/alee/datos/` | Planet orbital elements | https://ssd.jpl.nasa.gov/horizons/ |
 | NASA Exoplanet Archive (operated by IPAC/Caltech for NASA). Extract in `Resources/alee/datos/` | Science results for exoplanet missions | https://exoplanetarchive.ipac.caltech.edu/ |
+| NASA launch service award news releases (13 missions, 2014-2025). Extract in `Resources/alee/datos/` | Real launch prices | https://www.nasa.gov/kennedy/launch-services-program/ (one URL per row in the CSV) |
+| Jones, H. W., The Recent Large Reduction in Space Launch Cost, ICES-2018-81 (NASA Ames, NTRS 20200001093). Copy in `Resources/alee/pdf/costes/` | Launch cost per kg to LEO | https://ntrs.nasa.gov/citations/20200001093 |
+| Mission Operations Cost Estimation Tool (MOCET) 2024 presentation. Copy in `Resources/alee/pdf/costes/` | Cost caps per mission class | https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf |
+| 2026 Astrophysics SMEX AO community announcement | SMEX cost cap | https://science.nasa.gov/astrophysics/programs/cosmic-origins/community/2026-astrophysics-small-explorer-announcement-of-opportunity/ |
+| New Frontiers 5 Second Community Announcement. Copy in `Resources/alee/pdf/costes/` | New Frontiers cost cap | https://newfrontiers.larc.nasa.gov/NF5/pdf_files/NF5%20Second%20Community%20Announcement.pdf |
+| Project Cost Estimating Capability (PCEC) v2.4 overview, PCEC spacecraft CER paper (NTRS 20160013375) and CEH Appendix E. Copies in `Resources/alee/pdf/costes/` | Parametric cost model reference | https://www.nasa.gov/ocfo/ppc-corner/pcec-project-cost-estimating-capability |
 
 ## Space Agency Partner resources
 
 | Resource | Agency | What we use it for | Link |
 |---|---|---|---|
 | Digital Games and Activities | CSA | Survey of existing educational games | https://www.asc-csa.gc.ca/eng/youth-educators/digital-games-and-activities.asp |
+| OSCAR/Space instrument database (NASA-provided instruments). Extract in `Resources/alee/datos/`. Terms of use still to be checked | WMO | Instrument mass, power and data rate | https://space.oscar.wmo.int/ |
 
 ## Third-party assets, code and tools
 

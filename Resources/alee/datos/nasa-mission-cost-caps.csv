@@ -1,0 +1,15 @@
+mission_class,cost_cap_musd,dollar_year,includes_operations,includes_launch_vehicle,example_mission,source,source_url
+Pioneers (astrophysics),20,,,,,"NASA Goddard news, 2021-01-07",https://www.nasa.gov/centers-and-facilities/goddard/nasa-selects-4-concepts-for-small-missions-to-study-universes-secrets/
+Explorer Mission of Opportunity (MO),35-70,FY22,yes,no,GOLD,"MOCET 2024 presentation (NASA), table of cost caps",https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf
+Earth Venture-Instrument (EVI),37-42,FY24,yes,no,ACRIMSAT,MOCET 2024 presentation (NASA),https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf
+Earth Venture-Instrument (EVI),90 (for all selected),,,,TEMPO,MOCET 2024 presentation (NASA),https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf
+Small Explorer (SMEX) Astrophysics,145,FY19,yes,no,NuSTAR,"MOCET 2024, citing the 2019 Astrophysics SMEX AO",https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf
+Small Explorer (SMEX) Astrophysics 2026 AO,190,FY26,,no (NASA-provided launch excluded),,"2026 Astrophysics SMEX AO community announcement (raised from $170M FY25 in the draft AO)",https://science.nasa.gov/astrophysics/programs/cosmic-origins/community/2026-astrophysics-small-explorer-announcement-of-opportunity/
+Small Explorer (SMEX) Heliophysics,165,FY17,yes,"table says ""LV""",IBEX,"MOCET 2024, citing the 2016 Heliophysics SMEX AO",https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf
+Earth Venture-Mission (EV-M),190,FY22,yes,,CYGNSS,MOCET 2024 presentation (NASA),https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf
+Medium Explorer (MIDEX) Heliophysics,250,FY19,yes,no,ICON,"MOCET 2024, citing the 2019 Heliophysics MIDEX AO",https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf
+Medium Explorer (MIDEX) Astrophysics,300,FY22,yes,no,TESS,"MOCET 2024, citing the 2021 Astrophysics MIDEX AO",https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf
+Mars Scout,475,FY06,yes,yes,Phoenix,MOCET 2024 presentation (NASA),https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf
+Discovery,500,FY19,no,no,Lucy,"MOCET 2024, citing the 2019 Discovery AO",https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf
+New Frontiers 4,850,FY15,no,no,,"MOCET 2024, citing the 2016 New Frontiers 4 AO",https://www.nasa.gov/wp-content/uploads/2024/05/12-mocet-ncss-2024-04-12.pdf
+New Frontiers 5,900 (Phase A-D),FY22,no,,,NF5 Second Community Announcement,https://newfrontiers.larc.nasa.gov/NF5/pdf_files/NF5%20Second%20Community%20Announcement.pdf

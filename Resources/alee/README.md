@@ -34,13 +34,19 @@ alee/
 │   ├── 19-jpl-horizons.md                  posiciones de los planetas
 │   ├── 20-nasa-lessons-learned-llis.md     fallos reales (sin descarga)
 │   ├── 21-exoplanet-archive.md             exoplanetas como resultados científicos
-│   └── 22-recursos-visuales.md             modelos 3D, texturas e imágenes (sin descarga)
+│   ├── 22-recursos-visuales.md             modelos 3D, texturas e imágenes (sin descarga)
+│   ├── 23-costes-nasa.md                   precios de lanzamiento, $/kg, topes por clase, PCEC
+│   └── 24-instrumentos-wmo-oscar.md        catálogo de instrumentos (masa, potencia, datos)
 ├── datos/                          CSV/JSON listos para el juego (ver datos/README.md)
 │   ├── lsp-launch-vehicle-performance.csv
 │   ├── trajectory-browser-transfers-2026-2036.csv
 │   ├── nssdca-reference-missions.csv
 │   ├── horizons-elements-2026-11-14.csv
 │   ├── exoplanet-archive-pscomppars.csv
+│   ├── nasa-launch-service-awards.csv        precio real de 13 lanzamientos de NASA
+│   ├── launch-cost-per-kg-leo-ntrs.csv       coste por kg a LEO, 1957–2018
+│   ├── nasa-mission-cost-caps.csv            topes de coste por clase de misión
+│   ├── wmo-oscar-nasa-instruments.csv        instrumentos de NASA con masa, potencia y datos
 │   └── donki/                      llamaradas, SEP, tormentas, CME y resumen
 └── pdf/                            documentos originales (NASA / JPL)
     ├── 250323-design-and-develop-science-mission.pdf
@@ -51,6 +57,7 @@ alee/
     ├── nasa-cost-estimating-handbook-v4-main-body.pdf
     ├── das-3.2-users-guide.pdf
     ├── dsn-810-005/                          10 módulos del manual de enlaces de la DSN
+    ├── costes/                               coste por kg, topes MOCET, NF5, PCEC y apéndice E del CEH
     ├── mission-viz/                          4 PDFs de tutoriales y visión de Mission Viz
     └── webb-build-it-yourself/               transcripción oficial del juego
 ```
@@ -70,10 +77,13 @@ alee/
 | CubeSat 101: 437/140 MHz, 6,5 mm, ETU + FlatSat + 2 unidades de vuelo, LightSail-2 1,24 M$, NPSCul-Lite, entrega de 4 semanas a 6 meses | `fuentes/07` + PDF (aparecen en el documento completo) |
 | Regla de 25 años de desorbitado y límite de 100 objetos-año | `fuentes/18`: requisito 4.3-1 de NASA, citado en la guía de DAS |
 | Lanzadores y capacidades actuales (la lista de CubeSat 101 es de 2017) | `fuentes/11` + `datos/lsp-launch-vehicle-performance.csv`; lanzadores pequeños en `fuentes/10` (tabla 10-1) |
+| Valores de presupuesto por decisión (decisión del equipo, sin fuente) | `fuentes/23`: precios reales de lanzamiento, coste por kg, topes por clase de misión y modelo PCEC como base |
+| Mecánica de masa, potencia y datos por instrumento (sin fuente) | `fuentes/24` + `datos/wmo-oscar-nasa-instruments.csv` |
 
 ## Lo que sigue faltando
-- **Precios** de lanzadores y componentes: ninguna fuente de NASA descargada los da. Marcarlos como [POR DEFINIR] o buscar otra fuente.
-- **Instrumentos científicos** (masa, potencia y tasa de datos por tipo): no hay un catálogo de NASA equivalente al State-of-the-Art; usar instrumentos de misiones reales de `datos/nssdca-reference-missions.csv` como analogía.
+- **Precio de cada componente** (un panel o una radio concretos): NASA no lo publica. Usar un modelo paramétrico inspirado en PCEC (`fuentes/23`) o rangos [POR DEFINIR].
+- **Precio de cada lanzamiento pequeño** (VADR, p. ej. Electron): NASA no publica el de cada orden.
+- **Instrumentos de astrofísica y ciencia planetaria**: WMO OSCAR (`fuentes/24`) cubre sobre todo la observación de la Tierra y el clima espacial. Para telescopios y sondas planetarias, usar las misiones de `datos/nssdca-reference-missions.csv` como analogía.
 - Licencia de Mission Viz.
 
 ## Notas

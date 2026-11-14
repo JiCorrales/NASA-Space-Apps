@@ -46,6 +46,8 @@ Un **juego interactivo** para **diseñar, gestionar y simular una misión espaci
 | Fallos reales para eventos | [`fuentes/20`](fuentes/20-nasa-lessons-learned-llis.md) | (búsqueda web) |
 | Resultados científicos de exoplanetas | [`fuentes/21`](fuentes/21-exoplanet-archive.md) | `datos/exoplanet-archive-pscomppars.csv` |
 | Modelos 3D, texturas e imágenes | [`fuentes/22`](fuentes/22-recursos-visuales.md) | (sin descargar) |
+| Precios de lanzamiento, $/kg, presupuesto por clase de misión, modelo de costes | [`fuentes/23`](fuentes/23-costes-nasa.md) | `datos/nasa-launch-service-awards.csv`, `datos/launch-cost-per-kg-leo-ntrs.csv`, `datos/nasa-mission-cost-caps.csv`, `pdf/costes/` |
+| Catálogo de instrumentos (masa, potencia, tasa de datos) | [`fuentes/24`](fuentes/24-instrumentos-wmo-oscar.md) | `datos/wmo-oscar-nasa-instruments.csv` |
 
 ## 3. Conceptos que el juego debería enseñar (con su fuente)
 1. **Los requisitos científicos dirigen el diseño** (Webb game; "empezar por el final" en el webinar NASA).
