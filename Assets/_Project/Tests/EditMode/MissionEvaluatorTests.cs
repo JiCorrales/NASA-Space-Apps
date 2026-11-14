@@ -255,6 +255,30 @@ namespace SpaceApps.Mission.Tests
             Assert.AreEqual(Eval(DesignA()).science, EvalWith(DesignA(), d => d.instruments.Add("dosimeter")).science, 1e-4f);
 
         [Test]
+        public void MessagesDoNotDependOnTheMachineLanguage()
+        {
+            var designs = new List<MissionDesign>
+            {
+                Radiation().Clone(), DesignB().Clone(), DesignB().Clone(),
+            };
+            designs[0].instruments.AddRange(new[] { "magnetometer", "plasma-probe" });
+            designs[1].launch = "dedicated-small"; designs[1].orbit = "sso-550";
+            designs[2].radio = "uhf"; designs[2].groundStation = "amateur-uhf";
+
+            var saved = CultureInfo.CurrentCulture;
+            try
+            {
+                CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+                var invariant = designs.SelectMany(d => Eval(d).issues.Select(i => i.message)).ToList();
+                CultureInfo.CurrentCulture = new CultureInfo("es-ES");
+                var spanish = designs.SelectMany(d => Eval(d).issues.Select(i => i.message)).ToList();
+                CollectionAssert.AreEqual(invariant, spanish);
+                StringAssert.DoesNotContain(" %", string.Join(" ", invariant));
+            }
+            finally { CultureInfo.CurrentCulture = saved; }
+        }
+
+        [Test]
         public void OptionalTestsRaiseReliabilityAndScore()
         {
             var a = Eval(DesignA());
