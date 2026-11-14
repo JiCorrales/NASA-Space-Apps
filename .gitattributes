@@ -30,3 +30,11 @@
 *.mp4 binary
 *.ttf binary
 *.otf binary
+*.gif binary
+*.tif binary
+*.tiff binary
+*.webm binary
+*.pdf binary
+*.zip binary
+*.dll binary
+*.so binary
