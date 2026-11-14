@@ -69,11 +69,13 @@ namespace SpaceApps.UI
         public readonly string Unit;
         public readonly float Used;
         public readonly float Available;
-        public bool IsOverLimit => Used > Available;
+        /// <summary>False while no choice sets the limit yet; such a row is neutral, never over the limit.</summary>
+        public readonly bool LimitSet;
+        public bool IsOverLimit => LimitSet && Used > Available;
 
-        public ResourceStatus(string name, string unit, float used, float available)
+        public ResourceStatus(string name, string unit, float used, float available, bool limitSet = true)
         {
-            Name = name; Unit = unit; Used = used; Available = available;
+            Name = name; Unit = unit; Used = used; Available = available; LimitSet = limitSet;
         }
     }
 
