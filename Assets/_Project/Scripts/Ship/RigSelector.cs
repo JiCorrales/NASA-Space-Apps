@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -9,12 +10,18 @@ namespace SpaceApps.Ship
         public GameObject xrRig;
         public GameObject desktopRig;
 
+        public bool XrActive { get; private set; }
+        /// <summary>Raised with XrActive after every Apply.</summary>
+        public event Action<bool> RigChanged;
+
         void Awake() => Apply(XRSettings.isDeviceActive);
 
         public void Apply(bool xrActive)
         {
+            XrActive = xrActive;
             desktopRig.SetActive(!xrActive);
             xrRig.SetActive(xrActive);
+            RigChanged?.Invoke(xrActive);
         }
     }
 }
