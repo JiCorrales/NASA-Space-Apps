@@ -30,13 +30,14 @@ namespace SpaceApps.Game
         public virtual string Details => "";
         public abstract string Status { get; }
         public virtual bool StatusIsProblem => false;
-        public virtual string ActionLabel => null;
+        public virtual IReadOnlyList<string> Actions => Array.Empty<string>();
+        public virtual bool IsDone => false;
         public event Action Changed;
 
         protected void Redraw() => Changed?.Invoke();
         public virtual void SelectStep(int index) { }
         public virtual void Select(int index) { }
-        public virtual void Act() { }
+        public virtual void Act(int index) { }
     }
 
     /// <summary>A station where the player makes one or more decisions (one step per decision).</summary>
@@ -84,6 +85,9 @@ namespace SpaceApps.Game
 
         public override bool StatusIsProblem => Issues.Any();
 
+        public override bool IsDone => groups.All(g =>
+            g.Multi ? g.List(Session.Design).Count > 0 : !string.IsNullOrEmpty(g.Get(Session.Design)));
+
         public override void SelectStep(int index)
         {
             if (index < 0 || index >= groups.Length) return;
@@ -107,6 +111,7 @@ namespace SpaceApps.Game
         Objective Objective => MissionCatalog.Find(Session.Catalog.objectives, Session.Design.objective);
 
         public override string Status => Objective == null ? "Choose an objective first, at the Objective station." : "Objective: " + Objective.name;
+        public override bool IsDone => Objective != null;
 
         public override string Details
         {
@@ -138,33 +143,123 @@ namespace SpaceApps.Game
         }
     }
 
-    /// <summary>Verdict on the whole design: can it fly, why not, and the score. Resets the design.</summary>
+    /// <summary>
+    /// Verdict on the whole design and its flight: review (can it fly, what blocks it, the risks), playback of the
+    /// simulated mission entry by entry, and the outcome with its lessons.
+    /// </summary>
     sealed class MissionControlStation : SessionStation
     {
-        public MissionControlStation(MissionSession session, string title, string explanation) : base(session, title, explanation) { }
+        readonly MissionFlight flight;
 
-        public override string Status => Session.Report.success
-            ? "<b>Ready to fly.</b> Every constraint is met."
-            : $"<b>Cannot fly yet:</b> {Session.Report.issues.Count(i => i.severity == Severity.Blocking)} blocking problem(s).";
-
-        public override bool StatusIsProblem => !Session.Report.success;
-        public override string ActionLabel => "Reset design";
-        public override void Act() => Session.Reset();
-
-        public override string Details
+        public MissionControlStation(MissionSession session, MissionFlight flight, string title, string explanation)
+            : base(session, title, explanation)
         {
-            get
+            this.flight = flight;
+            flight.Changed += Redraw;
+        }
+
+        public override bool IsDone => flight.State == FlightState.Finished;
+        public override bool StatusIsProblem => flight.State == FlightState.Review && !Session.Report.success;
+
+        public override IReadOnlyList<string> Actions => flight.State switch
+        {
+            FlightState.Playing => new[] { "Next", "Skip to end" },
+            FlightState.Finished => new[] { "Fly again", "Change design", "Reset design" },
+            _ => flight.CanLaunch ? new[] { "Launch", "Reset design" } : new[] { "Reset design" },
+        };
+
+        public override void Act(int index)
+        {
+            string action = index >= 0 && index < Actions.Count ? Actions[index] : null;
+            switch (action)
             {
-                var r = Session.Report;
-                var sb = new StringBuilder();
-                sb.Append(r.success ? "<color=#5fe0a0><b>MISSION CAN FLY</b></color>\n" : "<color=#ff7366><b>MISSION CANNOT FLY</b></color>\n");
-                sb.Append($"Science <b>{N(r.science)}</b>     Reliability <b>{Pct(r.reliability)}</b>     Score <b>{r.score}</b>\n\n");
-                if (r.issues.Count == 0) sb.Append("No problems found.");
-                foreach (var i in r.issues.OrderByDescending(i => i.severity))
-                    sb.Append(i.severity == Severity.Blocking ? "<color=#ff7366>Blocking</color>: " : "<color=#ffc857>Warning</color>: ")
-                      .Append(i.message).Append('\n');
-                return sb.ToString();
+                case "Launch":
+                case "Fly again": flight.Launch(); break;
+                case "Next": flight.Step(); break;
+                case "Skip to end": flight.SkipToEnd(); break;
+                case "Change design": flight.BackToDesign(); break;
+                case "Reset design": Session.Reset(); flight.BackToDesign(); break;
             }
+        }
+
+        public override string Status => flight.State switch
+        {
+            FlightState.Playing => $"In flight: event {flight.Shown} of {flight.Run.timeline.Count}. Next comes on its own, or press Next.",
+            FlightState.Finished => "Fly again to see how luck changes the result, or change the design.",
+            _ => Session.Report.success
+                ? "<b>Ready to fly.</b> Press Launch."
+                : $"<b>Cannot fly yet:</b> {Session.Report.issues.Count(i => i.severity == Severity.Blocking)} blocking problem(s).",
+        };
+
+        public override string Details => flight.State switch
+        {
+            FlightState.Playing => Playback(),
+            FlightState.Finished => Outcome(),
+            _ => Review(),
+        };
+
+        string Review()
+        {
+            var r = Session.Report;
+            var sb = new StringBuilder();
+            sb.Append(r.success ? "<color=#5fe0a0><b>MISSION CAN FLY</b></color>\n" : "<color=#ff7366><b>MISSION CANNOT FLY</b></color>\n");
+            sb.Append($"Science <b>{N(r.science)}</b>     Reliability <b>{Pct(r.reliability)}</b>     Score <b>{r.score}</b>\n\n");
+            if (r.issues.Count == 0) sb.Append("No problems found.\n");
+            foreach (var i in r.issues.OrderByDescending(i => i.severity))
+                sb.Append(i.severity == Severity.Blocking ? "<color=#ff7366>Blocking</color>: " : "<color=#ffc857>Warning</color>: ")
+                  .Append(i.message).Append('\n');
+
+            var c = Session.Catalog;
+            var risks = (c.events ?? new EventCard[0])
+                .Select(e => (card: e, chance: MissionSimulator.EventChance(c, Session.Design, e.id)))
+                .OrderByDescending(x => x.chance).Take(5).ToList();
+            if (risks.Count > 0)
+            {
+                sb.Append("\n<b>Biggest risks in flight</b> <size=80%>(optional tests and a budget reserve lower them)</size>\n");
+                foreach (var (card, chance) in risks)
+                    sb.Append($"<b>{Pct(chance)}</b>  {card.name} <size=80%><color=#93a3b8>({card.phase})</color></size>\n");
+            }
+            return sb.ToString();
+        }
+
+        string Playback()
+        {
+            var sb = new StringBuilder("<b>MISSION IN PROGRESS</b>\n\n");
+            foreach (var e in flight.ShownEntries.Reverse().Take(4).Reverse()) Entry(sb, e);
+            return sb.ToString();
+        }
+
+        string Outcome()
+        {
+            var run = flight.Run;
+            var sb = new StringBuilder();
+            sb.Append(run.outcome switch
+            {
+                MissionOutcome.FullSuccess => "<color=#5fe0a0><b>MISSION ACCOMPLISHED</b></color>",
+                MissionOutcome.Partial => "<color=#ffc857><b>PARTIAL SUCCESS</b></color>",
+                MissionOutcome.Lost => "<color=#ff7366><b>MISSION LOST</b></color>",
+                _ => "<color=#ff7366><b>NEVER LAUNCHED</b></color>",
+            }).Append('\n');
+            sb.Append($"Science returned <b>{N(run.scienceReturned)}</b> of {N(run.scienceNeeded)} needed     Score <b>{run.score}</b>     Cost <b>{Usd(run.totalCostUsd)}</b>\n\n");
+            var last = run.timeline[run.timeline.Count - 1];
+            sb.Append(last.explanation).Append("\n\n");
+            var lessons = run.lessons.Where(l => !string.IsNullOrEmpty(l)).Distinct().Take(5).ToList();
+            if (lessons.Count > 0)
+            {
+                sb.Append("<b>Lessons</b>\n");
+                foreach (var l in lessons) sb.Append("- ").Append(l).Append('\n');
+            }
+            return sb.ToString();
+        }
+
+        static void Entry(StringBuilder sb, TimelineEntry e)
+        {
+            sb.Append($"<b>Month {N((float)Math.Round(e.month))}</b>  <color=#93a3b8>{e.phase}</color>  <b>{e.title}</b>\n");
+            sb.Append("<size=85%>").Append(e.explanation);
+            if (e.delayMonths > 0f) sb.Append($"  <color=#ffc857>+{N(e.delayMonths)} months</color>");
+            if (e.extraCostUsd > 0f) sb.Append($"  <color=#ffc857>+{Usd(e.extraCostUsd)}</color>");
+            if (e.scienceLost > 0f) sb.Append($"  <color=#ff7366>-{N(e.scienceLost)} science</color>");
+            sb.Append("</size>\n\n");
         }
     }
 

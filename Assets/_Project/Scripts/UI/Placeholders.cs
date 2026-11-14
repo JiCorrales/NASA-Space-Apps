@@ -26,12 +26,13 @@ namespace SpaceApps.UI
         public string Details => "";
         public string Status => selected < 0 ? "Select an option" : "Selected: " + Names[selected];
         public bool StatusIsProblem => false;
-        public string ActionLabel => null;
+        public IReadOnlyList<string> Actions => Array.Empty<string>();
+        public bool IsDone => selected >= 0;
         public event Action Changed;
 
         public void SelectStep(int index) { }
         public void Select(int index) { selected = index; Changed?.Invoke(); }
-        public void Act() { }
+        public void Act(int index) { }
     }
 
     public sealed class PlaceholderResourceViewModel : IResourceDashboardViewModel

@@ -111,12 +111,13 @@ namespace SpaceApps.Tests.PlayMode
             public string Details => "";
             public string Status => "";
             public bool StatusIsProblem => false;
-            public string ActionLabel => null;
+            public IReadOnlyList<string> Actions => Array.Empty<string>();
+            public bool IsDone => false;
             public event Action Changed;
             public void Raise() => Changed?.Invoke();
             public void SelectStep(int index) { }
             public void Select(int index) { }
-            public void Act() { }
+            public void Act(int index) { }
         }
 
         [Test]
