@@ -194,7 +194,7 @@
     "status": "game-balance"
    },
    "budgetUsd": {
-    "value": 1300000,
+    "value": 900000,
     "source": "Game balance: team proposal, Resources/04-reglas-diseno.md marks it [POR DEFINIR]",
     "status": "game-balance"
    },
@@ -897,6 +897,7 @@
  "launches": [
   {
    "id": "iss-deploy",
+   "nasaCovered": true,
    "name": "Space station deployment",
    "orbits": [
     "leo-iss"
@@ -923,6 +924,7 @@
   },
   {
    "id": "nasa-rideshare",
+   "nasaCovered": true,
    "name": "NASA rideshare",
    "orbits": [
     "leo-500",
@@ -949,6 +951,7 @@
   },
   {
    "id": "commercial-broker",
+   "nasaCovered": false,
    "name": "Commercial rideshare broker",
    "orbits": [
     "leo-500",
@@ -976,6 +979,7 @@
   },
   {
    "id": "dedicated-small",
+   "nasaCovered": false,
    "name": "Dedicated small launcher",
    "orbits": [
     "leo-500",
