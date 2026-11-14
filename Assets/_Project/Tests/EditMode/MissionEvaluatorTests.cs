@@ -211,6 +211,44 @@ namespace SpaceApps.Mission.Tests
         public void UnknownChoiceIsReportedNotThrown() => AssertBlocked(EvalWith(DesignA(), d => d.orbit = null), "incomplete-design");
 
         [Test]
+        public void EmptyDesignStillReportsEveryResource()
+        {
+            var r = Eval(new MissionDesign());
+            foreach (ResourceKind k in Enum.GetValues(typeof(ResourceKind)))
+                Assert.IsTrue(r.resources.Exists(b => b.kind == k), k.ToString());
+            Assert.AreEqual(catalog.constants.busMassKg.value, r.Get(ResourceKind.Mass).used, 1e-4f);
+            AssertBlocked(r, "incomplete-design");
+            StringAssert.Contains("orbit", r.issues.Find(i => i.code == "incomplete-design").message);
+        }
+
+        [Test]
+        public void PartialDesignShowsWhatIsKnownSoFar()
+        {
+            var r = Eval(new MissionDesign { format = "3u", instruments = new List<string> { "camera-basic" } });
+            Assert.AreEqual(0.3f + 0.5f + 0.2f, r.Get(ResourceKind.Mass).used, 1e-4f);
+            Assert.AreEqual(4.0f, r.Get(ResourceKind.Mass).available, 1e-4f);
+            Assert.AreEqual(15f, r.Get(ResourceKind.Data).used, 1e-4f);
+            Assert.AreEqual(0f, r.Get(ResourceKind.Power).available);
+            Assert.Greater(r.Get(ResourceKind.Budget).used, 0f);
+            var missing = r.issues.Find(i => i.code == "incomplete-design").message;
+            StringAssert.Contains("orbit", missing);
+            StringAssert.DoesNotContain("format", missing);
+            Assert.IsFalse(r.Has("power-deficit"), "checks that need a missing part are skipped");
+        }
+
+        [Test]
+        public void ChoosingAPartMovesTheResources()
+        {
+            var before = Eval(new MissionDesign { format = "3u" });
+            var after = Eval(new MissionDesign { format = "3u", power = "body-3u" });
+            Assert.Greater(after.Get(ResourceKind.Mass).used, before.Get(ResourceKind.Mass).used);
+            Assert.Greater(after.Get(ResourceKind.Power).available, before.Get(ResourceKind.Power).available);
+        }
+
+        [Test]
+        public void GetNeverThrows() => Assert.AreEqual(ResourceKind.Data, new MissionReport().Get(ResourceKind.Data).kind);
+
+        [Test]
         public void OptionalTestsRaiseReliabilityAndScore()
         {
             var a = Eval(DesignA());
