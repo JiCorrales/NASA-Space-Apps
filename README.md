@@ -9,8 +9,11 @@ shows how each decision affected the result.
 
 ## Requirements
 
-- Unity (the version in `ProjectSettings/ProjectVersion.txt`, once the project is created)
+- Unity 6000.6.9f1, the version pinned in `ProjectSettings/ProjectVersion.txt`. Install exactly that one from
+  Unity Hub.
 - Git
+
+The project was created from Unity Hub's VR template (OpenXR, XR Interaction Toolkit, URP).
 
 ## Getting started
 
@@ -19,6 +22,14 @@ git clone https://github.com/JiCorrales/NASA-Space-Apps.git
 ```
 
 Open the cloned folder from Unity Hub with "Add project from disk".
+
+To check that the project imports and compiles without opening the editor window (the path is the Linux
+default; adjust it on Windows):
+
+```bash
+~/Unity/Hub/Editor/6000.6.9f1/Editor/Unity -batchmode -nographics -projectPath . -quit -logFile import.log
+grep -c "error CS" import.log   # 0 means no compile errors
+```
 
 ## Working on the project
 
