@@ -139,9 +139,10 @@ namespace SpaceApps.Mission
                         Inv($"Each eclipse uses {eclipseWh:0.##} Wh but the battery can safely give {batteryWh:0.##} Wh, so the satellite browns out in Earth's shadow."));
             }
 
-            // Budget: NASA pays launch up to the cover; the team pays everything else and keeps a reserve.
+            // Budget: on NASA-provided launches NASA pays up to the cover; the team pays everything else and keeps a reserve.
             float launchPrice = launch != null && format != null ? launch.pricePerUnitUsd * format.units : 0f;
-            float launchToTeam = Math.Max(0f, launchPrice - c.nasaLaunchCoverUsd);
+            bool covered = launch != null && launch.nasaCovered;
+            float launchToTeam = covered ? Math.Max(0f, launchPrice - c.nasaLaunchCoverUsd) : launchPrice;
             bool imager = instruments.Any(i => i.isImager);
             var licences = catalog.licences.Where(l => !l.imagerOnly || imager).ToList();
             float cost = c.busCostUsd + (format?.costUsd.value ?? 0f) + (power?.costUsd.value ?? 0f) + (radio?.costUsd.value ?? 0f) +
@@ -152,7 +153,9 @@ namespace SpaceApps.Mission
             if (objective != null && cost > budget)
                 Add(report, "over-budget", ResourceKind.Budget, Severity.Blocking,
                     Inv($"The mission costs ${cost:N0} but the budget is ${budget:N0}.") +
-                    (launchToTeam > 0 ? Inv($" NASA covers launch only up to ${c.nasaLaunchCoverUsd.value:N0}, so the team pays ${launchToTeam:N0} of it.") : ""));
+                    (launchToTeam <= 0 ? "" : covered
+                        ? Inv($" NASA covers launch only up to ${c.nasaLaunchCoverUsd.value:N0}, so the team pays ${launchToTeam:N0} of it.")
+                        : Inv($" NASA does not pay for the {launch.name}, so the team pays the full ${launchToTeam:N0} launch.")));
             else if (objective != null && cost > budget * (1f - c.reserveFraction))
                 Add(report, "no-reserve", ResourceKind.Budget, Severity.Warning,
                     Inv($"Less than {c.reserveFraction.value * 100f:0}% of the budget is left in reserve. NASA advises keeping at least that much for surprises."));

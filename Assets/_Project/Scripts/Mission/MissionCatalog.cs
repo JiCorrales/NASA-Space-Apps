@@ -76,6 +76,8 @@ namespace SpaceApps.Mission
     [Serializable]
     public class LaunchOption : Entry
     {
+        /// <summary>True when NASA's CubeSat Launch Initiative provides this launch, so NASA pays up to the launch cover.</summary>
+        public bool nasaCovered;
         public string[] orbits, dispensers;
         public Num pricePerUnitUsd, maxMassKg, waitMonths;
     }

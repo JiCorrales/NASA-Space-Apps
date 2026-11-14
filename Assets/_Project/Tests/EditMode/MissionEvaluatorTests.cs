@@ -33,21 +33,21 @@ namespace SpaceApps.Mission.Tests
         static MissionDesign Radiation() => new MissionDesign
         {
             objective = "radiation-survey", format = "1u", power = "body-1u", radio = "uhf",
-            groundStation = "amateur-uhf", launch = "commercial-broker", orbit = "leo-500",
+            groundStation = "amateur-uhf", launch = "iss-deploy", orbit = "leo-iss",
             instruments = new List<string> { "dosimeter" }, tests = new List<string>(Mandatory),
         };
 
         static MissionDesign SpaceWeather() => new MissionDesign
         {
             objective = "space-weather", format = "3u", power = "body-3u", radio = "s-band",
-            groundStation = "university-sband", launch = "commercial-broker", orbit = "sso-550",
+            groundStation = "university-sband", launch = "nasa-rideshare", orbit = "sso-550",
             instruments = new List<string> { "magnetometer", "plasma-probe" }, tests = new List<string>(Mandatory),
         };
 
         static MissionDesign SoilMoisture() => new MissionDesign
         {
-            objective = "soil-moisture", format = "6u", power = "deployable-6u", radio = "s-band",
-            groundStation = "commercial-network", launch = "commercial-broker", orbit = "sso-550",
+            objective = "soil-moisture", format = "3u", power = "deployable-3u", radio = "s-band",
+            groundStation = "commercial-network", launch = "nasa-rideshare", orbit = "sso-550",
             instruments = new List<string> { "radiometer" }, tests = new List<string>(Mandatory),
         };
 
@@ -160,11 +160,22 @@ namespace SpaceApps.Mission.Tests
             AssertBlocked(EvalWith(DesignA(), d => d.groundStation = "amateur-uhf"), "station-band-mismatch");
 
         [Test]
-        public void OverBudgetWhenTheLaunchCostsMoreThanNasaCovers()
+        public void OverBudgetOnALauncherNasaDoesNotPayFor()
         {
             var r = EvalWith(DesignB(), d => { d.launch = "dedicated-small"; d.orbit = "sso-550"; });
             AssertBlocked(r, "over-budget");
-            StringAssert.Contains("NASA covers launch", r.issues.Find(i => i.code == "over-budget").message);
+            var message = r.issues.Find(i => i.code == "over-budget").message;
+            StringAssert.Contains("does not pay", message);
+            StringAssert.DoesNotContain("NASA covers launch", message);
+        }
+
+        [Test]
+        public void NasaCoverOnlyAppliesToNasaLaunches()
+        {
+            float covered = Eval(DesignA()).Get(ResourceKind.Budget).used;
+            float commercial = EvalWith(DesignA(), d => d.launch = "commercial-broker").Get(ResourceKind.Budget).used;
+            var broker = MissionCatalog.Find(catalog.launches, "commercial-broker");
+            Assert.AreEqual(covered + broker.pricePerUnitUsd * 3f, commercial, 1f);
         }
 
         [Test]
