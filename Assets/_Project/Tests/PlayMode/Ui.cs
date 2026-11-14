@@ -51,5 +51,17 @@ namespace SpaceApps.Tests.PlayMode
             Click(screen.Rows.Single(r => r.gameObject.activeSelf && r.nameText.text == optionName).button);
             yield return null;
         }
+
+        /// <summary>On a station: click the action button with this label.</summary>
+        public static IEnumerator Action(StationScreen screen, string label)
+        {
+            LookAt(screen);
+            yield return null; // layout of a freshly shown button row
+            var button = screen.ActionButtons.SingleOrDefault(b => b.gameObject.activeSelf && b.label.text == label);
+            Assert.IsNotNull(button, $"no '{label}' button at {screen.stationTitle}; shown: " +
+                string.Join(", ", screen.ActionButtons.Where(b => b.gameObject.activeSelf).Select(b => b.label.text)));
+            Click(button.button);
+            yield return null;
+        }
     }
 }

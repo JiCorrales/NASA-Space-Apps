@@ -5,6 +5,7 @@ using System.Linq;
 using Object = UnityEngine.Object;
 using NUnit.Framework;
 using SpaceApps.Game;
+using SpaceApps.Mission;
 using SpaceApps.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -36,7 +37,7 @@ namespace SpaceApps.Tests.PlayMode
             yield return null;
             var session = Object.FindFirstObjectByType<MissionGame>().Session;
 
-            yield return Shot(Path.Combine(dir, "corridor.png"));
+            yield return Shot(Path.Combine(dir, "spawn-welcome.png"));
 
             // A failing design: an S-band radio the amateur UHF ground station cannot hear.
             session.Change(d =>
@@ -53,7 +54,25 @@ namespace SpaceApps.Tests.PlayMode
             yield return ShotOf(Ui.Screen("Mission Control"), Path.Combine(dir, "mission-control-fail.png"));
 
             session.Change(d => d.groundStation = "university-sband");
-            yield return ShotOf(Ui.Screen("Mission Control"), Path.Combine(dir, "mission-control-pass.png"));
+            var control = Ui.Screen("Mission Control");
+            yield return ShotOf(control, Path.Combine(dir, "mission-control-pass.png"));
+
+            // Flights: pick seeds the simulator says end in success and in failure for this design.
+            var flight = Object.FindFirstObjectByType<MissionGame>().Flight;
+            int Seed(System.Func<MissionOutcome, bool> wanted) => Enumerable.Range(1, 2000)
+                .First(seed => wanted(MissionSimulator.Run(session.Catalog, session.Design.Clone(), seed).outcome));
+            int good = Seed(o => o == MissionOutcome.FullSuccess);
+            int bad = Seed(o => o == MissionOutcome.Lost || o == MissionOutcome.Partial);
+
+            flight.Launch(bad);
+            flight.Step();
+            flight.Step();
+            yield return ShotOf(control, Path.Combine(dir, "mission-control-playback.png"));
+            flight.SkipToEnd();
+            yield return ShotOf(control, Path.Combine(dir, "mission-control-outcome-failure.png"));
+            flight.Launch(good);
+            flight.SkipToEnd();
+            yield return ShotOf(control, Path.Combine(dir, "mission-control-outcome-success.png"));
         }
 
         static IEnumerator ShotOf(Component target, string path, float distance = 1.9f)
