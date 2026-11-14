@@ -1,6 +1,6 @@
 {
     "name": "SpaceApps.Game",
     "rootNamespace": "SpaceApps.Game",
-    "references": ["SpaceApps.Mission", "SpaceApps.UI"],
+    "references": ["SpaceApps.Mission", "SpaceApps.UI", "SpaceApps.Ship"],
     "autoReferenced": true
 }

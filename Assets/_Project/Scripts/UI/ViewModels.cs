@@ -51,15 +51,17 @@ namespace SpaceApps.UI
         /// <summary>Footer line: what is chosen, or why it is a problem.</summary>
         string Status { get; }
         bool StatusIsProblem { get; }
-        /// <summary>Label of the action button; null hides it.</summary>
-        string ActionLabel { get; }
+        /// <summary>Labels of the action buttons, left to right; empty hides the row.</summary>
+        IReadOnlyList<string> Actions { get; }
+        /// <summary>True when the player has made every choice this station asks for.</summary>
+        bool IsDone { get; }
 
         /// <summary>Raised whenever anything above changes; the screen redraws.</summary>
         event Action Changed;
 
         void SelectStep(int index);
         void Select(int index);
-        void Act();
+        void Act(int index);
     }
 
     /// <summary>One resource row: used versus available.</summary>

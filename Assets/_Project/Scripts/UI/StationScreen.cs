@@ -10,6 +10,7 @@ namespace SpaceApps.UI
     public sealed class StationScreen : MonoBehaviour
     {
         [Header("Set by the ship builder")]
+        public int stationNumber;
         public string stationTitle;
         [TextArea] public string explanation;
 
@@ -22,25 +23,31 @@ namespace SpaceApps.UI
         public OptionRowView optionTemplate;
         public TMP_Text detailsText;
         public TMP_Text statusText;
-        public Button actionButton;
-        public TMP_Text actionLabel;
+        public RectTransform actionsRoot;
+        public StepTabView actionTemplate;
+        public GameObject doneBadge;
+        public TMP_Text numberText;
 
         public static readonly Color RowIdle = new Color(0.12f, 0.17f, 0.25f);
         public static readonly Color RowSelected = new Color(0.10f, 0.45f, 0.65f);
         public static readonly Color ProblemColor = new Color(1f, 0.45f, 0.4f);
+        public static readonly Color DoneColor = new Color(0.37f, 0.88f, 0.63f);
+        static readonly Color ActionColor = new Color(0.15f, 0.6f, 0.4f);
         static readonly Color StatusOk = new Color(0.9f, 0.93f, 1f);
 
         readonly List<OptionRowView> rows = new List<OptionRowView>();
         readonly List<StepTabView> tabs = new List<StepTabView>();
+        readonly List<StepTabView> actions = new List<StepTabView>();
         public IStationViewModel ViewModel { get; private set; }
         public IReadOnlyList<OptionRowView> Rows => rows;
         public IReadOnlyList<StepTabView> Tabs => tabs;
+        public IReadOnlyList<StepTabView> ActionButtons => actions;
 
         void Awake()
         {
             optionTemplate.gameObject.SetActive(false);
             stepTemplate.gameObject.SetActive(false);
-            actionButton.onClick.AddListener(() => ViewModel?.Act());
+            actionTemplate.gameObject.SetActive(false);
         }
 
         void Start()
@@ -100,8 +107,21 @@ namespace SpaceApps.UI
 
             statusText.text = vm.Status;
             statusText.color = vm.StatusIsProblem ? ProblemColor : StatusOk;
-            actionButton.gameObject.SetActive(vm.ActionLabel != null);
-            actionLabel.text = vm.ActionLabel ?? "";
+
+            var labels = vm.Actions;
+            Grow(actions, labels.Count, actionTemplate, actionsRoot, (button, i) => button.button.onClick.AddListener(() => ViewModel?.Act(i)));
+            for (int i = 0; i < actions.Count; i++)
+            {
+                bool used = i < labels.Count;
+                actions[i].gameObject.SetActive(used);
+                if (!used) continue;
+                actions[i].label.text = labels[i];
+                actions[i].background.color = ActionColor;
+            }
+
+            doneBadge.SetActive(vm.IsDone);
+            numberText.text = stationNumber.ToString();
+            numberText.color = vm.IsDone ? DoneColor : StatusOk;
         }
 
         static void Grow<T>(List<T> list, int count, T template, Transform parent, System.Action<T, int> wire) where T : Component
