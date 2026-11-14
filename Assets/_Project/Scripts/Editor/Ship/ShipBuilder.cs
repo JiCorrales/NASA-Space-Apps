@@ -81,6 +81,7 @@ namespace SpaceApps.Ship.Editor
             var screenPrefab = SavePrefab(BuildStationScreen(frame, desk), "StationScreen");
             var dashboardPrefab = SavePrefab(BuildDashboard(frame), "ResourceDashboard");
             var desktopPrefab = SavePrefab(BuildDesktopRig(), "DesktopRig");
+            var welcomePrefab = SavePrefab(BuildWelcomeSign(frame), "WelcomeSign");
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             RenderSettings.skybox = null;
@@ -106,6 +107,7 @@ namespace SpaceApps.Ship.Editor
                 var station = Place(screenPrefab, $"Station {i + 1} {Stations[i].title}",
                     new Vector3(x, ScreenHeight, StationSpacing * (i + 1)), left ? -90f : 90f);
                 var so = new SerializedObject(station.GetComponent<StationScreen>());
+                so.FindProperty("stationNumber").intValue = i + 1;
                 so.FindProperty("stationTitle").stringValue = Stations[i].title;
                 so.FindProperty("explanation").stringValue = Stations[i].explanation;
                 so.ApplyModifiedPropertiesWithoutUndo();
@@ -115,6 +117,8 @@ namespace SpaceApps.Ship.Editor
                     station.transform.position + station.transform.right * 1.5f + Vector3.up * 0.05f, left ? -90f : 90f);
             }
 
+            // Hangs in front of the spawn point, above eye height so the corridor stays in view.
+            Place(welcomePrefab, "Welcome Sign", new Vector3(0f, 2.2f, 2.8f), 0f);
             Place(dashboardPrefab, "Resource Dashboard End", new Vector3(0f, 1.6f, length - 0.08f), 0f);
             new GameObject("Mission Game").AddComponent<MissionGame>();
 
@@ -280,11 +284,35 @@ namespace SpaceApps.Ship.Editor
             screen.detailsText.overflowMode = TextOverflowModes.Truncate;
 
             screen.statusText = Label("Status", canvas, 30, FontStyles.Normal, TextAlignmentOptions.Left, TextColor,
-                new Vector2(0, 0), new Vector2(0.7f, 0), new Vector2(48, 30), new Vector2(0, 190));
-            var action = Panel("Action", canvas, new Color(0.15f, 0.6f, 0.4f), new Vector2(0.7f, 0), new Vector2(1, 0),
-                new Vector2(24, 60), new Vector2(-48, 160));
-            screen.actionButton = MakeButton(action);
-            screen.actionLabel = Label("Label", action.rectTransform, 40, FontStyles.Bold, TextAlignmentOptions.Center, Color.white,
+                new Vector2(0, 0), new Vector2(0.4f, 0), new Vector2(48, 30), new Vector2(0, 190));
+
+            var actions = Rect("Actions", canvas, new Vector2(0.4f, 0), new Vector2(1, 0), new Vector2(24, 60), new Vector2(-48, 160));
+            var actionsLayout = actions.gameObject.AddComponent<HorizontalLayoutGroup>();
+            actionsLayout.spacing = 14;
+            actionsLayout.childAlignment = TextAnchor.MiddleRight;
+            actionsLayout.childControlHeight = actionsLayout.childControlWidth = true;
+            actionsLayout.childForceExpandHeight = true;
+            actionsLayout.childForceExpandWidth = false;
+            screen.actionsRoot = actions;
+            var action = Panel("Action Template", actions, new Color(0.15f, 0.6f, 0.4f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            action.gameObject.AddComponent<LayoutElement>().preferredWidth = 240;
+            var actionView = action.gameObject.AddComponent<StepTabView>();
+            actionView.background = action;
+            actionView.button = MakeButton(action);
+            actionView.label = Label("Label", action.rectTransform, 30, FontStyles.Bold, TextAlignmentOptions.Center, Color.white,
+                Vector2.zero, Vector2.one, new Vector2(8, 0), new Vector2(-8, 0));
+            AutoSize(actionView.label, 24f);
+            screen.actionTemplate = actionView;
+
+            var done = Panel("Done", canvas, StationScreen.DoneColor, new Vector2(1, 1), new Vector2(1, 1), new Vector2(-200, -100), new Vector2(-48, -40));
+            Label("Label", done.rectTransform, 32, FontStyles.Bold, TextAlignmentOptions.Center, new Color(0.04f, 0.1f, 0.08f),
+                Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).text = "DONE";
+            screen.doneBadge = done.gameObject;
+
+            // The station number, above the screen, readable from down the corridor.
+            var plate = Panel("Number Plate", canvas, new Color(0.04f, 0.06f, 0.1f), new Vector2(0.5f, 1), new Vector2(0.5f, 1),
+                new Vector2(-120, 50), new Vector2(120, 290));
+            screen.numberText = Label("Number", plate.rectTransform, 150, FontStyles.Bold, TextAlignmentOptions.Center, TextColor,
                 Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             return root;
         }
@@ -327,6 +355,25 @@ namespace SpaceApps.Ship.Editor
             view.barFillImage = Panel("Fill", bar.rectTransform, ResourceDashboard.BarOk, Vector2.zero, new Vector2(0.5f, 1f), Vector2.zero, Vector2.zero);
             view.barFill = view.barFillImage.rectTransform;
             dashboard.rowTemplate = view;
+            return root;
+        }
+
+        // ---------- welcome sign ----------
+
+        static GameObject BuildWelcomeSign(Material frameMat)
+        {
+            var root = new GameObject("WelcomeSign");
+            Box("Frame", root, new Vector3(0f, 0f, 0.03f), new Vector3(1.68f, 0.88f, 0.05f), frameMat, collider: false);
+            var canvas = WorldCanvas(root, new Vector2(1600f, 800f));
+            Panel("Background", canvas, new Color(0.04f, 0.06f, 0.1f, 0.97f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            var sign = root.AddComponent<WelcomeSign>();
+            sign.titleText = Label("Title", canvas, 60, FontStyles.Bold, TextAlignmentOptions.Left, TextColor,
+                new Vector2(0, 1), new Vector2(1, 1), new Vector2(48, -120), new Vector2(-48, -30));
+            sign.bodyText = Label("Body", canvas, 36, FontStyles.Normal, TextAlignmentOptions.TopLeft, TextColor,
+                new Vector2(0, 0), new Vector2(1, 1), new Vector2(48, 200), new Vector2(-48, -135));
+            var controls = Panel("Controls", canvas, new Color(0.12f, 0.17f, 0.25f), new Vector2(0, 0), new Vector2(1, 0), new Vector2(32, 28), new Vector2(-32, 180));
+            sign.controlsText = Label("Text", controls.rectTransform, 32, FontStyles.Normal, TextAlignmentOptions.Left, TextColor,
+                Vector2.zero, Vector2.one, new Vector2(24, 8), new Vector2(-24, -8));
             return root;
         }
 
