@@ -54,7 +54,17 @@ namespace SpaceApps.Ship.Editor
         [MenuItem("Space Apps/Build Ship Scene")]
         public static void Build()
         {
-            font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath) ?? TMP_Settings.defaultFontAsset;
+            // Template assets first: fail before anything is overwritten.
+            font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
+            var xrPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(XrRigPrefab);
+            if (font == null || xrPrefab == null)
+                throw new System.InvalidOperationException(
+                    $"[ShipBuilder] Template asset missing, nothing was changed. Font at {FontPath}: {(font ? "ok" : "missing")}; XR rig at {XrRigPrefab}: {(xrPrefab ? "ok" : "missing")}.");
+
+            // The builder replaces the open scene; let the user save theirs. Batch mode never prompts.
+            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                return;
+
             EnsureFolder(MaterialsDir);
 
             var hull = Mat("Hull", new Color(0.55f, 0.58f, 0.62f));
@@ -97,7 +107,6 @@ namespace SpaceApps.Ship.Editor
             new GameObject("Mission Game").AddComponent<MissionGame>();
 
             var spawn = new Vector3(0f, 0f, 1f);
-            var xrPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(XrRigPrefab);
             var xrRig = Place(xrPrefab, xrPrefab.name, spawn, 0f);
             xrRig.SetActive(false);
             var desktopRig = Place(desktopPrefab, "Desktop Rig", spawn, 0f);
