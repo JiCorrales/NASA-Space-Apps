@@ -54,7 +54,7 @@ El enunciado del equipo menciona la pestaña de recursos, pero no lista los recu
 
 ### 6. Juego Webb "Build It Yourself"
 - Juego en el que el jugador elige ciencia, longitudes de onda, instrumentos y óptica. [VERIFICADO-NASA]
-- Tres niveles: el nivel 1 es un objetivo; el nivel 2 hasta dos objetivos; el nivel 3 hasta cuatro. Ver el detalle en `../01-mission-objective/webb-build-it-yourself.md` y en `../01-mission-objective/juego-webb-build-it-yourself.md`. [VERIFICADO-NASA]
+- Tres niveles: el nivel 1 es un objetivo; el nivel 2 hasta dos objetivos; el nivel 3 hasta cuatro. Ver el detalle en `../01-mission-objective/webb-build-it-yourself.md` y en `../01-mission-objective/webb-build-it-yourself.md`. [VERIFICADO-NASA]
 - Las opciones incompatibles aparecen deshabilitadas. [VERIFICADO-NASA]
 - Sin puntaje. [VERIFICADO-NASA]
 - **Uso práctico:** mecánica de referencia. No copiar textos, arte ni código. [DERIVADO]
