@@ -31,6 +31,12 @@ that costs hours during a 48-hour hackathon.
 - **One owner per scene at a time.** Scene files merge badly. Say in the team chat which scene you hold.
 - **Build things as prefabs; scenes only place them.** Two people can then work on the same room without
   touching the same file.
+- **The ship is generated.** `Assets/_Project/Scenes/Ship.unity` and the prefabs it places
+  (`Assets/_Project/Prefabs/`) come from the ship builder, `Assets/_Project/Scripts/Editor/Ship/ShipBuilder.cs`.
+  Nobody edits or merges them by hand: change the builder and rerun it, from the menu **Space Apps > Build Ship
+  Scene** or headless with `-executeMethod SpaceApps.Ship.Editor.ShipBuilder.Build`. Commit regenerated files
+  only together with the builder change that caused them (a rerun gives the scene new internal IDs, so the diff
+  is large even when nothing changed). On a merge conflict in them, take either side and rerun the builder.
 - Project settings: Asset Serialization = Force Text, Version Control = Visible Meta Files.
 - Our own files go under `Assets/_Project/` (`Scenes`, `Scripts`, `Prefabs`, `Art`, `Data`). Downloaded
   assets go under `Assets/ThirdParty/<source>/` and are never edited in place.
