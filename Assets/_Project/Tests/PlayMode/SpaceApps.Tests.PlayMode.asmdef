@@ -1,0 +1,10 @@
+{
+    "name": "SpaceApps.Tests.PlayMode",
+    "rootNamespace": "SpaceApps.Tests.PlayMode",
+    "references": ["SpaceApps.UI", "SpaceApps.Ship", "UnityEngine.UI", "Unity.TextMeshPro", "UnityEngine.TestRunner", "UnityEditor.TestRunner"],
+    "optionalUnityReferences": [],
+    "precompiledReferences": ["nunit.framework.dll"],
+    "overrideReferences": true,
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "autoReferenced": false
+}
