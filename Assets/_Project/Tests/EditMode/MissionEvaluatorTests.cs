@@ -105,14 +105,24 @@ namespace SpaceApps.Mission.Tests
             var r = Eval(DesignA());
             Assert.AreEqual(1.45f, r.Get(ResourceKind.Mass).used, 1e-4f);
             Assert.AreEqual(4.0f, r.Get(ResourceKind.Mass).available, 1e-4f);
-            Assert.AreEqual(1f + 2f * 0.25f + 5f * 32f / 1440f, r.Get(ResourceKind.Power).used, 1e-4f);
-            Assert.AreEqual(4.9f, r.Get(ResourceKind.Power).available, 1e-4f);
+            Assert.AreEqual(1f + 2f * 0.25f + 5f * 20.6f / 1440f, r.Get(ResourceKind.Power).used, 1e-4f);
+            Assert.AreEqual(7f * 0.63f, r.Get(ResourceKind.Power).available, 1e-4f);
             Assert.AreEqual(15f, r.Get(ResourceKind.Data).used, 1e-4f);
-            Assert.AreEqual(240f, r.Get(ResourceKind.Data).available, 1e-3f);
+            Assert.AreEqual(1000f * 20.6f * 60f / 8000f, r.Get(ResourceKind.Data).available, 1e-3f);
             Assert.AreEqual(2f, r.Get(ResourceKind.Communications).used, 1e-4f);
-            Assert.AreEqual(32f, r.Get(ResourceKind.Communications).available, 1e-4f);
+            Assert.AreEqual(20.6f, r.Get(ResourceKind.Communications).available, 1e-4f);
             Assert.AreEqual(309000f, r.Get(ResourceKind.Budget).used, 1f);
             Assert.AreEqual(23f, r.Get(ResourceKind.Time).used, 1e-4f);
+        }
+
+        [Test]
+        public void OrbitAndStationBothSetDailyContact()
+        {
+            float sso = Eval(DesignA()).Get(ResourceKind.Communications).available;
+            float leo = EvalWith(DesignA(), d => d.orbit = "leo-500").Get(ResourceKind.Communications).available;
+            float network = EvalWith(DesignA(), d => d.groundStation = "commercial-network").Get(ResourceKind.Communications).available;
+            Assert.Greater(leo, sso, "a sun-synchronous orbit passes a mid-latitude station less often");
+            Assert.AreEqual(3f * sso, network, 1e-3f);
         }
 
         [Test]
