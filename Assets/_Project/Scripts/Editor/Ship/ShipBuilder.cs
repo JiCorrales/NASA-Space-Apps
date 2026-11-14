@@ -1,4 +1,5 @@
 using System.Linq;
+using SpaceApps.Game;
 using SpaceApps.Ship;
 using SpaceApps.UI;
 using TMPro;
@@ -26,9 +27,10 @@ namespace SpaceApps.Ship.Editor
             ("Requirements", "Turn the goal into numbers: what data you need, how much ground you must cover and how long the mission must last."),
             ("Spacecraft", "Pick the CubeSat size and its core systems. Bigger means more room and power, but more mass and cost."),
             ("Instruments", "Choose the sensors that collect your science. Each one adds mass, draws power and fills the data link."),
+            ("Communications", "Pick a radio and a ground station. Together they decide how much of your data reaches Earth each day."),
             ("Launch and Orbit", "Pick a rocket and an orbit. The orbit sets what you can see, how often, and how long the satellite lasts."),
-            ("Build and Test", "Assemble the spacecraft and test it for vibration, heat and a day in orbit. Tests cost time but catch failures."),
-            ("Mission Control", "Launch and operate the mission. Watch the resources, react to events and see what science comes home."),
+            ("Build and Test", "Choose how to test the spacecraft before launch. Tests cost money and time but make it more likely to work."),
+            ("Mission Control", "Check the whole design: can it fly, what blocks it, and how much science it returns."),
         };
 
         const string Root = "Assets/_Project";
@@ -42,11 +44,12 @@ namespace SpaceApps.Ship.Editor
         const float Height = 3f;
         const float StationSpacing = 3f;
         const float WallThickness = 0.2f;
-        const float ScreenHeight = 1.5f;
+        const float ScreenHeight = 1.6f;
 
         static TMP_FontAsset font;
         static readonly Color TextColor = new Color(0.9f, 0.93f, 1f);
         static readonly Color DimText = new Color(0.65f, 0.72f, 0.82f);
+        static readonly Color SourceText = new Color(0.55f, 0.62f, 0.72f);
 
         [MenuItem("Space Apps/Build Ship Scene")]
         public static void Build()
@@ -84,9 +87,14 @@ namespace SpaceApps.Ship.Editor
                 so.FindProperty("stationTitle").stringValue = Stations[i].title;
                 so.FindProperty("explanation").stringValue = Stations[i].explanation;
                 so.ApplyModifiedPropertiesWithoutUndo();
+
+                // A dashboard beside every station, so the resources are in view wherever the player stands.
+                Place(dashboardPrefab, $"Resource Dashboard {i + 1}",
+                    station.transform.position + station.transform.right * 1.5f + Vector3.up * 0.05f, left ? -90f : 90f);
             }
 
-            Place(dashboardPrefab, "Resource Dashboard", new Vector3(0f, 1.6f, length - 0.08f), 0f);
+            Place(dashboardPrefab, "Resource Dashboard End", new Vector3(0f, 1.6f, length - 0.08f), 0f);
+            new GameObject("Mission Game").AddComponent<MissionGame>();
 
             var spawn = new Vector3(0f, 0f, 1f);
             var xrPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(XrRigPrefab);
@@ -165,46 +173,73 @@ namespace SpaceApps.Ship.Editor
 
         static GameObject BuildStationScreen(Material frameMat, Material deskMat)
         {
+            const float w = 1400f, h = 1300f;
             var root = new GameObject("StationScreen");
-            Box("Frame", root, new Vector3(0f, 0f, 0.03f), new Vector3(1.48f, 1.08f, 0.05f), frameMat, collider: false);
+            Box("Frame", root, new Vector3(0f, 0f, 0.03f), new Vector3(w / 1000f + 0.08f, h / 1000f + 0.08f, 0.05f), frameMat, collider: false);
             Box("Desk", root, new Vector3(0f, -ScreenHeight + 0.45f, -0.22f), new Vector3(1.3f, 0.9f, 0.4f), deskMat);
 
-            var canvas = WorldCanvas(root, new Vector2(1400f, 1000f));
+            var canvas = WorldCanvas(root, new Vector2(w, h));
             Panel("Background", canvas, new Color(0.04f, 0.06f, 0.1f, 0.97f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
 
             var screen = root.AddComponent<StationScreen>();
             screen.titleText = Label("Title", canvas, 64, FontStyles.Bold, TextAlignmentOptions.Left, TextColor,
-                new Vector2(0, 1), new Vector2(1, 1), new Vector2(48, -130), new Vector2(-48, -30));
+                new Vector2(0, 1), new Vector2(1, 1), new Vector2(48, -120), new Vector2(-48, -28));
             screen.explanationText = Label("Explanation", canvas, 34, FontStyles.Normal, TextAlignmentOptions.TopLeft, DimText,
-                new Vector2(0, 1), new Vector2(1, 1), new Vector2(48, -270), new Vector2(-48, -140));
+                new Vector2(0, 1), new Vector2(1, 1), new Vector2(48, -230), new Vector2(-48, -125));
 
-            var options = Rect("Options", canvas, Vector2.zero, Vector2.one, new Vector2(48, 160), new Vector2(-48, -285));
+            var steps = Rect("Steps", canvas, new Vector2(0, 1), new Vector2(1, 1), new Vector2(48, -315), new Vector2(-48, -245));
+            var stepsLayout = steps.gameObject.AddComponent<HorizontalLayoutGroup>();
+            stepsLayout.spacing = 14;
+            stepsLayout.childControlHeight = stepsLayout.childControlWidth = true;
+            stepsLayout.childForceExpandWidth = stepsLayout.childForceExpandHeight = true;
+            screen.stepsRoot = steps;
+            var tab = Panel("Step Template", steps, StationScreen.RowIdle, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            var tabView = tab.gameObject.AddComponent<StepTabView>();
+            tabView.background = tab;
+            tabView.button = MakeButton(tab);
+            tabView.label = Label("Label", tab.rectTransform, 36, FontStyles.Bold, TextAlignmentOptions.Center, TextColor,
+                Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            screen.stepTemplate = tabView;
+
+            var body = new Vector2(48, 205);
+            var bodyTop = new Vector2(-48, -330);
+            var options = Rect("Options", canvas, Vector2.zero, Vector2.one, body, bodyTop);
             var layout = options.gameObject.AddComponent<VerticalLayoutGroup>();
-            layout.spacing = 14;
+            layout.spacing = 10;
             layout.childControlHeight = layout.childControlWidth = true;
             layout.childForceExpandHeight = false;
             layout.childForceExpandWidth = true;
             screen.optionsRoot = options;
 
             var row = Panel("Option Template", options, StationScreen.RowIdle, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-            row.gameObject.AddComponent<LayoutElement>().preferredHeight = 122;
+            row.gameObject.AddComponent<LayoutElement>().preferredHeight = 118;
             var rowView = row.gameObject.AddComponent<OptionRowView>();
             rowView.background = row;
             rowView.button = MakeButton(row);
-            rowView.nameText = Label("Name", row.rectTransform, 40, FontStyles.Bold, TextAlignmentOptions.Left, TextColor,
-                new Vector2(0, 0.5f), new Vector2(0.5f, 1), new Vector2(24, 0), new Vector2(0, -6));
-            rowView.statsText = Label("Stats", row.rectTransform, 32, FontStyles.Normal, TextAlignmentOptions.Right, TextColor,
-                new Vector2(0.5f, 0.5f), new Vector2(1, 1), new Vector2(0, 0), new Vector2(-24, -6));
-            rowView.descriptionText = Label("Description", row.rectTransform, 30, FontStyles.Normal, TextAlignmentOptions.Left, DimText,
-                new Vector2(0, 0), new Vector2(1, 0.5f), new Vector2(24, 6), new Vector2(-24, 0));
+            rowView.nameText = Label("Name", row.rectTransform, 32, FontStyles.Bold, TextAlignmentOptions.Left, TextColor,
+                new Vector2(0, 0.58f), new Vector2(0.38f, 1), new Vector2(20, 0), new Vector2(0, -2));
+            rowView.statsText = Label("Stats", row.rectTransform, 27, FontStyles.Normal, TextAlignmentOptions.Right, TextColor,
+                new Vector2(0.38f, 0.58f), new Vector2(1, 1), new Vector2(12, 0), new Vector2(-20, -2));
+            rowView.descriptionText = Label("Description", row.rectTransform, 28, FontStyles.Normal, TextAlignmentOptions.Left, DimText,
+                new Vector2(0, 0.28f), new Vector2(1, 0.58f), new Vector2(20, 0), new Vector2(-20, 0));
+            rowView.sourceText = Label("Source", row.rectTransform, 24, FontStyles.Italic, TextAlignmentOptions.Left, SourceText,
+                new Vector2(0, 0), new Vector2(1, 0.28f), new Vector2(20, 2), new Vector2(-20, 0));
+            rowView.descriptionText.textWrappingMode = rowView.sourceText.textWrappingMode = TextWrappingModes.NoWrap;
+            // Long names or many stats shrink a little rather than being cut off.
+            AutoSize(rowView.nameText, 26f);
+            AutoSize(rowView.statsText, 22f);
             screen.optionTemplate = rowView;
 
-            screen.selectionText = Label("Selection", canvas, 38, FontStyles.Normal, TextAlignmentOptions.Left, TextColor,
-                new Vector2(0, 0), new Vector2(0.62f, 0), new Vector2(48, 36), new Vector2(0, 130));
-            var confirm = Panel("Confirm", canvas, new Color(0.15f, 0.6f, 0.4f), new Vector2(0.62f, 0), new Vector2(1, 0),
-                new Vector2(24, 36), new Vector2(-48, 130));
-            screen.confirmButton = MakeButton(confirm);
-            screen.confirmLabel = Label("Label", confirm.rectTransform, 42, FontStyles.Bold, TextAlignmentOptions.Center, Color.white,
+            screen.detailsText = Label("Details", canvas, 32, FontStyles.Normal, TextAlignmentOptions.TopLeft, TextColor,
+                Vector2.zero, Vector2.one, body, bodyTop);
+            screen.detailsText.overflowMode = TextOverflowModes.Truncate;
+
+            screen.statusText = Label("Status", canvas, 30, FontStyles.Normal, TextAlignmentOptions.Left, TextColor,
+                new Vector2(0, 0), new Vector2(0.7f, 0), new Vector2(48, 30), new Vector2(0, 190));
+            var action = Panel("Action", canvas, new Color(0.15f, 0.6f, 0.4f), new Vector2(0.7f, 0), new Vector2(1, 0),
+                new Vector2(24, 60), new Vector2(-48, 160));
+            screen.actionButton = MakeButton(action);
+            screen.actionLabel = Label("Label", action.rectTransform, 40, FontStyles.Bold, TextAlignmentOptions.Center, Color.white,
                 Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             return root;
         }
@@ -214,14 +249,16 @@ namespace SpaceApps.Ship.Editor
         static GameObject BuildDashboard(Material frameMat)
         {
             var root = new GameObject("ResourceDashboard");
-            Box("Frame", root, new Vector3(0f, 0f, 0.03f), new Vector3(1.28f, 0.98f, 0.05f), frameMat, collider: false);
-            var canvas = WorldCanvas(root, new Vector2(1200f, 900f));
+            Box("Frame", root, new Vector3(0f, 0f, 0.03f), new Vector3(1.28f, 1.06f, 0.05f), frameMat, collider: false);
+            var canvas = WorldCanvas(root, new Vector2(1200f, 980f));
             Panel("Background", canvas, new Color(0.04f, 0.06f, 0.1f, 0.97f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             Label("Title", canvas, 56, FontStyles.Bold, TextAlignmentOptions.Left, TextColor,
                 new Vector2(0, 1), new Vector2(1, 1), new Vector2(48, -120), new Vector2(-48, -30)).text = "Mission resources";
 
             var dashboard = root.AddComponent<ResourceDashboard>();
-            var rows = Rect("Rows", canvas, Vector2.zero, Vector2.one, new Vector2(48, 36), new Vector2(-48, -135));
+            var rows = Rect("Rows", canvas, Vector2.zero, Vector2.one, new Vector2(48, 110), new Vector2(-48, -135));
+            dashboard.noteText = Label("Note", canvas, 28, FontStyles.Normal, TextAlignmentOptions.TopLeft, DimText,
+                Vector2.zero, new Vector2(1, 0), new Vector2(48, 16), new Vector2(-48, 106));
             var layout = rows.gameObject.AddComponent<VerticalLayoutGroup>();
             layout.spacing = 12;
             layout.childControlHeight = layout.childControlWidth = true;
@@ -321,6 +358,14 @@ namespace SpaceApps.Ship.Editor
             text.textWrappingMode = TextWrappingModes.Normal;
             text.overflowMode = TextOverflowModes.Ellipsis;
             return text;
+        }
+
+        static void AutoSize(TMP_Text text, float min)
+        {
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.fontSizeMax = text.fontSize;
+            text.fontSizeMin = min;
+            text.enableAutoSizing = true;
         }
 
         static Button MakeButton(Image target)

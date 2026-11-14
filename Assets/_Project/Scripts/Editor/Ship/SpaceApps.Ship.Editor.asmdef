@@ -1,7 +1,7 @@
 {
     "name": "SpaceApps.Ship.Editor",
     "rootNamespace": "SpaceApps.Ship.Editor",
-    "references": ["SpaceApps.UI", "SpaceApps.Ship", "Unity.TextMeshPro", "UnityEngine.UI", "Unity.XR.Interaction.Toolkit"],
+    "references": ["SpaceApps.UI", "SpaceApps.Ship", "SpaceApps.Game", "Unity.TextMeshPro", "UnityEngine.UI", "Unity.XR.Interaction.Toolkit"],
     "includePlatforms": ["Editor"],
     "autoReferenced": false
 }
