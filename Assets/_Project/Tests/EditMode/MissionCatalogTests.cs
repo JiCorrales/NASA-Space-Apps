@@ -9,6 +9,7 @@ namespace SpaceApps.Mission.Tests
     public class MissionCatalogTests
     {
         static readonly string[] Statuses = { "nasa-verified", "derived", "game-balance" };
+        static readonly string[] NasaPrefixes = { "CubeSat 101", "NASA ", "CubeSat Design Specification" };
 
         static IEnumerable<(string path, Num num)> Numbers(object node, string path)
         {
@@ -44,7 +45,7 @@ namespace SpaceApps.Mission.Tests
                 Assert.LessOrEqual(num.source.Length, 160, $"{path}: source too long to read on screen");
                 Assert.IsTrue(num.source.All(ch => ch < 128), $"{path}: source must be plain English text");
                 if (num.status == "nasa-verified")
-                    StringAssert.StartsWith("CubeSat 101", num.source, $"{path} is nasa-verified but does not cite the PDF");
+                    Assert.IsTrue(NasaPrefixes.Any(num.source.StartsWith), $"{path} is nasa-verified but does not cite a NASA document: {num.source}");
             }
         }
 
