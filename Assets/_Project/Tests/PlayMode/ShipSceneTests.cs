@@ -77,54 +77,32 @@ namespace SpaceApps.Tests.PlayMode
         }
 
         [Test]
-        public void ThereAreSevenStationScreensInWalkingOrder()
+        public void ThereAreEightStationScreensInWalkingOrder()
         {
-            var titles = UnityEngine.Object.FindObjectsByType<StationScreen>(FindObjectsSortMode.None)
-                .OrderBy(s => s.transform.position.z).Select(s => s.ViewModel.Title).ToArray();
-            CollectionAssert.AreEqual(new[] { "Objective", "Requirements", "Spacecraft", "Instruments",
-                "Launch and Orbit", "Build and Test", "Mission Control" }, titles);
+            CollectionAssert.AreEqual(new[] { "Objective", "Requirements", "Spacecraft", "Instruments", "Communications",
+                "Launch and Orbit", "Build and Test", "Mission Control" }, Ui.Screens().Select(s => s.ViewModel.Title).ToArray());
         }
 
-        [UnityTest]
-        public IEnumerator SelectingAndConfirmingThroughTheEventSystemRaisesConfirmed()
+        [Test]
+        public void EveryStationHasADashboardInView()
         {
-            var screen = UnityEngine.Object.FindObjectsByType<StationScreen>(FindObjectsSortMode.None)
-                .OrderBy(s => s.transform.position.z).First();
-            var vm = screen.ViewModel;
-            int confirmed = -1;
-            vm.Confirmed += i => confirmed = i;
-
-            var cam = Camera.main;
-            // Stand 1.6 m in front of the screen, looking at it.
-            cam.transform.position = screen.transform.position - screen.transform.forward * 1.6f;
-            cam.transform.rotation = Quaternion.LookRotation(screen.transform.forward);
-            yield return null;
-
-            Click(screen.Rows[1].button.transform as RectTransform, cam);
-            Assert.AreEqual(1, vm.SelectedIndex);
-            StringAssert.Contains(vm.Options[1].Name, screen.selectionText.text);
-
-            Click(screen.confirmButton.transform as RectTransform, cam);
-            Assert.AreEqual(1, confirmed);
-            Assert.IsTrue(vm.IsConfirmed);
-        }
-
-        /// <summary>Raycasts the screen point of the target through the EventSystem, then clicks what it hit.</summary>
-        static void Click(RectTransform target, Camera cam)
-        {
-            var screenPoint = (Vector2)cam.WorldToScreenPoint(target.TransformPoint(target.rect.center));
-            var data = new PointerEventData(EventSystem.current) { position = screenPoint, button = PointerEventData.InputButton.Left };
-            var hits = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(data, hits);
-            Assert.IsNotEmpty(hits, $"nothing under {target.name} at {screenPoint}");
-            Assert.IsTrue(hits[0].gameObject.transform.IsChildOf(target), $"{hits[0].gameObject.name} is in front of {target.name}");
-            data.pointerCurrentRaycast = hits[0];
-            ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, data, ExecuteEvents.pointerClickHandler);
+            var dashboards = UnityEngine.Object.FindObjectsByType<ResourceDashboard>(FindObjectsSortMode.None);
+            foreach (var screen in Ui.Screens())
+            {
+                var viewer = screen.transform.position - screen.transform.forward * 1.6f;
+                Assert.IsTrue(dashboards.Any(d =>
+                    {
+                        var toDashboard = d.transform.position - viewer;
+                        return toDashboard.magnitude < 3f && Vector3.Angle(screen.transform.forward, toDashboard) < 45f
+                               && Vector3.Dot(d.transform.forward, toDashboard) > 0f; // facing the viewer
+                    }), $"no dashboard in view at {screen.stationTitle}");
+            }
         }
 
         sealed class FakeResources : IResourceDashboardViewModel
         {
             public IReadOnlyList<ResourceStatus> Resources { get; set; }
+            public string Note => "";
             public event Action Changed { add { } remove { } }
         }
 
@@ -141,6 +119,7 @@ namespace SpaceApps.Tests.PlayMode
                     new ResourceStatus("Budget", "k$", 500f, 500f),
                 },
             });
+            Assert.AreEqual("6 / 5 W", dashboard.Rows[1].valueText.text);
             Assert.IsFalse(dashboard.IsOverLimitShown(0));
             Assert.IsTrue(dashboard.IsOverLimitShown(1));
             Assert.IsFalse(dashboard.IsOverLimitShown(2), "exactly at the limit is not over");

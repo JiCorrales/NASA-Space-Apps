@@ -17,32 +17,49 @@ namespace SpaceApps.UI
         public readonly string Name;
         public readonly string Description;
         public readonly IReadOnlyList<StatValue> Stats;
+        /// <summary>Where the numbers come from, shown under the option. May be empty.</summary>
+        public readonly string Source;
+        public readonly bool Selected;
 
-        public StationOption(string name, string description, IReadOnlyList<StatValue> stats)
+        public StationOption(string name, string description, IReadOnlyList<StatValue> stats, string source, bool selected)
         {
             Name = name;
             Description = description;
             Stats = stats ?? Array.Empty<StatValue>();
+            Source = source ?? "";
+            Selected = selected;
         }
     }
 
-    /// <summary>What a station screen shows and what it can do. The mission model adapts to this.</summary>
+    /// <summary>
+    /// What a station screen shows and what it can do. A station has one or more steps (tabs); the options
+    /// belong to the current step. Select picks an option, or toggles it when the step is multi-select.
+    /// </summary>
     public interface IStationViewModel
     {
         string Title { get; }
         string Explanation { get; }
+
+        /// <summary>Step names; one or zero steps hides the tabs.</summary>
+        IReadOnlyList<string> Steps { get; }
+        int StepIndex { get; }
+        /// <summary>Options of the current step; empty for read-only stations.</summary>
         IReadOnlyList<StationOption> Options { get; }
-        /// <summary>-1 when nothing is selected.</summary>
-        int SelectedIndex { get; }
-        bool IsConfirmed { get; }
+        bool MultiSelect { get; }
+        /// <summary>Free text shown when there are no options (rich text allowed).</summary>
+        string Details { get; }
+        /// <summary>Footer line: what is chosen, or why it is a problem.</summary>
+        string Status { get; }
+        bool StatusIsProblem { get; }
+        /// <summary>Label of the action button; null hides it.</summary>
+        string ActionLabel { get; }
 
         /// <summary>Raised whenever anything above changes; the screen redraws.</summary>
         event Action Changed;
-        /// <summary>Raised by Confirm with the confirmed option index.</summary>
-        event Action<int> Confirmed;
 
+        void SelectStep(int index);
         void Select(int index);
-        void Confirm();
+        void Act();
     }
 
     /// <summary>One resource row: used versus available.</summary>
@@ -64,6 +81,8 @@ namespace SpaceApps.UI
     public interface IResourceDashboardViewModel
     {
         IReadOnlyList<ResourceStatus> Resources { get; }
+        /// <summary>One line under the rows, such as what is still to choose. May be empty.</summary>
+        string Note { get; }
         event Action Changed;
     }
 }

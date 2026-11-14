@@ -12,5 +12,6 @@ namespace SpaceApps.UI
         public TMP_Text nameText;
         public TMP_Text descriptionText;
         public TMP_Text statsText;
+        public TMP_Text sourceText;
     }
 }
