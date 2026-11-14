@@ -4,12 +4,12 @@ using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-namespace NasaSpaceApps.Editor.Build
+namespace SpaceApps.Editor.Build
 {
     /// <summary>
     /// Headless WebGL build:
     /// Unity -batchmode -quit -projectPath . -buildTarget WebGL
-    ///       -executeMethod NasaSpaceApps.Editor.Build.WebGLBuild.Build -logFile build.log
+    ///       -executeMethod SpaceApps.Editor.Build.WebGLBuild.Build -logFile build.log
     /// Output: Builds/WebGL. Exits non-zero on failure.
     /// </summary>
     public static class WebGLBuild
