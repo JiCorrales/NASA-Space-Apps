@@ -1,0 +1,14 @@
+mission,award_date,launch_vehicle,total_cost_musd,cost_scope,source_url
+TESS,2014-12-17,Falcon 9,87,"launch service, spacecraft processing, payload integration, tracking, data and telemetry, other launch support",https://www.nasa.gov/news-release/nasa-awards-launch-services-contract-for-transiting-exoplanet-survey-satellite/
+SWOT,2016-11-22,Falcon 9,112,"launch service; spacecraft processing; payload integration; tracking, data and telemetry support",https://www.nasa.gov/news-release/nasa-selects-launch-services-for-global-surface-water-survey-mission/
+Landsat 9,2017-10-19,Atlas V,153.8,launch service and other mission-related costs,https://www.nasa.gov/news-release/nasa-awards-launch-services-contract-for-landsat-9-mission/
+DART,2019-04-11,Falcon 9,69,launch service and other mission related costs,https://www.nasa.gov/news-release/nasa-awards-launch-services-contract-for-asteroid-redirect-test-mission/
+PACE,2020-02-04,Falcon 9,80.4,launch service and other mission related costs,https://www.nasa.gov/news-release/nasa-awards-launch-services-contract-for-earth-science-mission/
+Psyche,2020-02-28,Falcon Heavy,117,"launch service and other mission related costs (includes secondary payloads)",https://www.nasa.gov/news-release/nasa-awards-launch-services-contract-for-the-psyche-mission/
+IMAP,2020-09-25,Falcon 9,109.4,"launch service and other mission related costs (includes secondary payloads)",https://www.nasa.gov/news-release/nasa-awards-launch-services-contract-for-imap-mission/
+SPHEREx,2021-02-04,Falcon 9,98.8,launch service and other mission related costs,https://www.nasa.gov/news-release/nasa-awards-launch-services-contract-for-spherex-astrophysics-mission/
+Europa Clipper,2021-07-23,Falcon Heavy,178,total contract award amount for launch services,https://www.nasa.gov/news-release/nasa-awards-launch-services-contract-for-europa-clipper-mission/
+Roman Space Telescope,2022-07-19,Falcon Heavy,255,launch service and other mission related costs,https://www.nasa.gov/news-release/nasa-awards-launch-services-contract-for-roman-space-telescope/
+Sentinel-6B,2022-12-20,Falcon 9,94,firm fixed price; launch services and other mission related costs,https://www.nasa.gov/news-release/nasa-awards-launch-services-contract-for-sentinel-6b-mission/
+JPSS-4,2024-07-22,Falcon 9,112.7,firm fixed price; launch services and other mission related costs,https://www.nasa.gov/news-release/nasa-awards-launch-services-contract-for-noaas-jpss-4-mission/
+NEO Surveyor,2025-02-21,Falcon 9,100,launch service and other mission related costs,https://www.nasa.gov/news-release/nasa-awards-planetary-defense-space-telescope-launch-services-contract/

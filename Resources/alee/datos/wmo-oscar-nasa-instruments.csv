@@ -1,0 +1,330 @@
+acronym,fullname,providing_agency,instrument_type,mass,power,data_rate,resolution,satellites,source_url
+CERES,Clouds and the Earth’s Radiant Energy System ,NASA,Broad band radiometer,57 kg,50 W,10 kbps,30 km,,https://space.oscar.wmo.int/instruments/view/ceres
+ERB,Earth Radiation Budget,NASA,Broad band radiometer,18 kg,30 W,0.5 kbps,Scanning channels: 80 km s.s.p.,Nimbus-6; Nimbus-7,https://space.oscar.wmo.int/instruments/view/erb
+ERBE,Earth Radiation Budget Experiment,NASA,Broad band radiometer,,,1.12 kbps,Scanning channels: 40 km s.s.p.,Earth Radiation Budget Satellite,https://space.oscar.wmo.int/instruments/view/erbe
+ERBE (NOAA),Earth Radiation Budget Experiment,NASA,Broad band radiometer,,,1.12 kbps,Scanning channels: 50 km s.s.p.,National Oceanic and Atmospheric Administration - 10; National Oceanic and Atmospheric Administration - 9,https://space.oscar.wmo.int/instruments/view/erbe_noaa
+FPR,Flat Plate Radiometer,NASA,Broad band radiometer,,,,N/A,,https://space.oscar.wmo.int/instruments/view/fpr
+Libera,Libera,NASA,Broad band radiometer,,,,,Joint Polar Satellite System - 4,https://space.oscar.wmo.int/instruments/view/libera
+MRIR,Medium Resolution Infrared Radiometer,NASA,Broad band radiometer,,,,55 km at s.s.p.,,https://space.oscar.wmo.int/instruments/view/mrir
+NISTAR,NIST Advanced Radiometer (NIST = National Institute of Standards and Technology Advanced Radiometer),NASA,Broad band radiometer,23.5 kg,,,N/A (full viewed Earth's disc),Deep Space Climate Observatory,https://space.oscar.wmo.int/instruments/view/nistar
+TIRS (PREFIRE),Thermal IR Spectrometer,NASA,Broad band radiometer,3 kg,4.5 W,12 kbps,11.7 km at s.s.p. (average for the two orbital altitudes),Polar Radiant Energy in the Far Infrared Experiment-1; Polar Radiant Energy in the Far Infrared Experiment-2,https://space.oscar.wmo.int/instruments/view/tirs_prefire
+AOS-Sky radar,AOS-Sky Single-frequency Doppler Radar,NASA,Cloud and precipitation radar,,,,"2km horizontal, 500m vertical",Atmosphere Observing System - Sky ,https://space.oscar.wmo.int/instruments/view/aos_sky_radar
+CPR (CloudSat),Cloud Profiling Radar for CloudSat,NASA,Cloud and precipitation radar,230 kg,270 W,15 kbps,Horizontal: 1.4 km (cross-track) x 3.5 km (along-track); vertical 500 m,Aerosol-Cloud-Ecosystems; CloudSat,https://space.oscar.wmo.int/instruments/view/cpr_cloudsat
+INCUS-radar,Radar on 3 INCUS satellites,NASA,Cloud and precipitation radar,7 kg,22 W,50 kbps,"3.1 km horizontal, 240 m vertical",INCUS-1; INCUS-2; INCUS-3,https://space.oscar.wmo.int/instruments/view/incus_radar
+RainCube,Radar In a CubeSat,NASA,Cloud and precipitation radar,5.5 kg,22 W,50 kbps,"7.9 km horizontal, 120 m vertical",Radar in a CubeSat,https://space.oscar.wmo.int/instruments/view/raincube
+AIRS,Atmospheric Infra-Red Sounder ,NASA,Cross-nadir infrared sounder,177 kg,220 W,1.27 Mbps,13.5 km IFOV for the spectrometer; 2.3 km IFOV for VIS/NIR channels,Earth Observation System - Aqua,https://space.oscar.wmo.int/instruments/view/airs
+CO sensor,Carbon oxide sensor,NASA,Cross-nadir infrared sounder,100 kg,100 W,28 Mbps,250 m,"Active Sensing of CO2 Emissions over Nights, Days, and Seasons",https://space.oscar.wmo.int/instruments/view/co_sensor
+FWS,Filter Wedge Spectrometer,NASA,Cross-nadir infrared sounder,,,,70 km s.s.p.,Nimbus-4,https://space.oscar.wmo.int/instruments/view/fws
+HIRS,High-resolution Infra-Red Sounder,NASA,Cross-nadir infrared sounder,13.5 kg,10 W,10.8 kbps,25 km at s.s.p.,Nimbus-6,https://space.oscar.wmo.int/instruments/view/hirs
+IR spectrometer,Infra Red Spectrometer,NASA,Cross-nadir infrared sounder,,,,100 km,Climate Absolute Radiance and Refractivity Observatory - 1A; Climate Absolute Radiance and Refractivity Observatory - 2A,https://space.oscar.wmo.int/instruments/view/ir_spectrometer
+IRIS-B,Infra-Red Interferometer Spectrometer - B,NASA,Cross-nadir infrared sounder,13 kg,16 W,3.75 kbps,144 km,Nimbus-3,https://space.oscar.wmo.int/instruments/view/iris_b
+IRIS-D,Infra-Red Interferometer Spectrometer - D,NASA,Cross-nadir infrared sounder,22 kg,28 W,3.75 kbps,94 km,Nimbus-4,https://space.oscar.wmo.int/instruments/view/iris_d
+ITPR,Infrared Temperature Profile Radiometer,NASA,Cross-nadir infrared sounder,15.9 kg,16 W,0.24 kbps,32 km at s.s.p.,Nimbus-5,https://space.oscar.wmo.int/instruments/view/itpr
+MOPITT,Measurement Of Pollution In The Troposphere ,NASA,Cross-nadir infrared sounder,182 kg,243 W,25 kbps,22 km IFOV,Earth Observation System - Terra,https://space.oscar.wmo.int/instruments/view/mopitt
+SIRS-A,Satellite Infra-Red Spectrometer,NASA,Cross-nadir infrared sounder,41 kg,24 W,100 bps,220 km,Nimbus-3,https://space.oscar.wmo.int/instruments/view/sirs_a
+SIRS-B,Satellite Infra-Red Spectrometer - B,NASA,Cross-nadir infrared sounder,31.5 kg,30 W,,220 km at s.s.p.,Nimbus-4,https://space.oscar.wmo.int/instruments/view/sirs_b
+SME (IR),SME-Infrared Radiometer,NASA,Cross-nadir infrared sounder,,,,,Solar Mesosphere Explorer,https://space.oscar.wmo.int/instruments/view/sme_ir
+TES-nadir,Tropospheric Emission Spectrometer ,NASA,Cross-nadir infrared sounder,385 kg,334 W,4.5 Mbps,Cross-track mode: 0.53 x 0.53 km at s.s.p.,Earth Observation System - Aura,https://space.oscar.wmo.int/instruments/view/tes_nadir
+BUV,Backscatter Ultraviolet Spectrometer,NASA,Cross-nadir scanning SW sounder,14.5 kg,7 W,,220 km s.s.p.,Nimbus-4,https://space.oscar.wmo.int/instruments/view/buv
+Carbon Mapper,Tanager Carbon Mapper,NASA,Cross-nadir scanning SW sounder,,,,30 m footprint on the ground.,Tanager-1; Tanager-2,https://space.oscar.wmo.int/instruments/view/carbon_mapper
+HySICS,"Hyper-Spectral Imager for Climate
+Science",NASA,Cross-nadir scanning SW sounder,,,,50 km,Climate Absolute Radiance and Refractivity Observatory Pathfinder on the ISS,https://space.oscar.wmo.int/instruments/view/hysics
+OCO (ISS) spectrometer,Orbiting Carbon Observatory ISS spectrometer,NASA,Cross-nadir scanning SW sounder,150 kg,165 W,1 Mbps,"1.29 km (cross-track), 2.25 km (along-track)",Orbiting Carbon Observatory 3 on the ISS,https://space.oscar.wmo.int/instruments/view/oco_iss_spectrometer
+OCO spectrometer,Orbiting Carbon Observatory Spectrometer,NASA,Cross-nadir scanning SW sounder,150 kg,165 W,1 Mbps,"1.29 km (cross-track), 2.25 km (along-track)",Orbiting Carbon Observatory; Orbiting Carbon Observatory - 2,https://space.oscar.wmo.int/instruments/view/oco_spectrometer
+SBUV,Solar Backscatter Ultraviolet Spectrometer,NASA,Cross-nadir scanning SW sounder,,,,200 km,Nimbus-7,https://space.oscar.wmo.int/instruments/view/sbuv
+SME (VND),SME - Visible Nitrogen Dioxide,NASA,Cross-nadir scanning SW sounder,,,,,Solar Mesosphere Explorer,https://space.oscar.wmo.int/instruments/view/sme_vnd
+SW spectrometer,Short-wave Spectrometer,NASA,Cross-nadir scanning SW sounder,,,,100 km,Climate Absolute Radiance and Refractivity Observatory - 1B; Climate Absolute Radiance and Refractivity Observatory - 2B,https://space.oscar.wmo.int/instruments/view/sw_spectrometer
+TEMPO,Tropospheric Emissions: Monitoring of Pollution,NASA,Cross-nadir scanning SW sounder,,,,2.0 x 4.75 km at ssp,Tropospheric Emissions: Monitoring of Pollution,https://space.oscar.wmo.int/instruments/view/tempo
+TOMS,Total Ozone Mapping Spectrometer,NASA,Cross-nadir scanning SW sounder,34 kg,24 W,700 bps,50 km at s.s.p.,,https://space.oscar.wmo.int/instruments/view/toms
+DCS (Landsat),Data Collection System,NASA,Data collection system,,,,N/A,Landsat-1; Landsat-2; Landsat-3,https://space.oscar.wmo.int/instruments/view/dcs_landsat
+IRLS,"Interrogation, Recording and Location System",NASA,Data collection system,7 kg,12 W,1 kbps,N/A,Nimbus-3; Nimbus-4,https://space.oscar.wmo.int/instruments/view/irls
+TWERLE,Tropical Wind Energy-conversion and Reference Level Experiment,NASA,Data collection system,7 kg,12 W,1 kbps,N/A,Nimbus-6,https://space.oscar.wmo.int/instruments/view/twerle
+ACE (TRACERS),Analyzer for Cusp Electrons,NASA,Energetic particle spectrometer,,,,18.7% ΔE/E FWHM,Tandem Reconnection and Cusp Electrodynamics Reconnaissance Satellites,https://space.oscar.wmo.int/instruments/view/ace_tracers
+ACI,Analyzer for Cusp Ions,NASA,Energetic particle spectrometer,,,,,Tandem Reconnection and Cusp Electrodynamics Reconnaissance Satellites,https://space.oscar.wmo.int/instruments/view/aci
+CAMMICE,Charge and Mass Magnetospheric Ion Composition Experiment,NASA,Energetic particle spectrometer,,,,N/A,Polar,https://space.oscar.wmo.int/instruments/view/cammice
+CEPPAD,Comprehensive Energetic-Particle Pitch Angle Distribution,NASA,Energetic particle spectrometer,,,,N/A,Polar,https://space.oscar.wmo.int/instruments/view/ceppad
+CPI,Comprehensive Plasma Investigation,NASA,Energetic particle spectrometer,,,,N/A,GEOTAIL,https://space.oscar.wmo.int/instruments/view/cpi
+CRIS (ACE),Cosmic Ray Isotope Spectrometer,NASA,Energetic particle spectrometer,29.3 kg,22 W,462 bps,N/A,Advanced Composition Explorer,https://space.oscar.wmo.int/instruments/view/cris_ace
+CoDICE,Compact Dual Ion Composition Experiment,NASA,Energetic particle spectrometer,,,,CoDICE-Lo Energy resolution ΔE/E ∼ 0.03 CoDICE-HI ΔE/E ∼ 35% CoDICE-Lo Mass range 3–60 amu CoDICE-Hi Mass range 1-60 amu,Interstellar Mapping and Acceleration Probe,https://space.oscar.wmo.int/instruments/view/codice
+ECT/HOPE,ECT Helium Oxygen Proton Electron,NASA,Energetic particle spectrometer,,,,N/A,Van Allen Probes (2 sats),https://space.oscar.wmo.int/instruments/view/ect_hope
+ECT/MagEIS,ECT Magnetic Electron and Ion Spectrometer,NASA,Energetic particle spectrometer,,,,N/A,Van Allen Probes (2 sats),https://space.oscar.wmo.int/instruments/view/ect_mageis
+ECT/REPT,ECT Relativistic Electron Proton Telescope,NASA,Energetic particle spectrometer,,,,N/A,Van Allen Probes (2 sats),https://space.oscar.wmo.int/instruments/view/ect_rept
+EFI,Electric Field Instrument,NASA,Energetic particle spectrometer,,,,Accuracy ± 1 mV/m,Tandem Reconnection and Cusp Electrodynamics Reconnaissance Satellites,https://space.oscar.wmo.int/instruments/view/efi
+EIS (MSS),Energetic Ion Spectrometer,NASA,Energetic particle spectrometer,,,,N/A,,https://space.oscar.wmo.int/instruments/view/eis_mss
+EPACT,"Energetic Particles Acceleration, Composition, Transport",NASA,Energetic particle spectrometer,,,,N/A,WIND,https://space.oscar.wmo.int/instruments/view/epact
+EPAM,"Electron, Proton, and Alpha-particle Monitor",NASA,Energetic particle spectrometer,6.4 kg,6.5 W,160 bps,N/A,Advanced Composition Explorer,https://space.oscar.wmo.int/instruments/view/epam
+EPIC,Energetic Particle and Ion Composition Experiment,NASA,Energetic particle spectrometer,,,,N/A,GEOTAIL,https://space.oscar.wmo.int/instruments/view/epic
+ES,Electron Spectrometer,NASA,Energetic particle spectrometer,,,,N/A,Deep Space Climate Observatory,https://space.oscar.wmo.int/instruments/view/es
+ESA,Electrostatic Analyzer,NASA,Energetic particle spectrometer,3 kg,1.7 W,,N/A,,https://space.oscar.wmo.int/instruments/view/esa
+FC,Faraday Cup,NASA,Energetic particle spectrometer,,,,N/A,Deep Space Climate Observatory,https://space.oscar.wmo.int/instruments/view/fc
+FEEPS,Fly's Eye Energetic Particle Sensor,NASA,Energetic particle spectrometer,,,,N/A,,https://space.oscar.wmo.int/instruments/view/feeps
+FPI,Fast Plasma Instrument,NASA,Energetic particle spectrometer,,,,N/A,,https://space.oscar.wmo.int/instruments/view/fpi
+HENA,High-Energy Neutral-Atom Imager,NASA,Energetic particle spectrometer,,,,N/A,Imager for Magnetopause-to-Aurora Global Exploration,https://space.oscar.wmo.int/instruments/view/hena
+HILT,Heavy Ion Large Telescope,NASA,Energetic particle spectrometer,22.8 kg,5.7 W,0.9 kbps,N/A,Solar Anomalous and Magnetospheric Particle Explorer,https://space.oscar.wmo.int/instruments/view/hilt
+HIT,High-energy Ion Telescope,NASA,Energetic particle spectrometer,,,,Mass resolution M/ΔM ≥ 7,Interstellar Mapping and Acceleration Probe,https://space.oscar.wmo.int/instruments/view/hit
+HPCA,Hot Plasma Composition Analyzer,NASA,Energetic particle spectrometer,,,,N/A,,https://space.oscar.wmo.int/instruments/view/hpca
+HYDRA,Hot Plasma Analyzer Experiment,NASA,Energetic particle spectrometer,,,,N/A,Polar,https://space.oscar.wmo.int/instruments/view/hydra
+IBEX,Interstellar Boundary Explorer,NASA,Energetic particle spectrometer,,,,"7° x 7° resolution when viewing the heliosphere, 3.5º x 3.5º to precisely measure the cold interstellar neutral oxygen drifting into the heliosphere",Interstellar Boundary Explorer,https://space.oscar.wmo.int/instruments/view/ibex
+IDEX,Interstellar Dust Experiment,NASA,Energetic particle spectrometer,,,,"Mass range 1–500 amu, mass resolution m/Δm ≥ 200",Interstellar Mapping and Acceleration Probe,https://space.oscar.wmo.int/instruments/view/idex
+IMAP-Hi,IMAP high energy neutral atoms,NASA,Energetic particle spectrometer,,,,,Interstellar Mapping and Acceleration Probe,https://space.oscar.wmo.int/instruments/view/imap_hi
+IMAP-Lo,IMAP Low energy neutral atoms,NASA,Energetic particle spectrometer,,,,,Interstellar Mapping and Acceleration Probe,https://space.oscar.wmo.int/instruments/view/imap_lo
+IMAP-Ultra,IMAP-Ultra high energy,NASA,Energetic particle spectrometer,,,,,Interstellar Mapping and Acceleration Probe,https://space.oscar.wmo.int/instruments/view/imap_ultra
+IMPACT/SEP,IMPACT / Solar Energetic Particles,NASA,Energetic particle spectrometer,,,,N/A,Solar-TErrestrial RElations Observatory - B,https://space.oscar.wmo.int/instruments/view/impact_sep
+IMPACT/STE,"IMPACT / Suprathermal Electron Telescope
+",NASA,Energetic particle spectrometer,,,,N/A,Solar-TErrestrial RElations Observatory - B,https://space.oscar.wmo.int/instruments/view/impact_ste
+IMPACT/SWEA,"IMPACT / Solar Wind Electron Analyzer
+",NASA,Energetic particle spectrometer,,,,N/A,Solar-TErrestrial RElations Observatory - B,https://space.oscar.wmo.int/instruments/view/impact_swea
+ISIS-EPI,Integrated Science Investigation of the Sun - Energetic Particle Instruments,NASA,Energetic particle spectrometer,,,,N/A (full disk),Parker Solar Probe,https://space.oscar.wmo.int/instruments/view/isis_epi
+LEICA,Low-Energy Ion Composition Analyzer,NASA,Energetic particle spectrometer,7.4 kg,4.9 W,1.3 kbps,N/A,Solar Anomalous and Magnetospheric Particle Explorer,https://space.oscar.wmo.int/instruments/view/leica
+LENA,Low-Energy Neutral-Atom Imager,NASA,Energetic particle spectrometer,21.8 kg,13.1 W,0.5 kbps,N/A,Imager for Magnetopause-to-Aurora Global Exploration,https://space.oscar.wmo.int/instruments/view/lena
+MAST,Mass Spectrometer Telescope,NASA,Energetic particle spectrometer,7.5 kg,3.3 W,1.4 kbps,N/A,Solar Anomalous and Magnetospheric Particle Explorer,https://space.oscar.wmo.int/instruments/view/mast
+MEA,Magnetic Electron Spectrometer,NASA,Energetic particle spectrometer,,,,N/A,Combined Release and Radiation Effects Satellite,https://space.oscar.wmo.int/instruments/view/mea
+MENA,Medium-Energy Neutral-Atom Imager,NASA,Energetic particle spectrometer,13.9 kg,22.5 W,4.3 kbps,N/A,Imager for Magnetopause-to-Aurora Global Exploration,https://space.oscar.wmo.int/instruments/view/mena
+PEM/EPS ,Particle Environment Monitor / Energetic Particle Spectrometer,NASA,Energetic particle spectrometer,,,,N/A,Upper Atmosphere Research Satellite,https://space.oscar.wmo.int/instruments/view/pem_eps
+PET,Proton/Electron Telescope,NASA,Energetic particle spectrometer,7.5 kg,1.2 W,0.5 kbps,N/A,Solar Anomalous and Magnetospheric Particle Explorer,https://space.oscar.wmo.int/instruments/view/pet
+PLASMA,3-D Plasma and Energetic Particles Experiment,NASA,Energetic particle spectrometer,,,,N/A (full disk),WIND,https://space.oscar.wmo.int/instruments/view/plasma
+PLASTIC,PLAsma and SupraThermal Ion and Composition,NASA,Energetic particle spectrometer,,,,N/A,Solar-TErrestrial RElations Observatory - B,https://space.oscar.wmo.int/instruments/view/plastic
+RBSPICE,Radiation Belt Storm Probes Ion Composition Experiment,NASA,Energetic particle spectrometer,6.6 kg,7.1 W,5.4 kbps,N/A,Van Allen Probes (2 sats),https://space.oscar.wmo.int/instruments/view/rbspice
+RPS,Relativistic Proton Spectrometer,NASA,Energetic particle spectrometer,20.9 kg,22.5 W,32.2 kbps,N/A,Van Allen Probes (2 sats),https://space.oscar.wmo.int/instruments/view/rps
+SEISS/EHIS,SEISS / Energetic Heavy Ion Sensor,NASA,Energetic particle spectrometer,4.5 kg,6.3 W,512 bps,N/A,,https://space.oscar.wmo.int/instruments/view/seiss_ehis
+SEISS/MPS,SEISS / Magnetospheric Particle Sensor,NASA,Energetic particle spectrometer,20.7 kg,18.1 W,23 kpbs,N/A,,https://space.oscar.wmo.int/instruments/view/seiss_mps
+SEISS/SGPS,SEISS / Solar and Galactic Proton Sensor,NASA,Energetic particle spectrometer,4.9 kg,5.1 W,,N/A,,https://space.oscar.wmo.int/instruments/view/seiss_sgps
+SEPICA ,Solar Energetic Particle Ionic Charge Analyzer,NASA,Energetic particle spectrometer,28.6 kg,16 W,600 bps,N/A (full disk),Advanced Composition Explorer,https://space.oscar.wmo.int/instruments/view/sepica
+SIS,Solar Isotope Spectrometer,NASA,Energetic particle spectrometer,20.6 kg,21.5 W,2 kbps,N/A (full disk),Advanced Composition Explorer,https://space.oscar.wmo.int/instruments/view/sis
+SMS,"Solar wind ion composition, Mass sensor, and Suprathermal ion composition",NASA,Energetic particle spectrometer,,,,N/A,WIND,https://space.oscar.wmo.int/instruments/view/sms
+SST,Solid State Telescope,NASA,Energetic particle spectrometer,1.43 kg,1.2 W,,N/A,,https://space.oscar.wmo.int/instruments/view/sst
+STIS,SupraThermal Ion Sensor,NASA,Energetic particle spectrometer,5 kg,5 W,1 kbps,N/A (insitu measurement),Space Weather Follow-On at L1; Space Weather Next at L1 B; Space Weather at L1 A,https://space.oscar.wmo.int/instruments/view/stis
+SWE,Solar Wind Experiment,NASA,Energetic particle spectrometer,,,,N/A,WIND,https://space.oscar.wmo.int/instruments/view/swe
+SWE (IMAP),Solar Wind Electron,NASA,Energetic particle spectrometer,,,,"Polar angle range 10–170º, 21º resolution Azimuthal range 0–360º over spin,~12º intrinsic resolution (varies w/ polar angle)",Interstellar Mapping and Acceleration Probe,https://space.oscar.wmo.int/instruments/view/swe_imap
+SWEAPI,Solar Wind Electrons Alphas and Protons Investigation,NASA,Energetic particle spectrometer,,,,N/A (full disk),Parker Solar Probe,https://space.oscar.wmo.int/instruments/view/sweapi
+SWEPAM,"Solar Wind Electron, Proton, and Alpha Monitor",NASA,Energetic particle spectrometer,6.7 kg,6.4 W,1 kbps,N/A (full disk),Advanced Composition Explorer,https://space.oscar.wmo.int/instruments/view/swepam
+SWICS,Solar Wind Ion Composition Spectrometer,NASA,Energetic particle spectrometer,6.3 kg,9 W,500 bps,N/A,Advanced Composition Explorer,https://space.oscar.wmo.int/instruments/view/swics
+SWIMS,Solar Wind Ion Mass Spectrometer,NASA,Energetic particle spectrometer,8.3 kg,19.4 W,505 bps,N/A,Advanced Composition Explorer,https://space.oscar.wmo.int/instruments/view/swims
+SWiPS,Solar Wind Plasma Sensor,NASA,Energetic particle spectrometer,9 kg,11 W,2 kbps,Different for individual plasma variables,Space Weather Follow-On at L1; Space Weather Next at L1 B; Space Weather at L1 A,https://space.oscar.wmo.int/instruments/view/swips
+TIDE/PSI,Thermal Ion Dynamics Experiment / Plasma Source Investigation,NASA,Energetic particle spectrometer,,,,N/A,Polar,https://space.oscar.wmo.int/instruments/view/tide_psi
+TIMAS,Toroidal Imaging Mass-Angle Spectrograph,NASA,Energetic particle spectrometer,15.7 kg,14 W,4.1 kbps,N/A,Polar,https://space.oscar.wmo.int/instruments/view/timas
+TWINS,Two Wide-angle Imaging Neutral-atom Spectrometers,NASA,Energetic particle spectrometer,18.7 kg,25.3 W,50 kbps,4º x 4º for H atoms with energies > 10 keV,Two Wide-angle Imaging Neutral-atom Spectrometers (2 sats),https://space.oscar.wmo.int/instruments/view/twins
+ULEIS,Ultra-Low Energy Isotope Spectrometer,NASA,Energetic particle spectrometer,18 kg,30.5 W,1 kbps,N/A (full disk),Advanced Composition Explorer,https://space.oscar.wmo.int/instruments/view/uleis
+AFG,Analog Fluxgate Magnetometer,NASA,Field or radiowave sensor,,,,N/A,,https://space.oscar.wmo.int/instruments/view/afg
+ASPOC (MMS),Active Spacecraft Potential Control Devices,NASA,Field or radiowave sensor,,,,N/A,,https://space.oscar.wmo.int/instruments/view/aspoc_mms
+CINDI,Coupled Ion-Neutral Dynamics Investigation,NASA,Field or radiowave sensor,5.8 kg,15.5 W,3.5 kbps,N/A,Communication/Navigation Outage Forecasting System,https://space.oscar.wmo.int/instruments/view/cindi
+DFG,Digital Fluxgate Magnetometer,NASA,Field or radiowave sensor,,,,N/A,,https://space.oscar.wmo.int/instruments/view/dfg
+DIDM,Digital Ion Drift Meter,NASA,Field or radiowave sensor,2.2 kg,5 W,5 kbps,N/A,Challenging Mini-Satellite Payload; Communication/Navigation Outage Forecasting System,https://space.oscar.wmo.int/instruments/view/didm
+DP,Double Probes,NASA,Field or radiowave sensor,,,,N/A,,https://space.oscar.wmo.int/instruments/view/dp
+EDI (MMS),Electron Drift Instrument,NASA,Field or radiowave sensor,,,,N/A,,https://space.oscar.wmo.int/instruments/view/edi_mms
+EFI (Polar),Electric Fields Instrument,NASA,Field or radiowave sensor,,,,N/A,Polar,https://space.oscar.wmo.int/instruments/view/efi_polar
+EFI (THEMIS),Electric Field Instrument,NASA,Field or radiowave sensor,13 kg,1 W,,N/A,,https://space.oscar.wmo.int/instruments/view/efi_themis
+EFW (VAP),Electric Field and Waves Suite,NASA,Field or radiowave sensor,9.2 kg,14.4 W,2 kbps,N/A,Van Allen Probes (2 sats),https://space.oscar.wmo.int/instruments/view/efw_vap
+EMFISIS,Electric and Magnetic Field Instrument Suite and Integrated Science,NASA,Field or radiowave sensor,27.4 kg,15.5 W,12 kbps,N/A,Van Allen Probes (2 sats),https://space.oscar.wmo.int/instruments/view/emfisis
+FGM (THEMIS),Fluxgate Magnetometer,NASA,Field or radiowave sensor,1.54 kg,0.85 W,,N/A,,https://space.oscar.wmo.int/instruments/view/fgm_themis
+FIELDS,Electromagnetic Fields Investigation,NASA,Field or radiowave sensor,,,,N/A,Parker Solar Probe,https://space.oscar.wmo.int/instruments/view/fields
+IMPACT/MAG,IMPACT / Magnetometer,NASA,Field or radiowave sensor,,,,N/A,Solar-TErrestrial RElations Observatory - B,https://space.oscar.wmo.int/instruments/view/impact_mag
+IVM,In-situ Ion Velocity Meter,NASA,Field or radiowave sensor,,,,N/A,Ionospheric Connection Explorer ,https://space.oscar.wmo.int/instruments/view/ivm
+MAG (ACE),Magnetic Field Monitor,NASA,Field or radiowave sensor,2.55 kg,3.4 W,,N/A (full disk),Advanced Composition Explorer,https://space.oscar.wmo.int/instruments/view/mag_ace
+MAG (DSCOVR),Magnetometer,NASA,Field or radiowave sensor,,,,N/A,Deep Space Climate Observatory,https://space.oscar.wmo.int/instruments/view/mag_dscovr
+MAG (Solar),Magnetometer,NASA,Field or radiowave sensor,1.5 kg,4 W,0.4 kbps,N/A,Space Weather Follow-On at L1; Space Weather Next at L1 B; Space Weather at L1 A,https://space.oscar.wmo.int/instruments/view/mag_solar
+MAG (TRACERS),DC Magnetometer on TRACERS,NASA,Field or radiowave sensor,,,,N/A,Tandem Reconnection and Cusp Electrodynamics Reconnaissance Satellites,https://space.oscar.wmo.int/instruments/view/mag_tracers
+MAGIC,MAGnetometers for Innovation and Capability,NASA,Field or radiowave sensor,,,,,Tandem Reconnection and Cusp Electrodynamics Reconnaissance Satellites,https://space.oscar.wmo.int/instruments/view/magic
+MFE,Magnetic Field Experiment,NASA,Field or radiowave sensor,,,,N/A,Polar,https://space.oscar.wmo.int/instruments/view/mfe
+MFI,Magnetic Field Investigation,NASA,Field or radiowave sensor,2.6 kg,2.4 W,,N/A,WIND,https://space.oscar.wmo.int/instruments/view/mfi
+MSC (Tracers),Magnetic Search Coil,NASA,Field or radiowave sensor,,,,Sensitivity - 10-6 nT2/Hz @ 10 Hz - 10-8 nT2/Hz @ 100 Hz,Tandem Reconnection and Cusp Electrodynamics Reconnaissance Satellites,https://space.oscar.wmo.int/instruments/view/msc_tracers
+PEM/VMAG,Particle Environment Monitor - Vector Magnetometer,NASA,Field or radiowave sensor,,,,N/A,Upper Atmosphere Research Satellite,https://space.oscar.wmo.int/instruments/view/pem_vmag
+PWI (Polar),Plasma Wave Instrument,NASA,Field or radiowave sensor,,,,N/A,Polar,https://space.oscar.wmo.int/instruments/view/pwi_polar
+RPI,Radio Plasma Imaging,NASA,Field or radiowave sensor,49.8 kg,30.8 W,,N/A,Imager for Magnetopause-to-Aurora Global Exploration,https://space.oscar.wmo.int/instruments/view/rpi
+S/WAVES,STEREO/WAVES,NASA,Field or radiowave sensor,,,,N/A (spatially integrated observation),Solar-TErrestrial RElations Observatory - B,https://space.oscar.wmo.int/instruments/view/s_waves
+SCM,Search Coil Magnetometer,NASA,Field or radiowave sensor,2 kg,0.1 W,,N/A,,https://space.oscar.wmo.int/instruments/view/scm
+VEFI,Vector Electric Field Instrument,NASA,Field or radiowave sensor,,,,N/A,Communication/Navigation Outage Forecasting System,https://space.oscar.wmo.int/instruments/view/vefi
+WAVES,Radio and Plasma Wave Experiment,NASA,Field or radiowave sensor,,,,N/A (integrated over the full interplanetary space),WIND,https://space.oscar.wmo.int/instruments/view/waves
+BlackJack (CHAMP),BlackJack GPS Receiver,NASA,GNSS radio-occultation sounder,3.2 kg,15 W,17 kbps,"About 300 km horizontal, 0.5 km vertical",Challenging Mini-Satellite Payload,https://space.oscar.wmo.int/instruments/view/blackjack_champ
+BlackJack (GRACE),BlackJack GPS Receiver,NASA,GNSS radio-occultation sounder,3.2 kg,15 W,17 kbps,"About 300 km horizontal, 0.5 km vertical",Gravity Recovery and Climate Experiment A; Gravity Recovery and Climate Experiment B,https://space.oscar.wmo.int/instruments/view/blackjack_grace
+CORISS,C/NOFS Occultation Receiver for Ionospheric Sensing and Specification,NASA,GNSS radio-occultation sounder,3 kg,10 W,0.5 kbps,"About 300 km horizontal, 0.5 km vertical",Communication/Navigation Outage Forecasting System,https://space.oscar.wmo.int/instruments/view/coriss
+GNSS-RO,Global Navigation Satellite System - Radio Occultation,NASA,GNSS radio-occultation sounder,6 kg,50 W,40 kbps,"About 300 km horizontal, 0.5 km vertical",Climate Absolute Radiance and Refractivity Observatory - 1A; Climate Absolute Radiance and Refractivity Observatory - 2A,https://space.oscar.wmo.int/instruments/view/gnss_ro
+GNSS-RO (Sentinel-6),Global Navigation Satellite System - Radio Occultation,NASA,GNSS radio-occultation sounder,6 kg,50 W,40 kbps,"About 300 km horizontal, 0.5 km vertical",Sentinel-6A; Sentinel-6B,https://space.oscar.wmo.int/instruments/view/gnss_ro_sentinel_6
+GOLPE,GPS Occultation and Passive reflection Experiment ,NASA,GNSS radio-occultation sounder,3.2 kg,15 W,17 kbps,"About 300 km horizontal, 0.5 km vertical",Satélite de Aplicaciones Cientificas - B,https://space.oscar.wmo.int/instruments/view/golpe
+GPS RO (GRACE),GPS RO for GRACE-FO ,NASA,GNSS radio-occultation sounder,6 kg,50 W,40 kbps,"About 300 km horizontal, 0.5 km vertical",Gravity Recovery and Climate Experiment - Continuity; Gravity Recovery and Climate Experiment C - Follow-on; Gravity Recovery and Climate Experiment D - Follow-on,https://space.oscar.wmo.int/instruments/view/gps_ro_grace
+GPS/MET,Global Positioning System / Meteorology,NASA,GNSS radio-occultation sounder,,,,"About 300 km horizontal, 0.5 km vertical",OrbView-1/MicroLab,https://space.oscar.wmo.int/instruments/view/gps_met
+IGOR (TacSat-2),Integrated GPS Occultation Receiver,NASA,GNSS radio-occultation sounder,4.6 kg,16 W,17 kbps,"About 300 km horizontal, 0.5 km vertical",Tactical Satellite - 2,https://space.oscar.wmo.int/instruments/view/igor_tacsat_2
+TGRS (COSMIC-2),TriG (Tri-GNSS) GNSS Radio Occultation System,NASA,GNSS radio-occultation sounder,6 kg,65 W,100 kbps,"About 200 km horizontal, 0.5 km vertical","Constellation Observing System for Meteorology, Ionosphere & Climate - 2a",https://space.oscar.wmo.int/instruments/view/tgrs_cosmic_2
+TRSR (Ørsted),TurboRogue Space Receiver,NASA,GNSS radio-occultation sounder,3.2 kg,15 W,17 kbps,"About 300 km horizontal, 0.5 km vertical",Ørsted,https://space.oscar.wmo.int/instruments/view/trsr_Orsted
+Accelerometer,Super Space Three-axis Accelerometer for Research,NASA,Gravity sensing system,,,,N/A,,https://space.oscar.wmo.int/instruments/view/accelerometer
+HAIRS,High Accuracy Inter-satellite Ranging System ,NASA,Gravity sensing system,,,,N/A,Gravity Recovery and Climate Experiment A; Gravity Recovery and Climate Experiment B,https://space.oscar.wmo.int/instruments/view/hairs
+LRI,Laser Ranging Interferometer,NASA,Gravity sensing system,,,,,Gravity Recovery and Climate Experiment - Continuity; Gravity Recovery and Climate Experiment C - Follow-on; Gravity Recovery and Climate Experiment D - Follow-on,https://space.oscar.wmo.int/instruments/view/lri
+MWA,MicroWAve Instrument ,NASA,Gravity sensing system,,,,,Gravity Recovery and Climate Experiment C - Follow-on; Gravity Recovery and Climate Experiment D - Follow-on,https://space.oscar.wmo.int/instruments/view/mwa
+ALI,Advanced Land Imager,NASA,High-resolution optical imager,106 kg,100 W,300 Mbps,"30 m (9 narrow-band channels), 10 m (PAN)",New Millennium Program Earth Observing - 1,https://space.oscar.wmo.int/instruments/view/ali
+ECOSTRESS,"ECOsystem
+Spaceborne Thermal Radiometer Experiment on Space Station",NASA,High-resolution optical imager,266 kg,527 W,2.32 Mbps,46 m s.s.p.,ECOsystem Spaceborne Thermal Radiometer Experiment on Space Station,https://space.oscar.wmo.int/instruments/view/ecostress
+ETM,Enhanced Thematic Mapper,NASA,High-resolution optical imager,369 kg,490 W,170 Mbps,"30 m (6 narrow-band channels), 15 m (PAN), 120 m (TIR)",Landsat-6,https://space.oscar.wmo.int/instruments/view/etm
+ETM+,Enhanced Thematic Mapper +,NASA,High-resolution optical imager,441 kg,590 W,150 Mbps,"30 m (6 narrow-band channels), 15 m (PAN), 60 m (TIR)",Landsat-7,https://space.oscar.wmo.int/instruments/view/etm_plus
+HICO,Hyperspectral Imager for the Coastal Ocean,NASA,High-resolution optical imager,,,,100 m at s.s.p.,Hyperspectral Imager for the Coastal Ocean on the ISS,https://space.oscar.wmo.int/instruments/view/hico
+Hyperion,Hyperion,NASA,High-resolution optical imager,49 kg,51 W,105 Mbps,30 m IFOV,New Millennium Program Earth Observing - 1,https://space.oscar.wmo.int/instruments/view/hyperion
+LAC,LEISA Atmospheric Corrector (LEISA = Linear Etalon Imaging Spectrometer Array,NASA,High-resolution optical imager,10.5 kg,35 W,95 Mbps,250 m IFOV,New Millennium Program Earth Observing - 1,https://space.oscar.wmo.int/instruments/view/lac
+LandIS,Landsat Next Instrument Suite,NASA,High-resolution optical imager,,,,10-20 m for surface sensing VIS/SWIR channels 60 m for atmospheric SWIR/IR channels,Landsat Next-A; Landsat Next-B; Landsat Next-C,https://space.oscar.wmo.int/instruments/view/landis
+MSS,Multi-Spectral Scanner,NASA,High-resolution optical imager,64 kg,50 W,15 Mbps,80 m IFOV,,https://space.oscar.wmo.int/instruments/view/mss
+OLI,Operational Land Imager,NASA,High-resolution optical imager,450 kg,375 W,265 Mbps,"30 m (8 narrow-band channels), 15 m (PAN)",Landsat-8; Landsat-9,https://space.oscar.wmo.int/instruments/view/oli
+RBV,Return-Beam Vidicon camera,NASA,High-resolution optical imager,,,,80 m,Landsat-1; Landsat-2; Landsat-3,https://space.oscar.wmo.int/instruments/view/rbv
+TIRS,Thermal Infra-Red Sensor,NASA,High-resolution optical imager,225 kg,400 W,26.2 Mbps,100 m,Landsat-8; Landsat-9,https://space.oscar.wmo.int/instruments/view/tirs
+TM,Thematic Mapper,NASA,High-resolution optical imager,258 kg,332 W,85 Mbps,"30 m (6 short-wave channels), 120 m (TIR)",Landsat-4.; Landsat-5,https://space.oscar.wmo.int/instruments/view/tm
+WFC,Wide-Field Camera,NASA,High-resolution optical imager,2.6 kg,10.6 W,15.8 kbps,125 m,Cloud-Aerosol Lidar and Infrared Pathfinder Satellite Observations,https://space.oscar.wmo.int/instruments/view/wfc
+InSAR,Interferometric Synthetic Aperture Radar,NASA,Imaging radar (SAR),600 kg,1600 W,,10 m,"Deformation, Ecosystem Structure, and Dynamics of Ice",https://space.oscar.wmo.int/instruments/view/insar
+SAR,Synthetic Aperture Radar,NASA,Imaging radar (SAR),147 kg,216 W,"20 MHz (analogue, S-band at 2.265 GHz)",25 m,SeaSat,https://space.oscar.wmo.int/instruments/view/sar
+SAR-L (NISAR),SAR-L for the NASA-ISRO Synthetic Aperture Radar ,NASA,Imaging radar (SAR),,,,"Variable with the polarisation mode, 2 to 7 m",NASA-ISRO Synthetic Aperture Radar,https://space.oscar.wmo.int/instruments/view/sar_l_nisar
+SAR-S (NISAR) ,SAR-S for the NASA-ISRO Synthetic Aperture Radar,NASA,Imaging radar (SAR),,,,"Variable with the polarisation mode, 2 to 6 m",NASA-ISRO Synthetic Aperture Radar,https://space.oscar.wmo.int/instruments/view/sar_s_nisar
+SAR-X/Ku,Synthetic Aperture Radar in X- and Ku- bands,NASA,Imaging radar (SAR),,,,,Snow and Cold Land Processes,https://space.oscar.wmo.int/instruments/view/sar_x_ku
+LIS,Lightning Imaging Sensor ,NASA,Lightning imager,21 kg,33 W,6 kbps,4 km,Tropical Rainfall Measuring Mission,https://space.oscar.wmo.int/instruments/view/lis
+LIS (ISS),Lightning Imaging Sensor,NASA,Lightning imager,21 kg,33 W,6 kbps,4 km,Lightning Imaging Sensor on the ISS,https://space.oscar.wmo.int/instruments/view/lis_iss
+OTD,Optical Transient Detector,NASA,Lightning imager,18 kg,,,10 km,OrbView-1/MicroLab,https://space.oscar.wmo.int/instruments/view/otd
+ALICE,Advanced Limb Infrared Chemistry Experiment ,NASA,Limb sounder,,,,,Stratosphere Troposphere Response using Infrared Vertically-resolved light Explorer,https://space.oscar.wmo.int/instruments/view/alice
+ARGOS (STRIVE),Aerosol Radiometer for Global Observations of the Stratosphere,NASA,Limb sounder,,,,,Stratosphere Troposphere Response using Infrared Vertically-resolved light Explorer,https://space.oscar.wmo.int/instruments/view/argos_strive
+CLAES,Cryogenic Limb Array Etalon Spectrometer,NASA,Limb sounder,1180 kg,,,Vertical: 2.6 km; horizontal: 300 km along-view,Upper Atmosphere Research Satellite,https://space.oscar.wmo.int/instruments/view/claes
+FUV (Carruthers),Far Ultra-violet cameras,NASA,Limb sounder,,,,,Carruthers Geocorona Observatory,https://space.oscar.wmo.int/instruments/view/fuv_carruthers
+HALOE,Halogen Occultation Experiment,NASA,Limb sounder,101 kg,,4 kbps,Vertical: 1.6 km. Horizontal: about 300 km along-view,Upper Atmosphere Research Satellite,https://space.oscar.wmo.int/instruments/view/haloe
+HIRDLS,High-Resolution Dynamics Limb Sounder ,NASA,Limb sounder,,220 W,65 kbps,"Vertical: 1 km, in the altitude range 10-100 km. Horizontal effective resolution: ~ 300 km (limb geometry)",Earth Observation System - Aura,https://space.oscar.wmo.int/instruments/view/hirdls
+HRDI,High-Resolution Doppler Imager,NASA,Limb sounder,,,4.75 kbps,Vertical: 3 km; horizontal: 300 km along-view,Upper Atmosphere Research Satellite,https://space.oscar.wmo.int/instruments/view/hrdi
+LIMS,Limb Infrared Monitor of the Stratosphere,NASA,Limb sounder,68.4 kg,27 W,4 kbps,Vertical: 2-4 km; horizontal: 300 km along-view,Nimbus-7,https://space.oscar.wmo.int/instruments/view/lims
+LRIR,Limb Radiance Inversion Radiometer,NASA,Limb sounder,18 kg,36 W,15.68 kbps,Vertical: 2-4 km; horizontal: 300 km along-view,Nimbus-6,https://space.oscar.wmo.int/instruments/view/lrir
+MIGHTI,Michelson Interferometer for Global High-resolution Thermospheric Imaging,NASA,Limb sounder,,,,Horizontal: <500 km,Ionospheric Connection Explorer ,https://space.oscar.wmo.int/instruments/view/mighti
+MLS ,Microwave Limb Sounder ,NASA,Limb sounder,280 kg,163 W,1.25 kbps,"Vertical: 4 km, in the altitude range 5-85 km. Horizontal effective resolution: ~ 300 km (limb geometry)",Upper Atmosphere Research Satellite,https://space.oscar.wmo.int/instruments/view/mls
+MLS  (EOS-Aura),Microwave Limb Sounder ,NASA,Limb sounder,430 kg,530 W,100 kbps,Vertical: 1.5 km in the altitude range 5-120 km. Horizontal effective resolution: ~ 300 km (limb geometry),Earth Observation System - Aura,https://space.oscar.wmo.int/instruments/view/mls_eos_aura
+SABER,Sounding of the Atmosphere using Broadband Emission Radiometry,NASA,Limb sounder,62 kg,64 W,4 kbps,Horizontal: 400 km - Vertical: 2 km in the range 10 to 180 km,"Thermosphere, Ionosphere, Mesosphere Energetics and Dynamics mission",https://space.oscar.wmo.int/instruments/view/saber
+SAGE-I,Stratospheric Aerosol and Gas Experiment - I,NASA,Limb sounder,18 kg,,,FOV was about 0.15 mrad,Applications Explorer Mission-2,https://space.oscar.wmo.int/instruments/view/sage_i
+SAGE-II,Stratospheric Aerosol and Gas Experiment - II,NASA,Limb sounder,29.5 kg,18 W,6.3 kbps,"300 km (horizontal), 1-2 km (vertical)",Earth Radiation Budget Satellite,https://space.oscar.wmo.int/instruments/view/sage_ii
+SAGE-III,Stratospheric Aerosol and Gas Experiment - III,NASA,Limb sounder,76 kg,80 W,115 kbps,"300 km (horizontal), 1-2 km (vertical)",Meteor-3M; Stratospheric Aerosol and Gas Experiment III on the ISS,https://space.oscar.wmo.int/instruments/view/sage_iii
+SAM-II,Stratospheric Aerosol Measurement - II,NASA,Limb sounder,17 kg,0.8 W,4 kbps,"300 km (horizontal), 1-2 km (vertical)",Nimbus-7,https://space.oscar.wmo.int/instruments/view/sam_ii
+SAMS,Stratospheric and Mesospheric Sounder,NASA,Limb sounder,23.6 kg,20 W,25 kbps,"Vertical: 10 km, horizontal: 300 km along-view",Nimbus-7,https://space.oscar.wmo.int/instruments/view/sams
+TES-limb,Tropospheric Emission Spectrometer ,NASA,Limb sounder,385 kg,334 W,4.5 Mbps,Vertical: 2.3 km in the altitude range 0-37 km; horizontal effective resolution: ~ 300 km (limb geometry),Earth Observation System - Aura,https://space.oscar.wmo.int/instruments/view/tes_limb
+TIDI ,TIMED Doppler Interferometer,NASA,Limb sounder,42 kg,20 W,2.5 kbps,Vertical resolution from 2.5 km in the mesosphere to 25 km in the thermosphere; altitude range: 60-300 km,"Thermosphere, Ionosphere, Mesosphere Energetics and Dynamics mission",https://space.oscar.wmo.int/instruments/view/tidi
+COWVR,Compact Ocean Wind Vector Radiometer,NASA,Microwave conical scanning radiometer,59 kg,40 W,77 kbps,"Changing with frequency, consistent with antenna diameter of 75 cm, effectively 12-24 km.",Compact Ocean Wind Vector Radiometer on the ISS,https://space.oscar.wmo.int/instruments/view/cowvr
+ESMR (Nimbus-6),Electrically Scanning Microwave Radiometer,NASA,Microwave conical scanning radiometer,28 kg,40 W,400 bps,20 km (cross-track) x 45 km (along-track),Nimbus-6,https://space.oscar.wmo.int/instruments/view/esmr_nimbus_6
+GMI (core),GPM Microwave Imager,NASA,Microwave conical scanning radiometer,150 kg,140 W,25 kbps,"Changing with frequency, consistent with an antenna diameter of 1.2 m (only partially illuminated at higher frequencies)",Global Precipitation Measurement - Core Observatory,https://space.oscar.wmo.int/instruments/view/gmi_core
+SMAP,Soil Moisture Active-Passive (intended as payload),NASA,Microwave conical scanning radiometer,356 kg,448 W,40 Mbps,"Radiometer: 40 km; SAR: 30 km (unprocessed, real aperture), 3 km (processed)",Soil Moisture Active-Passive,https://space.oscar.wmo.int/instruments/view/smap
+SMMR,Scanning Multichannel Microwave Radiometer),NASA,Microwave conical scanning radiometer,52.3 kg,60 W,2 kbps,"Changing with frequency, ranging from 22 km at 37 GHz to 120 km at 6.6 GHz, consistent with a 80-cm antenna diameter",Nimbus-7; SeaSat,https://space.oscar.wmo.int/instruments/view/smmr
+TMI ,TRMM Microwave Imager ,NASA,Microwave conical scanning radiometer,65 kg,50 W,8.8 kbps,"Changing with frequency, consistent with an antenna diameter of 61 x 66 cm",Tropical Rainfall Measuring Mission,https://space.oscar.wmo.int/instruments/view/tmi
+AMR,Advanced Microwave Radiometer,NASA,Microwave cross-track scanning radiometer,27 kg,31 W,100 bps,25 km,Joint Altimetry Satellite Oceanography Network - 2; Joint Altimetry Satellite Oceanography Network - 3,https://space.oscar.wmo.int/instruments/view/amr
+AMR-C,Advanced Microwave Radiometer - Climate Quality,NASA,Microwave cross-track scanning radiometer,,,,25 km,Sentinel-6A; Sentinel-6B,https://space.oscar.wmo.int/instruments/view/amr_c
+AMR-CR,Advanced Microwave Radiometer - CR,NASA,Microwave cross-track scanning radiometer,,,,25 km,Copernicus polaR Ice and Snow Topography ALtimeter-A; Copernicus polaR Ice and Snow Topography ALtimeter-B,https://space.oscar.wmo.int/instruments/view/amr_cr
+AOS-Sky MWR,AOS-Sky Microwave Radiometer,NASA,Microwave cross-track scanning radiometer,,,,10 km,Atmosphere Observing System - Sky ,https://space.oscar.wmo.int/instruments/view/aos_sky_mwr
+Aquarius,Aquarius,NASA,Microwave cross-track scanning radiometer,247 kg,291 W,5 kbps,100 km average in the 390 km swath. Corresponding to a 2.5-m antenna,Satélite de Aplicaciones Cientificas - D,https://space.oscar.wmo.int/instruments/view/aquarius
+ESMR (Nimbus-5),Electrically Scanning Microwave Radiometer,NASA,Microwave cross-track scanning radiometer,28 kg,40 W,0.4 kbps,25 km s.s.p.,Nimbus-5,https://space.oscar.wmo.int/instruments/view/esmr_nimbus_5
+GeoSTAR,Geostationary Synthetic Thinned-Aperture Radiometer,NASA,Microwave cross-track scanning radiometer,,,,"50 km s.s.p. at 54 GHz, 25 km s.s.p. at 183 GHz",Precipitation and All-weather Temperature and Humidity,https://space.oscar.wmo.int/instruments/view/geostar
+HRMR,High Resolution Microwave Radiometer,NASA,Microwave cross-track scanning radiometer,,,,3-5 km,,https://space.oscar.wmo.int/instruments/view/hrmr
+JMR,JASON Microwave Radiometer,NASA,Microwave cross-track scanning radiometer,27 kg,31 W,100 bps,25 km,Joint Altimetry Satellite Oceanography Network - 1,https://space.oscar.wmo.int/instruments/view/jmr
+MM Radiometer,Millimetre-wave Radiometer,NASA,Microwave cross-track scanning radiometer,3.8 kg,,,16km,INCUS-2; Temporal Experiment for Storms and Tropical Systems Technology - 1 on the ISS; Temporal Experiment for Storms and Tropical Systems Technology - Demonstration on the ISS,https://space.oscar.wmo.int/instruments/view/mm_radiometer
+MW radiometer,Microwave radiometer,NASA,Microwave cross-track scanning radiometer,27 kg,31 W,100 bps,30 km,Surface Water and Ocean Topography,https://space.oscar.wmo.int/instruments/view/mw_radiometer
+NEMS,Nimbus-E Microwave Sounder,NASA,Microwave cross-track scanning radiometer,22.6 kg,35 W,60 bps,180 km,Nimbus-5,https://space.oscar.wmo.int/instruments/view/nems
+PolSIR radiometer,PolSIR Radiometer,NASA,Microwave cross-track scanning radiometer,,,,,Polarized Submillimeter Ice-cloud Radiometer-1,https://space.oscar.wmo.int/instruments/view/polsir_radiometer
+SCAMS,Scanning Microwave Spectrometer,NASA,Microwave cross-track scanning radiometer,23.4 kg,46 W,120 bps,145 km at s.s.p.,Nimbus-6,https://space.oscar.wmo.int/instruments/view/scams
+TMR,TOPEX Microwave Radiometer,NASA,Microwave cross-track scanning radiometer,50 kg,25 W,,35 km,"Topography Experiment - Positioning,Ocean,Solid Earth, Ice Dynamics, Orbital Navigator",https://space.oscar.wmo.int/instruments/view/tmr
+TMS,TROPICS Millimeter-wave Sounder,NASA,Microwave cross-track scanning radiometer,,,,Depending on frequency (see table),,https://space.oscar.wmo.int/instruments/view/tms
+WVR,Water Vapor Radiometer,NASA,Microwave cross-track scanning radiometer,,,160 bps,25 km,GEOSat Follow-on,https://space.oscar.wmo.int/instruments/view/wvr
+AOS-Sky polarimeter,AOS-Sky multi-angle polarimeter,NASA,Moderate-resolution optical imager,,,,0.5 km at nadir.,Atmosphere Observing System - Sky ,https://space.oscar.wmo.int/instruments/view/aos_sky_polarimeter
+APS,Aerosol Polarimetry Sensor,NASA,Moderate-resolution optical imager,69 kg,55 W,160 kbps,5.6 km,Glory,https://space.oscar.wmo.int/instruments/view/aps
+APT,Automatic Picture Transmission,NASA,Moderate-resolution optical imager,,,Analogue: 3.2 kHz base band,"Ranging from 1.8 to 3 km, depending on the satellite orbital height",,https://space.oscar.wmo.int/instruments/view/apt
+AVCS,Advanced Vidicon Camera System,NASA,Moderate-resolution optical imager,,,,Ranging from 0.9 km s.s.p. (Nimbus) to 3.7 km (ESSA) depending on the satellite orbital height and the number of parallel cameras,,https://space.oscar.wmo.int/instruments/view/avcs
+CC,Cloud Camera,NASA,Moderate-resolution optical imager,3 kg,10 W,216 kbps,500 m,Glory,https://space.oscar.wmo.int/instruments/view/cc
+CZCS,Coastal Zone Colour Scanner,NASA,Moderate-resolution optical imager,27 kg,11.4 W,800 kps,825 m s.s.p.,Nimbus-7,https://space.oscar.wmo.int/instruments/view/czcs
+EMIT,Earth Surface Mineral Dust Source Investigation,NASA,Moderate-resolution optical imager,,,,,Earth Surface Mineral Dust Source Investigation on the ISS,https://space.oscar.wmo.int/instruments/view/emit
+EPIC (DSCOVR),Earth Polychromatic Imaging Camera,NASA,Moderate-resolution optical imager,63.2 kg,62 W,,8 km s.s.p.,Deep Space Climate Observatory,https://space.oscar.wmo.int/instruments/view/epic_dscovr
+HARP2,Hyper Angular Research Polarimeter 2,NASA,Moderate-resolution optical imager,9.6 kg,11.5 W,~ 4 Mbps,2.6 km,"Aerosol-Cloud-Ecosystems; Plankton, Aerosol, Cloud, ocean Ecosystem",https://space.oscar.wmo.int/instruments/view/harp2
+HCMR,Heat Capacity Mapping Radiometer,NASA,Moderate-resolution optical imager,38.9 kg,,,500 m (VIS) or 600 m (IR) at s.s.p.,Heat Capacity Mapping Mission,https://space.oscar.wmo.int/instruments/view/hcmr
+HRIR,High Resolution Infrared Radiometer,NASA,Moderate-resolution optical imager,8 kg,8 W,Analogue: 0.4 kHz base band,8.5 km at s.s.p.,Nimbus-1; Nimbus-2; Nimbus-3,https://space.oscar.wmo.int/instruments/view/hrir
+HSI (GLIMR),Geosynchronous Littoral Imaging and Monitoring Radiometer Hyperspectral Imager,NASA,Moderate-resolution optical imager,,,,300 m over America at low latitudes,Geosynchronous Littoral Imaging and Monitoring Radiometer,https://space.oscar.wmo.int/instruments/view/hsi_glimr
+IDCS,Image Dissector Camera System,NASA,Moderate-resolution optical imager,11.3 kg,18 W,Analogue: 3.2 kHz base band,3.2 km at s.s.p.,Nimbus-3; Nimbus-4,https://space.oscar.wmo.int/instruments/view/idcs
+MAIA, Multi-Angle Imager for Aerosols ,NASA,Moderate-resolution optical imager,80 kg,85 W,10 Mbps,200 m at s.s.p.,Multi-Angle Imager for Aerosols; PLATiNO-2 ,https://space.oscar.wmo.int/instruments/view/maia
+MISR,Multi-angle Imaging Spectro-Radiometer ,NASA,Moderate-resolution optical imager,148 kg,131 W,3.3 Mbps,"250 m for the nadir-pointing camera, 275 m for the 8 off-nadir pointing cameras. In Global Observing mode, for the off-nadir cameras, only the red channel is acquired at full resolution, the remaining",Earth Observation System - Terra,https://space.oscar.wmo.int/instruments/view/misr
+MODIS,Moderate-resolution Imaging Spectro-radiometer ,NASA,Moderate-resolution optical imager,250 kg,225 W,6.2 Mbps,"IFOV: 0.25 km (two channels), 0.5 km (5 channels), 1.0 km (29 channels) – See table",Earth Observation System - Aqua; Earth Observation System - Terra,https://space.oscar.wmo.int/instruments/view/modis
+MSSCC,Multi-color Spin Scan Cloud Camera,NASA,Moderate-resolution optical imager,,,,3.5 km at s.s.p.,Application Technology Satellite - 3,https://space.oscar.wmo.int/instruments/view/msscc
+OCI,Ocean Color Instrument,NASA,Moderate-resolution optical imager,272 kg,237 W,,1.2 km,"Aerosol-Cloud-Ecosystems; Plankton, Aerosol, Cloud, ocean Ecosystem",https://space.oscar.wmo.int/instruments/view/oci
+SCMR,Surface Composition Mapping Radiometer,NASA,Moderate-resolution optical imager,25 kg,7 W,250 bps,660 m at s.s.p.,Nimbus-5,https://space.oscar.wmo.int/instruments/view/scmr
+SSCC,Spin Scan Cloud Camera,NASA,Moderate-resolution optical imager,,,,4.5 km at s.s.p.,Application Technology Satellite - 1,https://space.oscar.wmo.int/instruments/view/sscc
+SeaWiFS,Sea-viewing Wide Field-of-view Sensor,NASA,Moderate-resolution optical imager,45 kg,88 W,2 Mbps,1.1 IFOV,OrbView-2 (former: SeaStar),https://space.oscar.wmo.int/instruments/view/seawifs
+THIR,Temperature-Humidity Infrared Radiometer,NASA,Moderate-resolution optical imager,9 kg,8.5 W,Analogue: 0.8 kHz base band,7 km at s.s.p. (window channel) and 22 km at s.s.p. (water vapour channel),,https://space.oscar.wmo.int/instruments/view/thir
+VCS-MA,Vidicon Camera System - Medium Angle,NASA,Moderate-resolution optical imager,,,,2.5 km at image center when pointing normal to the Earth surface,Television and Infra-Red Observation Satellite - 4; Television and Infra-Red Observation Satellite - 5; Television and Infra-Red Observation Satellite - 6,https://space.oscar.wmo.int/instruments/view/vcs_ma
+VCS-NA,Vidicon Camera System - Narrow Angle,NASA,Moderate-resolution optical imager,,,,0.3 km at image center when pointing normal to the Earth surface,Television and Infra-Red Observation Satellite - 1; Television and Infra-Red Observation Satellite - 2,https://space.oscar.wmo.int/instruments/view/vcs_na
+VCS-WA,Vidicon Camera System - Wide Angle,NASA,Moderate-resolution optical imager,,,,3 km at image center when pointing normal to the Earth surface,,https://space.oscar.wmo.int/instruments/view/vcs_wa
+VHRR (ATS),Very High Resolution Radiometer,NASA,Moderate-resolution optical imager,,,,5.5 km (VIS) and 11 km (IR),Application Technology Satellite - 6,https://space.oscar.wmo.int/instruments/view/vhrr_ats
+VIRR (Seasat),Visible and Infra Red Radiometer,NASA,Moderate-resolution optical imager,8.1 kg,7.3 W,,2.3 km at s.s.p. (VIS) or 4.4 km at s.s.p. (IR),SeaSat,https://space.oscar.wmo.int/instruments/view/virr_seasat
+VIRS,Visible and Infra Red Scanner,NASA,Moderate-resolution optical imager,34.5 kg,40 W,50 kbps,2.0 km at s.s.p.,Tropical Rainfall Measuring Mission,https://space.oscar.wmo.int/instruments/view/virs
+DDMI,Delay Doppler Mapping Instrument ,NASA,Positioning system,,,,N/A,Cyclone Global Navigation Satellite System (8 sats),https://space.oscar.wmo.int/instruments/view/ddmi
+GPS (NASA),GPS Receiver,NASA,Positioning system,,,,N/A,Landsat-4.; Landsat-5; Surface Water and Ocean Topography,https://space.oscar.wmo.int/instruments/view/gps_nasa
+GPSDR,GPS Demonstration Receiver,NASA,Positioning system,,,,N/A,"Topography Experiment - Positioning,Ocean,Solid Earth, Ice Dynamics, Orbital Navigator",https://space.oscar.wmo.int/instruments/view/gpsdr
+LRA (NASA),Laser Retroreflector Array,NASA,Positioning system,2.2 kg,,,N/A,,https://space.oscar.wmo.int/instruments/view/lra_nasa
+LRR (NASA),Laser Retro-Reflector,NASA,Positioning system,,,,N/A,SeaSat,https://space.oscar.wmo.int/instruments/view/lrr_nasa
+TRSR,Turbo Rogue Space Receiver,NASA,Positioning system,10 kg,17.5 W,,N/A,,https://space.oscar.wmo.int/instruments/view/trsr
+ALT (SeaSat),Radar Altimeter,NASA,Radar altimeter,,,,12 km IFOV,SeaSat,https://space.oscar.wmo.int/instruments/view/alt_seasat
+GFO-RA,GEOSat Follow-On Radar Altimeter,NASA,Radar altimeter,,,,25 km s.s.p.,GEOSat Follow-on,https://space.oscar.wmo.int/instruments/view/gfo_ra
+GRA,GEOSat Radar Altimeter,NASA,Radar altimeter,,,,25 km s.s.p.,Geodetic Satellite,https://space.oscar.wmo.int/instruments/view/gra
+KaRIN,Ka-band Radar Interferometer,NASA,Radar altimeter,300 kg,1100 W,320Mbps,"Horizontal 50 m over land, 1 km over ocean; vertical 10 cm over land, 1 cm over ocean",Surface Water and Ocean Topography,https://space.oscar.wmo.int/instruments/view/karin
+NRA,NASA Radar Altimeter,NASA,Radar altimeter,230 kg,237 W,9.8 kbps,30 km,"Topography Experiment - Positioning,Ocean,Solid Earth, Ice Dynamics, Orbital Navigator",https://space.oscar.wmo.int/instruments/view/nra
+Poseidon-3C,Poseidon-3C Altimeter,NASA,Radar altimeter,70 kg,78 W,22.5 kbps,25 km,Surface Water and Ocean Topography,https://space.oscar.wmo.int/instruments/view/poseidon_3c
+NSCAT,NASA Scatterometer,NASA,Radar scatterometer,280 kg,240 W,3.2 kbps,50 km (sampling: 25 km),Advanced Earth Observing Satellite (original name: “Midori”),https://space.oscar.wmo.int/instruments/view/nscat
+RapidScat,Rapid Scatterometer,NASA,Radar scatterometer,200 kg,220 W,40 kbps,Best quality: 50 km - standard quality: 25 km - basic sampling: 12.5 km,Rapid Scatterometer on the ISS,https://space.oscar.wmo.int/instruments/view/rapidscat
+SASS,SeaSat-A Scatterometer System,NASA,Radar scatterometer,103 kg,100 W,,50 km,SeaSat,https://space.oscar.wmo.int/instruments/view/sass
+SeaWinds,SeaWinds,NASA,Radar scatterometer,200 kg,220 W,40 kbps,Best quality: 50 km - standard quality: 25 km - basic sampling: 12.5 km,Advanced Earth Observing Satellite - 2 (original name: “Midori-2”) ; Quick Scatterometer Mission,https://space.oscar.wmo.int/instruments/view/seawinds
+AIA,Atmospheric Imaging Assembly,NASA,Solar activity monitor,,,,750 km at the Sun surface,Solar Dynamics Observatory,https://space.oscar.wmo.int/instruments/view/aia
+CP,Coronagraph/Polarimeter,NASA,Solar activity monitor,,,,7300 km at Sun surface,Solar Maximum Mission,https://space.oscar.wmo.int/instruments/view/cp
+EIT,Extreme UV Imaging Telescope,NASA,Solar activity monitor,,,1 kbps,750 km at sun surface,Solar and Heliospheric Observatory,https://space.oscar.wmo.int/instruments/view/eit
+EVE,EUV Variability Experiment,NASA,Solar activity monitor,54 kg,47 W,7 Mbps,N/A (full disk),Solar Dynamics Observatory,https://space.oscar.wmo.int/instruments/view/eve
+GRS,Gamma-Ray Spectrometer,NASA,Solar activity monitor,,,,N/A (full disk),Solar Maximum Mission,https://space.oscar.wmo.int/instruments/view/grs
+GXRE/SOXS,Goddard X-Ray Experiment / Soft X-Ray Spectrometer,NASA,Solar activity monitor,,,,N/A (full disk),Satélite de Aplicaciones Cientificas - B,https://space.oscar.wmo.int/instruments/view/gxre_soxs
+HMI,Helioseismic and Magnetic Imager,NASA,Solar activity monitor,,,55 Mbps,1000 km at the Sun surface,Solar Dynamics Observatory,https://space.oscar.wmo.int/instruments/view/hmi
+HXRBS,Hard X-Ray Burst Spectrometer,NASA,Solar activity monitor,,,,N/A,Solar Maximum Mission,https://space.oscar.wmo.int/instruments/view/hxrbs
+IRIS (IRIS),Interface Region Imaging Spectrograph ,NASA,Solar activity monitor,87 kg,55 W,0.7 Mbps,250 km at Sun surface,Interface Region Imaging Spectrograph,https://space.oscar.wmo.int/instruments/view/iris_iris
+JEDI,Extreme Ultra-Violet Imager,NASA,Solar activity monitor,,,,Spatial resolution : 3.2 arcseconds,Vigil-L5 (previously known as Lagrange-L5),https://space.oscar.wmo.int/instruments/view/jedi
+LAD,Lyman Alpha Detector,NASA,Solar activity monitor,,,,N/A (full disk),Two Wide-angle Imaging Neutral-atom Spectrometers (2 sats),https://space.oscar.wmo.int/instruments/view/lad
+LASCO,Large Angle and Spectrometric Coronagraph,NASA,Solar activity monitor,,,,4000 km at the Sun surface,Solar and Heliospheric Observatory,https://space.oscar.wmo.int/instruments/view/lasco
+MDI,Michelson Doppler Imager,NASA,Solar activity monitor,,,40 kbps,1000 km at Sun surface,Solar and Heliospheric Observatory,https://space.oscar.wmo.int/instruments/view/mdi
+MUSE,Monitor of Ultraviolet Solar Energy,NASA,Solar activity monitor,,,,N/A (full disk),Nimbus-3; Nimbus-4,https://space.oscar.wmo.int/instruments/view/muse
+NFI,Narrow Field Imager Coronagraph,NASA,Solar activity monitor,,,1.9 GBytes/day,Angular resolution 2 arc-minutes,Polarimeter to UNify the Corona and Heliosphere,https://space.oscar.wmo.int/instruments/view/nfi
+RHESSI,Reuven Ramaty High Energy Solar Spectroscopic Imager,NASA,Solar activity monitor,131 kg,143 W,,"1700 km for 3-100 keV, 5000 km at 400 keV, 27000 km above 1 MeV; at Sun surface",Reuven Ramaty High Energy Solar Spectroscopic Imager,https://space.oscar.wmo.int/instruments/view/rhessi
+SEE,Solar Extreme Ultraviolet Experiment,NASA,Solar activity monitor,27 kg,27 W,210 bps,N/A (full disk),"Thermosphere, Ionosphere, Mesosphere Energetics and Dynamics mission",https://space.oscar.wmo.int/instruments/view/see
+SME (SPA),SME - Solar Proton Alarm,NASA,Solar activity monitor,,,,,Solar Mesosphere Explorer,https://space.oscar.wmo.int/instruments/view/sme_spa
+STEAM,Student Thermal Activity Energetic Module ,NASA,Solar activity monitor,,,,,Polarimeter to UNify the Corona and Heliosphere,https://space.oscar.wmo.int/instruments/view/steam
+TRACE,"Transition Region and Coronal Explorer (instrument, same name as satellite and programme)",NASA,Solar activity monitor,51 kg,,42 kbps,370 km at the Sun surface,Transition Region and Coronal Explorer,https://space.oscar.wmo.int/instruments/view/trace
+UVCS,UV Coronagraph and Spectrometer,NASA,Solar activity monitor,,,,"15000 km at the Sun surface for most of the EUV range, 7500 km for the Lyman-alpha range",Solar and Heliospheric Observatory,https://space.oscar.wmo.int/instruments/view/uvcs
+UVSP,Ultraviolet Spectrometer and Polarimeter,NASA,Solar activity monitor,,,,"Pixels of 730 km x 190,000 km at Sun surface",Solar Maximum Mission,https://space.oscar.wmo.int/instruments/view/uvsp
+WFI (PUNCH),Wide Field Heliospheric Imager,NASA,Solar activity monitor,,,1.1 GBytes/day,,Polarimeter to UNify the Corona and Heliosphere,https://space.oscar.wmo.int/instruments/view/wfi_punch
+XPS,XUV Photometer System,NASA,Solar activity monitor,2.6 kg,8.6 W,267 bps,N/A (full disk),Solar Radiation and Climate Experiment,https://space.oscar.wmo.int/instruments/view/xps
+ACRIM-I,Active Cavity Radiometer Irradiance Monitoring - I,NASA,Solar irradiance monitor,13 kg,10 W,600 bps,N/A,Solar Maximum Mission,https://space.oscar.wmo.int/instruments/view/acrim_i
+ACRIM-II,Active Cavity Radiometer Irradiance Monitoring - II,NASA,Solar irradiance monitor,13 kg,10 W,600 bps,N/A,Upper Atmosphere Research Satellite,https://space.oscar.wmo.int/instruments/view/acrim_ii
+ACRIM-III,Active Cavity Radiometer Irradiance Monitoring - III,NASA,Solar irradiance monitor,13 kg,10 W,600 bps,N/A,Active Cavity Radiometer Irradiance Monitor Satellite,https://space.oscar.wmo.int/instruments/view/acrim_iii
+CTIM-FD,Compact Total Irradiance Monitor-Flight Demonstration,NASA,Solar irradiance monitor,0.6 kg,,,N/A,Compact Total Irradiance Monitor-Flight Demonstration,https://space.oscar.wmo.int/instruments/view/ctim_fd
+SIM,Spectral Irradiance Monitor,NASA,Solar irradiance monitor,22 kg,25.3 W,4.84 kbps,N/A,Compact Spectral Irradiance Monitor; Solar Radiation and Climate Experiment,https://space.oscar.wmo.int/instruments/view/sim
+SOLSTICE,Solar/Stellar Irradiance Comparison Experiment,NASA,Solar irradiance monitor,36 kg,33 W,740 bps,N/A,Solar Radiation and Climate Experiment; Upper Atmosphere Research Satellite,https://space.oscar.wmo.int/instruments/view/solstice
+TIM ,Total Irradiance Monitoring,NASA,Solar irradiance monitor,7.9 kg,14 W,539 bps,N/A (full solar disk),Glory; Solar Radiation and Climate Experiment; Space Test Program Satellite - 3,https://space.oscar.wmo.int/instruments/view/tim
+XRIS,X-Ray Irradiance Sensor,NASA,Solar irradiance monitor,,,,,Space Weather Next at L1 B,https://space.oscar.wmo.int/instruments/view/xris
+3D-Winds Lidar,Lidar of 3D-Winds,NASA,Space lidar,,,,,Three-Dimensional Tropospheric Winds from Space-Based Lidar,https://space.oscar.wmo.int/instruments/view/3d_winds_lidar
+3D-Winds Lidar-copy,Lidar of 3D-Winds,NASA,Space lidar,,,,,,https://space.oscar.wmo.int/instruments/view/3d_winds_lidar_copy
+3D-Winds Lidar-copy,Lidar of 3D-Winds,NASA,Space lidar,,,,,,https://space.oscar.wmo.int/instruments/view/3d_winds_lidar_copy
+ACE Lidar,Aerosol-Cloud Ecosystems Lidar,NASA,Space lidar,,,,,Aerosol-Cloud-Ecosystems,https://space.oscar.wmo.int/instruments/view/ace_lidar
+AOS-Lidar,Atmosphere Observing System-Lidar,NASA,Space lidar,,,,"350m footprint, 30m vertical",Atmosphere Observing System - Sky ,https://space.oscar.wmo.int/instruments/view/aos_lidar
+ATLAS,Advanced Topographic Laser Altimeter System,NASA,Space lidar,298 kg,300 W,450 bps,"Horizontal: 66 m IFOV sampled at 170 m intervals along track. Vertical: 10 cm surface, 200 m cloud top","Ice, Cloud and land Elevation Satellite",https://space.oscar.wmo.int/instruments/view/atlas
+CALIOP,Cloud-Aerosol Lidar with Orthogonal Polarisation,NASA,Space lidar,156 kg,124 W,332 kbps,Horizontal: 70 m IFOV sampled at 333 m intervals along track. Vertical: 30 m,Cloud-Aerosol Lidar and Infrared Pathfinder Satellite Observations,https://space.oscar.wmo.int/instruments/view/caliop
+CATS,Cloud-Aerosol Transport System,NASA,Space lidar,500 kg,1000 W,2 Mbps,"350 m (horizontal), 30 m (vertical)",Cloud-Aerosol Transport System on the ISS,https://space.oscar.wmo.int/instruments/view/cats
+CO2 lidar,Carbon dioxide lidar,NASA,Space lidar,420 kg,920 W,1.9 Mbps,125 m,"Active Sensing of CO2 Emissions over Nights, Days, and Seasons",https://space.oscar.wmo.int/instruments/view/co2_lidar
+EDGE LIDAR,Earth Dynamics Geodetic Explorer LIDAR,NASA,Space lidar,1038 kg,1275 W,300 GB per day,,Earth Dynamics Geodetic Explorer,https://space.oscar.wmo.int/instruments/view/edge_lidar
+GEDI Lidar,Global Ecosystem Dynamics Investigation Lidar,NASA,Space lidar,230 kg,516 W,2.1 Mbps,25 m s.s.p.,Global Ecosystem Dynamics Investigation on ISS,https://space.oscar.wmo.int/instruments/view/gedi_lidar
+GLAS,Geoscience Laser Altimeter System,NASA,Space lidar,298 kg,300 W,450 bps,"Horizontal: 66 m IFOV sampled at 170 m intervals along track. Vertical: 10 cm surface, 200 m cloud top","Ice, Cloud and land Elevation Satellite",https://space.oscar.wmo.int/instruments/view/glas
+O3 lidar,Ozone lidar,NASA,Space lidar,,,,,Global Atmospheric Composition Mission,https://space.oscar.wmo.int/instruments/view/o3_lidar
+VCL,Vegetation Canopy Lidar,NASA,Space lidar,225 kg,336 W,0.8 Mbps,"25 m horizontal, 1 m vertical","Deformation, Ecosystem Structure, and Dynamics of Ice",https://space.oscar.wmo.int/instruments/view/vcl
+CUBIC,"Cosmic Unresolved X-Ray Background 
+Instrument using CCDs",NASA,Space radiometer or spectrometer,,,,N/A (space-integrated viewing),Satélite de Aplicaciones Cientificas - B,https://space.oscar.wmo.int/instruments/view/cubic
+EUV,Extreme Ultraviolet Imager,NASA,Space radiometer or spectrometer,15.6 kg,15.5 W,,"0.6º at apogee, corresponding to 640 km at the plasmasphere height",Imager for Magnetopause-to-Aurora Global Exploration,https://space.oscar.wmo.int/instruments/view/euv
+EUV (ICON),Extreme Ultra Violet Imaging Spectrograph ,NASA,Space radiometer or spectrometer,,,,0.48°. In the limb region: 300 km,Ionospheric Connection Explorer ,https://space.oscar.wmo.int/instruments/view/euv_icon
+FUV (ICON),Far Ultra Violet Imaging Spectrograph ,NASA,Space radiometer or spectrometer,,,,0.48°. In the limb region:300 km,Ionospheric Connection Explorer ,https://space.oscar.wmo.int/instruments/view/fuv_icon
+FUV/GEO,Far Ultraviolet Imager / Geocorona Photometer,NASA,Space radiometer or spectrometer,,,,1°,Imager for Magnetopause-to-Aurora Global Exploration,https://space.oscar.wmo.int/instruments/view/fuv_geo
+FUV/SI,Far Ultraviolet Imager / Spectrographic Imager,NASA,Space radiometer or spectrometer,,,,1.12° corresponding to 100 km at apogee distances,Imager for Magnetopause-to-Aurora Global Exploration,https://space.oscar.wmo.int/instruments/view/fuv_si
+FUV/WIC,Far Ultraviolet Imager / Wideband Imaging Camera,NASA,Space radiometer or spectrometer,,,,"0.07º, corresponding to a spatial resolutions of < 70 km at apogee distances;",Imager for Magnetopause-to-Aurora Global Exploration,https://space.oscar.wmo.int/instruments/view/fuv_wic
+GLOWS,GLObal solar Wind Structure,NASA,Space radiometer or spectrometer,,,,,Interstellar Mapping and Acceleration Probe,https://space.oscar.wmo.int/instruments/view/glows
+GOLD,Global-scale Observations of the Limb and Disk,NASA,Space radiometer or spectrometer,37 kg,72 W,6 Mbps,50 km,SES-14,https://space.oscar.wmo.int/instruments/view/gold
+GUVI,Global Ultra-Violet Imager,NASA,Space radiometer or spectrometer,19.2 kg,24 W,8 kbps,"9.5 km at s.s.p., 300 km for limb viewing","Thermosphere, Ionosphere, Mesosphere Energetics and Dynamics mission",https://space.oscar.wmo.int/instruments/view/guvi
+GXRE/GRaBS,Goddard X-Ray Experiment - Gamma Ray Burst Spectrometer,NASA,Space radiometer or spectrometer,,,,N/A (integrated view of the interplanetary space),Satélite de Aplicaciones Cientificas - B,https://space.oscar.wmo.int/instruments/view/gxre_grabs
+KONUS,Gamma Ray Burst Investigation,NASA,Space radiometer or spectrometer,,,,N/A (integrated over the full interplanetary space),WIND,https://space.oscar.wmo.int/instruments/view/konus
+PEM/AXIS,Particle Environment Monitor / Atmospheric X-ray Imaging Spectrometer,NASA,Space radiometer or spectrometer,,,,80 km at s.s.p.,Upper Atmosphere Research Satellite,https://space.oscar.wmo.int/instruments/view/pem_axis
+PIXIE,Polar Ionospheric X-ray Imaging Experiment,NASA,Space radiometer or spectrometer,24.5 kg,11 W,3.5 kbps,Best conditioms: 0.05*,Polar,https://space.oscar.wmo.int/instruments/view/pixie
+SME (SUM),SME - Solar UV Monitor,NASA,Space radiometer or spectrometer,,,,,Solar Mesosphere Explorer,https://space.oscar.wmo.int/instruments/view/sme_sum
+SME (UVOE),SME - Ultra-Violet Ozone Experiment.,NASA,Space radiometer or spectrometer,,,,,Solar Mesosphere Explorer,https://space.oscar.wmo.int/instruments/view/sme_uvoe
+SMEI,"Solar Mass Ejection Imager
+",NASA,Space radiometer or spectrometer,35 kg,,64 kbps,1°,Coriolis,https://space.oscar.wmo.int/instruments/view/smei
+TGRS,Transient Gamma Ray Spectrometer,NASA,Space radiometer or spectrometer,,,,N/A (integrated over the interplanetary space),WIND,https://space.oscar.wmo.int/instruments/view/tgrs
+UVI,Ultraviolet Imager,NASA,Space radiometer or spectrometer,21 kg,21 W,12 kbps,"300 km for the Earth's limb, 30 km for the surface (from the apogee)",Polar,https://space.oscar.wmo.int/instruments/view/uvi
+VIS,Visible Imaging System,NASA,Space radiometer or spectrometer,,,,10 km at Earth's surface (from the apogee),Polar,https://space.oscar.wmo.int/instruments/view/vis

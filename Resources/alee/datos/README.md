@@ -10,6 +10,11 @@ Datos reales de NASA listos para convertir en los archivos de datos del juego (`
 | `donki/` | NASA CCMC DONKI | Llamaradas, SEP, tormentas geomagnéticas y CME de 2024–2025, más un resumen de frecuencias | [`../fuentes/17`](../fuentes/17-donki-space-weather.md) |
 | `horizons-elements-2026-11-14.csv` | JPL Horizons | Elementos orbitales de los 8 planetas y la Luna | [`../fuentes/19`](../fuentes/19-jpl-horizons.md) |
 | `exoplanet-archive-pscomppars.csv` | NASA Exoplanet Archive | 6470 exoplanetas confirmados con método e instalación de descubrimiento | [`../fuentes/21`](../fuentes/21-exoplanet-archive.md) |
+| `nasa-launch-service-awards.csv` | Notas de prensa de NASA | 13 lanzamientos de NASA con lanzador y coste total (69–255 M$), 2014–2025 | [`../fuentes/23`](../fuentes/23-costes-nasa.md) |
+| `launch-cost-per-kg-leo-ntrs.csv` | NASA Ames (NTRS 20200001093) | Coste por kg a LEO de 36 lanzadores, 1957–2018, en k$ de 2018 | [`../fuentes/23`](../fuentes/23-costes-nasa.md) |
+| `nasa-mission-cost-caps.csv` | MOCET 2024 de NASA y convocatorias (AO) | Topes de coste por clase de misión (Pioneers 20 M$ … New Frontiers 900 M$) | [`../fuentes/23`](../fuentes/23-costes-nasa.md) |
+| `wmo-oscar-nasa-instruments.csv` | WMO OSCAR/Space | 323 instrumentos aportados por NASA: tipo, masa, potencia, tasa de datos y satélites | [`../fuentes/24`](../fuentes/24-instrumentos-wmo-oscar.md) |
+| `wmo-oscar-instrument-type-summary.csv` | WMO OSCAR/Space (calculado) | Mediana, mínimo y máximo de masa, potencia y tasa de datos por tipo de instrumento | [`../fuentes/24`](../fuentes/24-instrumentos-wmo-oscar.md) |
 
 ## Cómo se obtuvieron
 - **LSP**: formulario web consultado con el navegador; resultados copiados de la tabla de cada consulta.
@@ -18,5 +23,9 @@ Datos reales de NASA listos para convertir en los archivos de datos del juego (`
 - **DONKI**: API `https://ccmc.gsfc.nasa.gov/DONKI/WS/get/<tipo>` en tramos de 60 días.
 - **Horizons**: API oficial (`ssd.jpl.nasa.gov/api/horizons.api`).
 - **Exoplanet Archive**: servicio TAP oficial.
+- **Lanzamientos de NASA**: cifra copiada literalmente de cada nota de prensa (URL en la última columna).
+- **Coste por kg**: tabla A1 del PDF de NTRS, transcrita.
+- **Topes por clase**: tabla de la presentación MOCET 2024 y convocatorias (URL por fila).
+- **WMO OSCAR**: lista de instrumentos desde su API (`/api/v1/instruments`); masa, potencia y tasa de datos leídas de la ficha web de cada instrumento.
 
 Las URL exactas de cada consulta están en la ficha correspondiente, para poder repetirlas.
