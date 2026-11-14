@@ -30,6 +30,8 @@ namespace SpaceApps.Mission
         public Num baseReliability, maxReliability, preferredOrbitBonus, healthyMarginMax;
         /// <summary>How late delivery can be and still make the planned rocket.</summary>
         public Num deliverySlackMonths;
+        /// <summary>Science spare (0.2 = 20% above the minimum) below which the evaluator warns.</summary>
+        public Num scienceMarginWarning;
     }
 
     [Serializable]

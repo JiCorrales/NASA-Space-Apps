@@ -183,6 +183,13 @@ namespace SpaceApps.Mission.Tests
         }
 
         [Test]
+        public void OneSmallHitIsSurvivableWithScienceMargin()
+        {
+            var r = MissionSimulator.Run(OnlyEvent("team-turnover"), MissionEvaluatorTests.Radiation(), 0);
+            Assert.AreEqual(MissionOutcome.FullSuccess, r.outcome, $"{r.scienceReturned} of {r.scienceNeeded}");
+        }
+
+        [Test]
         public void SameSeedGivesTheSameRun()
         {
             for (int seed = 0; seed < 50; seed++)

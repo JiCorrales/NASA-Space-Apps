@@ -65,6 +65,11 @@
    "source": "Game balance value chosen by the team; CubeSat 101 ch.2 p.9: delivery is due 4 weeks to 6 months before launch",
    "status": "game-balance"
   },
+  "scienceMarginWarning": {
+   "value": 0.2,
+   "source": "Game balance value chosen by the team, not NASA data",
+   "status": "game-balance"
+  },
   "healthyMarginMax": {
    "value": 0.4,
    "source": "Game balance value from general engineering knowledge, not NASA data; typical conceptual margins 20-30%",
@@ -124,7 +129,7 @@
     "leo-500"
    ],
    "minScience": {
-    "value": 10,
+    "value": 8,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
@@ -160,7 +165,7 @@
     "sso-550"
    ],
    "minScience": {
-    "value": 12,
+    "value": 9,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },
@@ -193,7 +198,7 @@
    ],
    "preferredOrbits": [],
    "minScience": {
-    "value": 45,
+    "value": 36,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
    },

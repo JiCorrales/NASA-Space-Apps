@@ -207,6 +207,9 @@ namespace SpaceApps.Mission
                 else if (missing.Count == 0 && report.science < objective.minScience)
                     Add(report, "science-short", ResourceKind.Data, Severity.Blocking,
                         Inv($"The mission returns {report.science:0} science points but the objective needs {objective.minScience.value:0}."));
+                else if (missing.Count == 0 && report.science < objective.minScience * (1f + c.scienceMarginWarning))
+                    Add(report, "thin-science-margin", ResourceKind.Data, Severity.Warning,
+                        Inv($"The mission returns {report.science:0.#} science points against {objective.minScience.value:0.#} needed, with less than {c.scienceMarginWarning.value * 100f:0}% to spare, so one bad event in orbit could leave it short."));
             }
 
             report.reliability = Math.Min(c.maxReliability.value, c.baseReliability + tests.Sum(t => t.reliabilityBonus.value));

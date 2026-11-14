@@ -363,6 +363,16 @@ namespace SpaceApps.Mission.Tests
         }
 
         [Test]
+        public void NoScienceMarginIsAWarning()
+        {
+            MissionCatalog.Find(catalog.objectives, "radiation-survey").minScience.value = 10f; // design returns exactly 10
+            var r = Eval(Radiation());
+            Assert.IsTrue(r.Has("thin-science-margin"));
+            Assert.AreEqual(Severity.Warning, r.issues.Find(i => i.code == "thin-science-margin").severity);
+            Assert.IsTrue(r.success);
+        }
+
+        [Test]
         public void OptionalTestsRaiseReliabilityAndScore()
         {
             var a = Eval(DesignA());
