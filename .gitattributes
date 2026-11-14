@@ -6,7 +6,9 @@
 *.meta text
 *.unity text
 *.prefab text
-*.asset text
+# Not every .asset is YAML: baked lighting, NavMesh and terrain data are binary even with
+# Force Text, and forcing "text" would rewrite CRLF byte pairs inside them. Let git detect it.
+*.asset text=auto
 *.mat text
 *.anim text
 *.controller text
