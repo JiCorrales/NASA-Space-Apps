@@ -366,8 +366,9 @@ namespace SpaceApps.Ship.Editor
             rt.sizeDelta = sizePx;
             rt.localScale = Vector3.one * 0.001f; // 1 px = 1 mm
             go.AddComponent<Canvas>().renderMode = RenderMode.WorldSpace;
-            go.AddComponent<GraphicRaycaster>();
-            go.AddComponent<TrackedDeviceGraphicRaycaster>();
+            // Walls and doors in front of a screen block both the mouse and the XR ray.
+            go.AddComponent<GraphicRaycaster>().blockingObjects = GraphicRaycaster.BlockingObjects.ThreeD;
+            go.AddComponent<TrackedDeviceGraphicRaycaster>().checkFor3DOcclusion = true;
             return rt;
         }
 
