@@ -89,6 +89,7 @@ namespace SpaceApps.Mission
         readonly string[] wk = new string[Weeks];
         int delivered, lost, silence, passesUsed, weeksDone, pointOk, outageWeeksTotal;
         float powerSum, minBattery = 100f;
+        bool passThisWeek;
         readonly int[] deliveredPerWeek = new int[Weeks];
         int stormWeeksLeft, faultWeeksLeft, outageWeeksLeft, backupWeeksLeft, pausedWeeks, safeWeeks;
         bool prioritize, lastCapturing, lastContact, answered, launchFailed;
@@ -244,7 +245,7 @@ namespace SpaceApps.Mission
             lastContact = true;
             battery -= downlinkWh / capWh * 100f;
             if (link < s.minLinkPct) { silence++; Say(week, "Ground pass with a weak link, nothing could be sent", "alert"); return; }
-            silence = 0; passesUsed++;
+            silence = 0; passThisWeek = true;
             float mb = passMb * link / 100f * (backupWeeksLeft > 0 ? backup.passFactor.value : 1f);
             if (prioritize && queue.Count > 0)
             {
@@ -287,6 +288,10 @@ namespace SpaceApps.Mission
             pausedWeeks = Math.Max(0, pausedWeeks - 1);
             safeWeeks = Math.Max(0, safeWeeks - 1);
             backupWeeksLeft = Math.Max(0, backupWeeksLeft - 1);
+            // A pass counts once its week is over, like power and pointing: counting it in the downlink put the
+            // link factor above 1 (and the projection above 100) in the middle of a week.
+            if (passThisWeek) passesUsed++;
+            passThisWeek = false;
             powerSum += Math.Max(0f, battery);
             if (pointing <= tol) pointOk++;
             minBattery = Math.Min(minBattery, battery);
