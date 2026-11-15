@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { RequirementsScreen } from "../RequirementsScreen";
+import { RequirementsScreen, stepOf } from "../RequirementsScreen";
 import { fixtureState, issue, mockSend } from "./fixture";
 
 describe("requirements screen", () => {
@@ -23,6 +23,18 @@ describe("requirements screen", () => {
     expect(slider).toHaveAttribute("max", "52");
     fireEvent.change(slider, { target: { value: "40" } });
     expect(fn).toHaveBeenCalledWith({ type: "setRequirement", payload: { id: "images", value: 40 } });
+  });
+
+  it("the slider step fits the range: whole units, or a tenth for a range with a fraction", () => {
+    expect(stepOf({ min: 12, max: 36 })).toBe(1);
+    expect(stepOf({ min: 300000, max: 1500000 })).toBe(10000);
+    expect(stepOf({ min: 0.5, max: 2 })).toBe(0.1);
+    const state = fixtureState();
+    state.requirements = [{ id: "pointingToleranceDeg", label: "Pointing tolerance", value: 1, unit: "deg", min: 0.5, max: 2, check: "x" }];
+    render(<RequirementsScreen state={state} send={mockSend().send} />);
+    const slider = screen.getByRole("slider", { name: "Pointing tolerance" }) as HTMLInputElement;
+    expect(slider).toHaveAttribute("step", "0.1");
+    expect(slider.value).toBe("1"); // the thumb sits where the value is, not snapped to 1.5
   });
 
   it("the exact value field clamps to the range and sends on Enter", async () => {

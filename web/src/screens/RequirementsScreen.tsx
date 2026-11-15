@@ -30,10 +30,14 @@ export function RequirementsScreen({ state, send = defaultSend }: { state: Missi
   );
 }
 
-/** A step that gives about a hundred positions between min and max, or whole units for small ranges. */
-function stepOf(r: Requirement): number {
+/** Whole units for a whole-number range up to 100 wide, else about a hundred positions; a range with a fraction
+ * (pointing, 0.5 to 2) gets a power of ten that leaves about ten to a hundred positions, never a step wider than the range. */
+export function stepOf(r: Pick<Requirement, "min" | "max">): number {
   const span = r.max - r.min;
-  return span <= 100 ? 1 : Math.pow(10, Math.floor(Math.log10(span / 100)));
+  if (!(span > 0)) return 1;
+  const whole = Number.isInteger(r.min) && Number.isInteger(r.max);
+  if (whole) return span <= 100 ? 1 : Math.pow(10, Math.floor(Math.log10(span / 100)));
+  return Math.pow(10, Math.floor(Math.log10(span / 10)));
 }
 
 function RequirementRow({ req: r, send }: { req: Requirement; send: Send }) {
