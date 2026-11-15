@@ -1,6 +1,6 @@
 # Mars version: plan
 
-> Draft 0.1, 2026-11-15, 02:00. Written from the decisions Jose took in the early hours of 2026-11-15.
+> Draft 0.2, 2026-11-15, 02:15. Written from the decisions Jose took in the early hours of 2026-11-15.
 > **Nothing in this plan gets coded until Jose says go.** What is still open is in [section 12](#12-still-open).
 > The game as it was before this plan (Earth Watch, with the Unity ship) is kept on the branch `backup/earth-watch`
 > and is described in [game-plan.md](game-plan.md).
@@ -24,7 +24,7 @@ they can see and how often they can talk. When they lose, the attempt is kept, s
 | Step 6 of Act 1 | Launch, a short cruise where the months pass, arrival in orbit and landing, then Act 2. The launch can fail, which ends the attempt |
 | Time in Act 2 | Turns, one per sol. A run is 30 sols |
 | Winning | Finish the mission list before the window home closes (sol 30) |
-| Losing | The window closes first, or a vital resource runs out |
+| Losing | The window closes first, a vital resource runs out, or nobody is left able to work |
 | Mission list | Power up the base; raise the antenna; sample three sites and send the data; save the satellite when it gets into trouble |
 | Deciding | Together, over communicators. A player whose communicator has failed decides alone |
 | A failed communicator | The player is blind but free to act: they see only their surroundings and their own gauges, no forecast and no view of the others' plans, and can still do anything their role can. The team learns what they did when the link returns |
@@ -36,6 +36,7 @@ they can see and how often they can talk. When they lose, the attempt is kept, s
 | Code structure | An abstract `Player`, one class per role, and interfaces for skills, activities, hazards, base modules, tasks and controllers, for maintainability |
 | Hints | None, as before: nothing tells the player in advance what will go wrong. Causes are named only in the report after a run |
 | Numbers | NASA data wherever it exists, each with its source. A number NASA does not give is labelled as the team's |
+| Crew health | Each of the four has health gauges fed by real data: what the body goes through on Mars, not hit points |
 | History | Every attempt is kept: the design, what each player did, what ended the run |
 | Safety net | At 12:00 the team looks at what works. If the Mars version plays from design to the end of a run, it is submitted. If not, Earth Watch is submitted from the backup |
 
@@ -99,6 +100,18 @@ The design is not a score to carry over; it is the equipment the crew has.
 
 **Hazards.** Each is a real condition with a real source (to be confirmed by the data in [section 9](#9-data)): a dust storm that cuts solar power and links, the cold of the night draining batteries, dust settling on the array, a solar storm, and the satellite's own problems. They are drawn from a seed, so the same design and seed replay the same run, and a retry differs.
 
+**Crew health.** Each player has their own gauges, and they change with what the player does and what the planet does. The frame is NASA's own: the Human Research Program names five hazards of human spaceflight, and four of them act on the surface of Mars.
+
+| Gauge | What moves it | NASA's hazard |
+|---|---|---|
+| Radiation dose | Every sol outside adds to it; a solar storm adds much more unless the player is sheltered | Space radiation |
+| Energy and rest | Work outside, a short night, a long walk; sleep and a quiet sol restore it | Hostile and closed environments |
+| Air, water and food | Used every sol; the base's power and supplies decide how much there is | Hostile and closed environments |
+| Body | Suit wear, dust, cold, an accident during a job attempted without the skill | Gravity fields; hostile environments |
+| Morale | Being cut off from the team, bad news, a failed task; contact and a finished task raise it | Isolation and confinement; distance from Earth |
+
+A player whose gauge is low works slower and fails more often; one whose gauge runs out is out for the rest of the run, and the others must cover their role. The gauges show what is, never what is likely to happen. Help from Earth arrives with the radio delay, so the team treats its own: that is the commander's first aid. Every rate comes from the data in [section 9](#9-data), or is labelled as the team's.
+
 **The base.** A few modules, built by spending supplies, power and sols: habitat, solar array, antenna, storage. The antenna shortens link failures; storage protects samples through a storm.
 
 **Score, shown only after a run:** tasks completed, science delivered to Earth, resources left, and decisions under pressure (what was done with a hazard and with a dead link). With a line per role.
@@ -152,7 +165,7 @@ The rules come first: every other package draws or drives them.
 
 ## 9. Data
 
-A research pass is collecting, from NASA and JPL pages, with the page and the sentence each number comes from: temperatures at rover sites, dust storms and what they did to solar power (Opportunity in 2018, InSight), radiation measured by Curiosity, the radio delay and blackouts, relay passes and data volumes through the orbiters, what orbiters give a surface team, and dated events the game can use. Anything not found is recorded as not found, so it is not invented later.
+A research pass is collecting, from NASA and JPL pages, with the page and the sentence each number comes from: temperatures at rover sites, dust storms and what they did to solar power (Opportunity in 2018, InSight), radiation measured by Curiosity, what NASA publishes on crew health (dose limits, work outside, air, water and food per person, sleep, isolation in its analog missions), the radio delay and blackouts, relay passes and data volumes through the orbiters, what orbiters give a surface team, and dated events the game can use. Anything not found is recorded as not found, so it is not invented later.
 
 ## 10. Order and checkpoints
 
@@ -170,7 +183,7 @@ If it does not fit, cut in this order: base modules beyond the array and the ant
 
 ## 11. How we will know it works
 
-- Tests on the rules: a good design and sensible play win; a bad design loses more often; every hazard has a cost; a cut-off player's choice is hidden until the link returns; the same seed replays the same run.
+- Tests on the rules: a good design and sensible play win; a bad design loses more often; every hazard has a cost; every health gauge can be lowered and restored; a cut-off player's choice is hidden until the link returns; the same seed replays the same run.
 - The whole game played by hand in a browser, from step 1 to the end of a run, on a computer and on a tablet.
 - The demo watched from start to end without touching it.
 - No text shown before or during a run contains odds or advice about what will go wrong.
