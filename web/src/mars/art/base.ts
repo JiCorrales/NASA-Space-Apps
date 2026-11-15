@@ -26,10 +26,13 @@ function habBody(g: Grid, S: Style, lit: boolean): void {
   // windows
   for (const x of [9, 34]) {
     g.rect(x, 18, 5, 4, "n").rect(x + 1, 19, 3, 2, lit ? "G" : "g");
+    // B: the lit windows fill their frame and throw a line of light, so power reads at 1x
+    if (lit && S.rich) g.rect(x, 18, 5, 4, "G").rect(x, 18, 5, 1, "n").rect(x - 1, 22, 7, 1, "y");
   }
   // roof vent
   if (S.v !== "C") g.rect(13, 9, 4, 3, "n").rect(14, 9, 2, 1, "m");
   if (lit) g.rect(34, 2, 1, 4, "n").set(34, 1, "y").set(33, 1, "Y").set(35, 1, "y");
+  if (lit && S.rich) g.rect(32, 0, 5, 1, "y").rect(33, 1, 3, 1, "Y").rect(20, 17, 8, 1, "y");
 }
 
 function habFrame(g: Grid, S: Style): void {
@@ -56,6 +59,11 @@ function habDamaged(g: Grid, S: Style): void {
   g.stamp(["n..n", ".nn.", ".nn.", "n..n"], 34, 18); // shattered window
   g.rect(9, 18, 5, 4, "n").rect(10, 19, 3, 2, "g");
   g.set(30, 20, "R").set(31, 21, "R").set(29, 22, "R").set(32, 22, "R"); // scorch on the wall
+  if (S.rich) {
+    // B: a wider breach and a plume of smoke, so damage reads at 1x
+    g.rect(27, 7, 11, 8, "g").rect(26, 9, 1, 4, "g").rect(38, 9, 1, 3, "g").rect(28, 6, 9, 1, "n");
+    g.stamp([".nn.", "nnnn", "nnnn", ".nn."], 29, 1).stamp([".mm.", "mmmm", ".mm."], 33, 0).set(35, 4, "m").set(31, 5, "f").set(36, 6, "f");
+  }
 }
 
 /** One solar panel as a sheared parallelogram of cells. `dust` is 0 (clean), 1 (dusty) or 2 (broken). */
@@ -142,6 +150,32 @@ function waves(g: Grid, f: number): void {
   }
 }
 
+/** B draws every antenna 3 px left and 4 px lower, which leaves room above and to the right for the radio arcs. */
+function antennaAt(g: Grid, S: Style, stage: 1 | 2 | 3, broken = false): void {
+  if (S.v !== "B") return antenna(g, S, stage, broken);
+  const t = new Grid(32, 32);
+  antenna(t, S, stage, broken);
+  if (broken) {
+    // B: the dish is snapped off on the right and lies on the ground
+    for (let y = 0; y < 17; y++) for (let x = 21; x < 32; x++) t.set(x, y, ".");
+    t.ell(25, 26, 4, 2, "n").ell(25, 25, 3.5, 1.6, "h").set(24, 24, "f").set(27, 22, "y").set(20, 8, "f").set(22, 12, "y");
+    t.line(19, 6, 22, 11, "n");
+  }
+  for (let y = 0; y < 32; y++) for (let x = 0; x < 32; x++) g.set(x - 3, y + 4, t.get(x, y));
+}
+
+/** B: larger, clearer arcs spreading right and down from the horn, two frames that grow outward. */
+function wavesB(g: Grid, f: number): void {
+  const radii = f === 0 ? [5, 9] : [7, 11];
+  radii.forEach((r, k) => {
+    for (let a = -58; a <= 22; a += 3) {
+      const t = (a * Math.PI) / 180;
+      const x = Math.round(22 + Math.cos(t) * r), y = Math.round(6 + Math.sin(t) * r);
+      g.set(x, y, k === 0 ? "Y" : "y").set(x, y + 1, k === 0 ? "y" : "a");
+    }
+  });
+}
+
 function storage(g: Grid, S: Style, stage: 1 | 2, broken = false): void {
   shadow(g, S, 17, 28, 14, 3);
   g.rect(2, 24, 28, 4, "n").rect(2, 24, 28, 1, "m");
@@ -161,6 +195,7 @@ function storage(g: Grid, S: Style, stage: 1 | 2, broken = false): void {
     g.stamp(["..gg..", ".gggg.", "gggggg", ".gggg."], 22, 13);
     g.line(8, 9, 11, 15, "g").set(25, 11, "f").set(26, 10, "y").set(5, 17, "R").set(6, 18, "R");
     g.rect(13, 17, 2, 6, "g");
+    if (S.rich) g.rect(19, 11, 9, 7, "g").stamp([".nn.", "nnnn", ".nn."], 20, 6).stamp([".mm.", "mmmm"], 24, 3).set(22, 12, "f").set(26, 13, "f");
   }
 }
 
@@ -233,11 +268,11 @@ const defs = {
   solarDusty: (v: Ver) => build(v, 48, 32, (g, S) => array(g, S, 1)),
   solarStowed: (v: Ver) => build(v, 48, 32, arrayStowed),
   solarDamaged: (v: Ver) => build(v, 48, 32, (g, S) => array(g, S, 2)),
-  antenna1: (v: Ver) => build(v, 32, 32, (g, S) => antenna(g, S, 1)),
-  antenna2: (v: Ver) => build(v, 32, 32, (g, S) => antenna(g, S, 2)),
-  antenna3: (v: Ver) => build(v, 32, 32, (g, S) => antenna(g, S, 3)),
-  antennaTransmit: (v: Ver) => frames(v, 2, 32, 32, (g, S, f) => { antenna(g, S, 3); waves(g, f); }),
-  antennaDamaged: (v: Ver) => build(v, 32, 32, (g, S) => antenna(g, S, 3, true)),
+  antenna1: (v: Ver) => build(v, 32, 32, (g, S) => antennaAt(g, S, 1)),
+  antenna2: (v: Ver) => build(v, 32, 32, (g, S) => antennaAt(g, S, 2)),
+  antenna3: (v: Ver) => build(v, 32, 32, (g, S) => antennaAt(g, S, 3)),
+  antennaTransmit: (v: Ver) => frames(v, 2, 32, 32, (g, S, f) => { antennaAt(g, S, 3); if (S.v === "B") wavesB(g, f); else waves(g, f); }),
+  antennaDamaged: (v: Ver) => build(v, 32, 32, (g, S) => antennaAt(g, S, 3, true)),
   storage1: (v: Ver) => build(v, 32, 32, (g, S) => storage(g, S, 1)),
   storage2: (v: Ver) => build(v, 32, 32, (g, S) => storage(g, S, 2)),
   storageDamaged: (v: Ver) => build(v, 32, 32, (g, S) => storage(g, S, 2, true)),
