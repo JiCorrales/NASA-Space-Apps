@@ -114,13 +114,14 @@ ul { list-style: none; margin: 0; padding: 0; }
 .detail .lines li, .detail .plans li { line-height: 1.35; padding: 1px 0; }
 .detail .plans li { display: flex; gap: 6px; align-items: center; }
 .detail .gauges--full { gap: 7px; }
-.picker__list { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-.opt { width: 100%; height: 100%; display: flex; align-items: center; gap: 6px; text-align: left; font: 12px var(--font-mono); color: var(--text); background: var(--bg); border: 2px solid var(--edge); padding: 3px 6px; cursor: pointer; }
+.picker__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+.opt { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 0; text-align: left; font: 12px var(--font-mono); color: var(--text); background: var(--bg); border: 2px solid var(--edge); padding: 3px 6px; cursor: pointer; }
 .opt:hover:not(:disabled) { border-color: var(--accent); }
 .opt:disabled { color: var(--text-2); border-style: dashed; cursor: not-allowed; }
-.opt__name { flex: 1; }
+.opt__top { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.opt__name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.opt__why { color: var(--warning); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .opt__tag { font: 600 12px var(--font-mono); color: var(--ok); }
-.opt:disabled .opt__tag { color: var(--warning); font-weight: 400; }
 
 /* ---- result card ---- */
 .result { position: fixed; inset: 0; background: rgba(5,7,15,.84); display: flex; align-items: center; justify-content: center; z-index: 20; padding: 16px; }
@@ -171,6 +172,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   .mp__side { gap: 8px; padding: 8px 10px; }
   .detail { position: fixed; inset: 8px; z-index: 30; overflow-y: auto; border: 2px solid var(--accent); }
   .picker__list { grid-template-columns: 1fr; }
+  .opt__why { white-space: normal; }
   .bar__take { margin-left: 0; }
   .bar .pxbtn, .bar__design select, .take, .mini, .act, .opt { min-height: 40px; }
   .mini { padding: 4px 10px; }
