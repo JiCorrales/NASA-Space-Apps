@@ -50,8 +50,8 @@ const TARGET_KIND: Partial<Record<ActivityId, ActivityOption["targetKind"]>> = {
 const OFFERED: ActivityId[] = ["build", "repair", "clearDust", "sample", "analyse", "readMap", "restoreLink", "schedulePass", "sendData", "moveSupplies", "firstAid", "rest", "shelter", "plan", "travel"];
 
 const GAUGE_META: Record<GaugeId, [string, string, string]> = {
-  radiation: ["Radiation dose", "mSv", "HL10"], energy: ["Energy", "%", "team"], rest: ["Rest", "%", "HL28"], air: ["Air", "%", "HL19"],
-  water: ["Water", "%", "HL20"], food: ["Food", "%", "HL21"], body: ["Body", "%", "team"], morale: ["Morale", "%", "team"],
+  radiation: ["Radiation dose", "mSv", "HL10"], energy: ["Energy", "points", "team"], rest: ["Rest", "points", "HL28"], air: ["Air", "points", "HL19"],
+  water: ["Water", "points", "HL20"], food: ["Food", "points", "HL21"], body: ["Body", "points", "team"], morale: ["Morale", "points", "team"],
 };
 
 interface Pl { pos: Pos; g: Record<GaugeId, number>; out: boolean; linkDown: boolean; sampled: SiteId[]; log: { sol: number; activity: ActivityId; target: typeof NO_TARGET }[] }
@@ -126,26 +126,26 @@ export function createFixtureEngine(seed: number, design: DesignId, crew: CrewSe
     const objs: ObjectView[] = [];
     const near = (q: Pos) => Math.hypot(q.x - me.pos.x, q.y - me.pos.y) <= 5;
     MODULES.forEach((m) => { if (near(m.pos)) objs.push({ kind: "module", id: m.id, label: m.name, pos: m.pos, state: mod[m.id] >= m.needed ? "working" : mod[m.id] > 0 ? "building" : "absent" }); });
-    SITES.forEach((s) => { if (near(s.pos)) objs.push({ kind: "site", id: s.id, label: s.name, pos: s.pos, state: sites[s.id].sampled ? "sampled" : "found" }); });
-    PLAYER_IDS.forEach((q) => { if (q !== p && near(pl[q]!.pos)) objs.push({ kind: "player", id: String(q), label: crew[q]!.name, pos: pl[q]!.pos, state: "active" }); });
+    SITES.forEach((s) => { if (near(s.pos)) objs.push({ kind: "site", id: s.id, label: s.name, pos: s.pos, state: sites[s.id].sampled ? "sampled" : "unsampled" }); });
+    PLAYER_IDS.forEach((q) => { if (q !== p && near(pl[q]!.pos)) objs.push({ kind: "player", id: String(q), label: crew[q]!.name, pos: pl[q]!.pos, state: ROLES[q]! }); });
     const warn: Warning[] = sol < stormFrom && stormFrom - sol <= 2 && design !== "poor" ? [{ hazard: "dust-storm", inSols: stormFrom - sol, text: `Storm front expected in ${stormFrom - sol} sol${stormFrom - sol > 1 ? "s" : ""}.` }] : [];
     const crewViews: CrewView[] = PLAYER_IDS.map((q) => {
       const c = choices.get(q);
       return { id: q, name: crew[q]!.name, look: crew[q]!.look, role: ROLES[q]!, status: pl[q]!.out ? "out" : "active", linked: linkedNow(q), position: pl[q]!.pos,
-        plan: linked && c && linkedNow(q) ? { player: q, activity: c.activity, target: c.target } : null, known: known[q]!, lastContactSol: linkedNow(q) ? sol : sol - 1 };
+        plan: linked && c && linkedNow(q) ? { player: q, activity: c.activity, target: c.target } : null, known: known[q]!, lastContactSol: linkedNow(q) ? sol : sol - 1, health: linkedNow(q) ? gaugeViews(q) : null, carrying: null, commHealth: linkedNow(q) ? 100 : null };
     });
     const plans: PlanView[] | null = linked ? crewViews.filter((c) => c.id !== p && c.plan).map((c) => c.plan!) : null;
     return {
       sol, totalSols: RUN_SOLS,
       self: { id: p, name: crew[p]!.name, look: crew[p]!.look, role, position: me.pos, status: me.out ? "out" : "active", outReason: null, gauges: gaugeViews(p),
-        skills: [], carrying: { rations: 3, samples: me.sampled, spares: 1 }, linked },
+        skills: [], carrying: { rations: 3, samples: me.sampled, spares: 1 }, linked, commHealth: linked ? 100 : 20 },
       surroundings: { patch: patch(me.pos), sky: skyOf(sol), objects: objs },
       options: options(p),
       briefing: [`Sol ${sol}. ${skyOf(sol) === "dust" ? "The sky is thick with dust." : "The sky is clear."}`, linked ? "Your communicator works." : "Your communicator is down. You decide alone."],
       shared: linked ? {
         map: { width: W, height: H, rows: Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => (Math.hypot(x - BASE.x, y - BASE.y) <= knownR || PLAYER_IDS.some((q) => Math.hypot(x - pl[q]!.pos.x, y - pl[q]!.pos.y) <= 4) ? tileAt(x, y) : "?")).join("")), base: BASE, knownRadius: knownR },
-        sites: SITES.map((s): SiteView => ({ id: s.id, name: s.name, pos: s.pos, sampled: sites[s.id].sampled, analysed: sites[s.id].sent > 0, sentMb: sites[s.id].sent, datasetMb: 120, deliveredMb: sites[s.id].sent })),
-        modules: MODULES.map((m): ModuleView => ({ id: m.id, name: m.name, status: mod[m.id] >= m.needed ? "working" : mod[m.id] > 0 ? "building" : "absent", progress: mod[m.id], needed: m.needed, pos: m.pos, effect: m.id === "antenna" ? "Shortens link failures" : "Part of the base" })),
+        labSamples: [], sites: SITES.map((s): SiteView => ({ id: s.id, name: s.name, pos: s.pos, sampled: sites[s.id].sampled, analysed: sites[s.id].sent > 0, sentMb: sites[s.id].sent, datasetMb: 120, deliveredMb: sites[s.id].sent })),
+        modules: MODULES.map((m): ModuleView => ({ id: m.id, name: m.name, status: mod[m.id] >= m.needed ? "working" : mod[m.id] > 0 ? "building" : "absent", progress: mod[m.id], needed: m.needed, pos: m.pos, effect: m.id === "antenna" ? "Shortens link failures" : "Part of the base", dust: m.id === "array" && skyOf(sol) === "dust" ? 0.4 : 0, wear: 0 })),
         resources: resources(), forecast: warn, tasks: wantsTask(), satellite: { state: satellite, passToday: sol % 2 === 0, passMinutes: 14, passes: 3, capacityMb: 400, storedMb: 60, storageMb: 500, diagnosed: satFixed },
         crew: crewViews, news: history.at(-1)?.events.slice(0, 3) ?? [] } : null,
       plans, myChoice: choices.get(p) ?? null,

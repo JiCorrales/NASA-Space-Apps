@@ -46,7 +46,7 @@ export function appendHistory(a: Attempt, s: KeyValueStorage | null = store()): 
 export interface MarsEngine {
   viewFor(p: PlayerId): PlayerView;
   /** Records (or replaces) the choice of one player for the current sol. */
-  choose(c: Choice): void;
+  choose(c: Choice): { ok: boolean; reason?: string } | void;
   /** Plays the sol with the choices made so far and moves on to the next one. */
   resolveSol(): SolReport;
   eveningFor(p: PlayerId): EveningView;
