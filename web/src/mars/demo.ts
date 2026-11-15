@@ -14,10 +14,12 @@ interface Memory {
   lab: number;
   analyseTries: number;
   shared: SharedView | null;
+  rows: string[] | null;
+  explore: Pos | null;
 }
 
 export class DemoController implements PlayerController {
-  private mem: Memory = { base: null, sites: new Map(), assigned: null, lab: 0, analyseTries: 0, shared: null };
+  private mem: Memory = { base: null, sites: new Map(), assigned: null, lab: 0, analyseTries: 0, shared: null, rows: null, explore: null };
   constructor(readonly player: PlayerId) {}
 
   choose(view: PlayerView): Choice | null {
@@ -31,7 +33,7 @@ export class DemoController implements PlayerController {
   private observe(v: PlayerView) {
     const m = this.mem;
     if (v.shared) {
-      m.base = v.shared.map.base; m.shared = v.shared;
+      m.base = v.shared.map.base; m.shared = v.shared; m.rows = v.shared.map.rows;
       for (const s of v.shared.sites) m.sites.set(s.id, { pos: s.pos, sampled: s.sampled });
     }
     for (const o of v.surroundings.objects) if (o.kind === "site") m.sites.set(o.id as SiteId, { pos: o.pos, sampled: o.state === "sampled" });
@@ -39,6 +41,8 @@ export class DemoController implements PlayerController {
     if (v.self.carrying.samples.length > 0 && cheb(v.self.position, m.base) <= 2) m.lab += v.self.carrying.samples.length;
   }
 }
+
+const m_sitesUnknown = (m: Memory) => m.sites.size < 3;
 
 class Turn {
   constructor(private v: PlayerView, private m: Memory) {}
@@ -81,7 +85,7 @@ class Turn {
 
   private tripRations(id: SiteId): number {
     const d = cheb(this.m.sites.get(id)!.pos, this.base);
-    return Math.min(TEAM.packMax.value, 2 * Math.ceil((d * 1.6) / TEAM.moveBudget.value) + 1);
+    return Math.min(TEAM.packMax.value, 2 * Math.ceil((d * 1.6) / TEAM.moveBudget.value) + 2);
   }
 
   private fieldWork(): { activity: Choice["activity"]; target: Target } | null {
@@ -92,8 +96,9 @@ class Turn {
     const id = this.fieldSite();
     if (!id) return null;
     if (this.nearBase && this.me.carrying.rations < this.tripRations(id)) {
-      const commanderLoads = this.v.shared?.crew.some((c) => c.role === "commander" && c.status === "active" && c.linked) && this.me.role !== "commander";
-      if (!commanderLoads && this.ok("moveSupplies")) return this.act("moveSupplies", { kind: "player", id: this.me.id });
+      // someone else is loading me this sol (their plan names me): go; otherwise load myself
+      const loadedByOther = (this.v.plans ?? []).some((p) => p.activity === "moveSupplies" && p.target.kind === "player" && p.target.id === this.me.id && p.player !== this.me.id);
+      if (!loadedByOther && this.ok("moveSupplies")) return this.act("moveSupplies", { kind: "player", id: this.me.id });
     }
     return this.act("sample", { kind: "site", id });
   }
@@ -135,6 +140,7 @@ class Turn {
     }
     const work = this.fieldWork();
     if (work && this.v.sol >= 2) return work;
+    if (sh.sites.length < 3 && this.v.sol >= 6 && this.ok("travel")) return this.explore();
     if (this.ok("plan")) return this.act("plan");
     return null;
   }
@@ -151,6 +157,7 @@ class Turn {
     for (const c of sh.crew) if (c.status === "active" && c.commHealth !== null && c.commHealth < 55 && this.ok("repair") && (c.id === this.me.id || cheb(c.position, this.me.position) <= 3)) return this.act("repair", { kind: "player", id: c.id });
     const work = this.fieldWork();
     if (work) return work;
+    if (sh.sites.length < 3 && this.v.sol >= 6 && array.status !== "absent" && antenna.status === "working") return this.explore();
     if (storage.status === "absent" && this.v.sol < 18) { const b = build("storage"); if (b) return b; }
     return null;
   }
@@ -161,7 +168,7 @@ class Turn {
     if (this.atBase && sh.sites.length < 3 && this.ok("readMap") && this.v.sol <= 6) return this.act("readMap");
     const work = this.fieldWork();
     if (work) return work;
-    if (sh.sites.length < 3 && sh.sites.every((s) => s.sampled)) return this.explore();
+    if (sh.sites.length < 3) return this.explore();
     return null;
   }
 
@@ -181,15 +188,26 @@ class Turn {
       if (!sh.satellite.passToday && this.ok("schedulePass")) return this.act("schedulePass");
     }
     if (this.atBase && sh.labSamples.length > 0 && !sh.crew.some((c) => c.role === "scientist" && c.status === "active" && c.linked && cheb(c.position, this.base) <= 2) && this.ok("analyse")) return this.act("analyse");
-    if (this.mod(sh, "antenna").status !== "working" && this.mod(sh, "array").status === "working" && this.ok("build") && sh.crew.every((c) => c.role !== "engineer" || c.status === "out")) return this.act("build", { kind: "module", id: "antenna" });
-    // second pair of hands in the field once the base is up
-    if (this.mod(sh, "antenna").status === "working") { const work = this.fieldWork(); if (work) return work; }
-    return null;
+    // an extra pair of hands on the base while it is going up
+    for (const id of ["array", "antenna"] as const) if (this.mod(sh, id).status !== "working" && this.atBase && this.ok("build")) return this.act("build", { kind: "module", id });
+    return null; // the operator stays at the base: the satellite can need them any sol
   }
 
+  /** Walk toward the nearest part of the map nobody has seen, until a new site shows up. */
   private explore() {
-    const me = this.me.position;
-    return this.act("travel", { kind: "tile", x: Math.min(39, me.x + 8), y: me.y });
+    const m = this.m;
+    if (this.nearBase && this.me.carrying.rations < 6 && this.ok("moveSupplies")) return this.act("moveSupplies", { kind: "player", id: this.me.id });
+    if (m.explore && cheb(this.me.position, m.explore) > 1) return this.act("travel", { kind: "tile", x: m.explore.x, y: m.explore.y });
+    let best: Pos | null = null, bd = Infinity;
+    (m.rows ?? []).forEach((row, y) => [...row].forEach((c, x) => {
+      if (c !== "?") return;
+      // nearest unseen ground; each player leans toward their own band of rows so two explorers part ways
+      const d = Math.hypot(x - this.base.x, y - this.base.y) + 0.3 * Math.hypot(x - this.me.position.x, y - this.me.position.y) + 0.25 * Math.abs(y - (3 + this.me.id * 6));
+      if (d < bd) { bd = d; best = { x, y }; }
+    }));
+    m.explore = best;
+    const t: Pos = best ?? this.base;
+    return this.act("travel", { kind: "tile", x: t.x, y: t.y });
   }
 
   // ----------------------------------------------------------------- blind: surroundings, own gauges, memory
@@ -214,6 +232,7 @@ class Turn {
     }
     const work = this.fieldWork();
     if (work) return work;
+    if (role === "scientist" && m_sitesUnknown(this.m)) return this.explore();
     if (!this.atBase) return this.act("travel", { kind: "tile", x: this.base.x, y: this.base.y });
     return this.rest();
   }

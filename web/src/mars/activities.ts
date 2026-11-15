@@ -150,7 +150,7 @@ export const ACTIVITIES: Record<ActivityId, Activity> = {
       const s = w.sites[id];
       s.analysisWork += c.effort;
       if (s.analysisWork >= TEAM.analyseWork.value) {
-        s.analysed = true; s.inLab = false;
+        s.analysed = true; s.inLab = false; w.analysedOrder.push(id);
         w.bufferMb += TEAM.datasetMb.value;
         return { text: `${p.name} finished analysing ${w.siteOf(id).name}: ${TEAM.datasetMb.value} Mb of data wait to be sent.`, ok: true };
       }
@@ -235,7 +235,7 @@ export const ACTIVITIES: Record<ActivityId, Activity> = {
   }),
 
   moveSupplies: make({
-    id: "moveSupplies", name: "Load supplies", summary: "Load air, water and food for a teammate who will be away from the base.", skill: "logistics", targetKind: "player",
+    id: "moveSupplies", name: "Load supplies", summary: "Load air, water and food for a teammate who will be away from the base.", skill: "logistics", targetKind: "player", fallible: false,
     blocked(w, p, t) {
       const q = playerOf(w, t);
       if (!q || !q.active) return block("Pick a teammate.", false);
@@ -247,7 +247,7 @@ export const ACTIVITIES: Record<ActivityId, Activity> = {
     targets: (w, p, informed) => playerTargets(atBasePlayers(w).filter((q) => q.id === p.id || informed || cheb(q.position, p.position) <= TEAM.vision.value)),
     perform(w, p, t, c) {
       const q = playerOf(w, t)!;
-      const n = Math.max(1, Math.min(TEAM.packMax.value - q.carry.rations, Math.round((TEAM.rationsLoaded.value * c.effort) / SKILLED_EFFORT), Math.floor(w.rationsInStock())));
+      const n = Math.max(1, Math.min(TEAM.packMax.value - q.carry.rations, Math.max(3, Math.round((TEAM.packMax.value * c.effort) / SKILLED_EFFORT)), Math.floor(w.rationsInStock())));
       w.takeRations(n); q.carry.rations += n;
       return { text: `${p.name} loaded ${n} sols of supplies for ${q.id === p.id ? "themselves" : q.name}.`, ok: true };
     },
