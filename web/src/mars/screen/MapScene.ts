@@ -5,7 +5,7 @@
 import type { CrewSetup, ModuleId, ModuleStatus, ObjectView, PlayerId, PlayerView, Pos, SiteId, SolEvent, SolReport } from "../types";
 import type { Sprite } from "../art/paint";
 import { hash } from "../art/worldkit";
-import { BASE_ART, CHARS, EXTRA, GEAR, HAZ, SAT, T, bmp, pickFrame } from "./sprites";
+import { BASE_ART, CHARS, EXTRA, GEAR, HAZ, ICON, SAT, T, bmp, pickFrame } from "./sprites";
 
 export const TILE = 16;
 const WALK_TILES_PER_S = 6;
@@ -33,7 +33,8 @@ interface Beat { start: number; end: number; ev: SolEvent }
 interface Walker { x: number; y: number; facing: "down" | "up" | "left" | "right"; mode: "stand" | "walk" | "work" | "rest"; bubble: { key: string; until: number } | null }
 interface Ring { x: number; y: number; until: number; colour: string; from: number }
 
-const SPEECH: Record<string, string> = { alert: "emote_alert", done: "emote_done", question: "emote_question" };
+const SHADOW: Sprite = { rows: ["..aaaaaa..", ".aaaaaaaa."], palette: { a: "rgba(5,7,15,0.35)" } };
+const NW = ["E", "SE", "S", "SW", "W", "NW", "N", "NE"];
 
 export class MapScene {
   input: SceneInput | null = null;
@@ -43,6 +44,10 @@ export class MapScene {
   private started = new Set<number>();
   private walkers = new Map<PlayerId, Walker>();
   private night = 0;
+  private mask: HTMLCanvasElement | null = null;
+  private cam = { x: 0, y: 0 };
+  private lights: { x: number; y: number; r: number; windows?: { x: number; y: number }[] }[] = [];
+  private craters: { view: PlayerView; pieces: Map<string, string> } | null = null;
   private dust = 0;
   private moduleOverride = new Map<ModuleId, { status: ModuleStatus; progress: number }>();
   private dusty = false;
@@ -87,7 +92,7 @@ export class MapScene {
     const out = new Map<PlayerId, { pos: Pos; out: boolean }>();
     out.set(view.self.id, { pos: view.self.position, out: view.self.status === "out" });
     if (view.shared) for (const c of view.shared.crew) { if (c.id !== view.self.id) out.set(c.id, { pos: c.position, out: c.status === "out" }); }
-    else for (const o of view.surroundings.objects) if (o.kind === "player") out.set(Number(o.id) as PlayerId, { pos: o.pos, out: o.state === "out" });
+    else for (const o of view.surroundings.objects) if (o.kind === "player") out.set(Number(o.id) as PlayerId, { pos: o.pos, out: o.state === "out" || (o as { out?: boolean }).out === true });
     return out;
   }
 
@@ -170,6 +175,7 @@ export class MapScene {
       }
       case "task": ring(input.view.shared?.map.base ?? input.view.self.position, "#86dcf2", 1.4); this.toast = { text: ev.text, until: now + 2 }; break;
       case "data": ring(ev.at ?? (ev.site ? sitePos(input.view, ev.site) : undefined), "#86dcf2", 1); break;
+      case "supplies": ring(ev.at ?? (w ? { x: w.x, y: w.y } : undefined), "#f3c04f", 1); if (w) w.bubble = { key: "emote_done", until: now + 1.2 }; break;
       case "out": if (w) w.mode = "stand"; break;
       default: break;
     }
@@ -201,15 +207,65 @@ export class MapScene {
     return "?";
   }
 
-  private ground(c: string, x: number, y: number, night: boolean): Sprite | null {
+  private ground(c: string, x: number, y: number): Sprite | null {
     const h = hash(x, y, 3);
     switch (c) {
-      case ",": return pickFrame(T[night ? "nightRocky" : "rocky"]!, 0);
-      case "~": return pickFrame(T[night ? "nightRipples" : "ripples"]!, 0);
+      case ",": return pickFrame(T.rocky!, 0);
+      case "~": return pickFrame(T.ripples!, 0);
       case "#": return pickFrame(T.cliff!, 0);
       case "?": return null;
-      default: return pickFrame(T[`${night ? "nightRegolith" : "regolith"}${1 + Math.floor(h * 3)}`]!, 0);
+      default: return pickFrame(T[`regolith${1 + Math.floor(h * 3)}`]!, 0);
     }
+  }
+
+  /**
+   * Crater rims are drawn with the round crater pieces: each rim tile takes the corner or edge piece that faces away
+   * from the centre of its ring, and the tiles inside the ring take the floor piece. The rings are found from the
+   * map itself (connected rim tiles), so the shapes need not be 3 x 3 or 5 x 5.
+   */
+  private craterPieces(view: PlayerView): Map<string, string> {
+    if (this.craters?.view === view) return this.craters.pieces;
+    const pieces = new Map<string, string>();
+    const sh = view.shared?.map, p = view.surroundings.patch;
+    const x0 = sh ? 0 : p.x0, y0 = sh ? 0 : p.y0, x1 = sh ? sh.width : p.x0 + p.width, y1 = sh ? sh.height : p.y0 + p.height;
+    const rim = (x: number, y: number) => x >= x0 && y >= y0 && x < x1 && y < y1 && this.tileChar(view, x, y) === "#";
+    const seen = new Set<string>();
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
+      if (!rim(x, y) || seen.has(`${x},${y}`)) continue;
+      const comp: Pos[] = [], stack: Pos[] = [{ x, y }];
+      seen.add(`${x},${y}`);
+      while (stack.length) {
+        const c = stack.pop()!; comp.push(c);
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+          const k = `${c.x + dx},${c.y + dy}`;
+          if ((dx || dy) && rim(c.x + dx, c.y + dy) && !seen.has(k)) { seen.add(k); stack.push({ x: c.x + dx, y: c.y + dy }); }
+        }
+      }
+      if (comp.length < 4) continue;
+      const mx = comp.reduce((a, c) => a + c.x, 0) / comp.length, my = comp.reduce((a, c) => a + c.y, 0) / comp.length;
+      const radius = comp.reduce((a, c) => a + Math.hypot(c.x - mx, c.y - my), 0) / comp.length;
+      for (const c of comp) {
+        const a = Math.atan2(c.y - my, c.x - mx);
+        pieces.set(`${c.x},${c.y}`, `crater${NW[((Math.round(a / (Math.PI / 4)) % 8) + 8) % 8]!}`);
+      }
+      for (let fy = Math.floor(my - radius); fy <= Math.ceil(my + radius); fy++) for (let fx = Math.floor(mx - radius); fx <= Math.ceil(mx + radius); fx++) {
+        if (!rim(fx, fy) && Math.hypot(fx - mx, fy - my) < radius - 0.9 && this.tileChar(view, fx, fy) !== "?") pieces.set(`${fx},${fy}`, "craterFloor");
+      }
+    }
+    this.craters = { view, pieces };
+    return pieces;
+  }
+
+  /** Nobody hides another: characters sharing a tile are spread a few pixels apart, in order of player id. */
+  private spread(): Map<PlayerId, { dx: number; dy: number }> {
+    const out = new Map<PlayerId, { dx: number; dy: number }>();
+    const all = [...this.walkers.entries()].sort((a, b) => a[0] - b[0]);
+    for (const [id, w] of all) {
+      const group = all.filter(([, o]) => Math.hypot(o.x - w.x, o.y - w.y) < 0.9);
+      const i = group.findIndex(([g]) => g === id), n = group.length;
+      out.set(id, n < 2 ? { dx: 0, dy: 0 } : { dx: Math.round((i - (n - 1) / 2) * 8), dy: (i % 2) * 3 - 1 });
+    }
+    return out;
   }
 
   /* ------------------------------------------------------------ drawing */
@@ -228,13 +284,17 @@ export class MapScene {
       ctx.drawImage(b, Math.round(px - cx), Math.round(py - cy));
       if (alpha !== 1) ctx.globalAlpha = 1;
     };
-    const night = this.night > 0.5;
+    const pieces = this.craterPieces(view);
+    this.lights = [];
+    this.cam = { x: cx, y: cy };
     const x0 = Math.floor(cx / TILE), y0 = Math.floor(cy / TILE), x1 = Math.ceil((cx + w) / TILE), y1 = Math.ceil((cy + h) / TILE);
     for (let ty = y0; ty < y1; ty++) for (let tx = x0; tx < x1; tx++) {
       const c = this.tileChar(view, tx, ty);
-      const g = this.ground(c, tx, ty, night);
+      const piece = c === "?" ? undefined : pieces.get(`${tx},${ty}`);
+      const g = this.ground(c, tx, ty);
       if (!g) { this.fog(ctx, tx * TILE - cx, ty * TILE - cy); continue; }
       blit(g, tx * TILE, ty * TILE);
+      if (piece && T[piece]) blit(pickFrame(T[piece]!, 0), tx * TILE, ty * TILE);
       if (c === "^") blit(pickFrame(T.boulder!, 0), tx * TILE, ty * TILE);
     }
     // objects sorted by their feet so the nearer ones cover the farther
@@ -242,8 +302,15 @@ export class MapScene {
     const baseP = view.shared?.map.base;
     if (baseP) items.push({ y: baseP.y - 1, draw: () => blit(pickFrame(BASE_ART.lander!, T0), baseP.x * TILE - 16, (baseP.y + 1) * TILE - 48 - 8) });
     for (const m of this.moduleList(view)) items.push({ y: m.pos.y, draw: () => this.drawModule(blit, m.id, m.pos, m.status, m.progress, T0, m.dust) });
-    for (const s of this.siteList(view)) items.push({ y: s.pos.y - 0.2, draw: () => blit(pickFrame(T[s.sampled ? "siteSampled" : "siteFound"]!, T0), s.pos.x * TILE, s.pos.y * TILE) });
-    for (const [id, wk] of this.walkers) items.push({ y: wk.y + 0.5, draw: () => this.drawPerson(blit, id, wk, T0) });
+    for (const s of this.siteList(view)) items.push({ y: s.pos.y - 0.2, draw: () => {
+      const marker = s.state === "unknown" ? "siteUnknown" : s.state === "located" ? "siteFound" : "siteSampled";
+      blit(pickFrame(T[marker]!, T0), s.pos.x * TILE, s.pos.y * TILE);
+      // analysed: a lab mark; sent: the data icon with a tick, so a delivered site reads at a glance
+      if (s.state === "analysed" && ICON.analyse) blit(ICON.analyse, s.pos.x * TILE + 2, s.pos.y * TILE - 12);
+      if (s.state === "sent") { if (ICON.data) blit(ICON.data, s.pos.x * TILE - 1, s.pos.y * TILE - 12); if (ICON.task_done) blit(ICON.task_done, s.pos.x * TILE + 8, s.pos.y * TILE - 8); }
+    } });
+    const apart = this.spread();
+    for (const [id, wk] of this.walkers) items.push({ y: wk.y + 0.5 + (apart.get(id)!.dy + 1) * 0.01 + id * 0.001, draw: () => this.drawPerson(blit, id, wk, T0, apart.get(id)!) });
     items.sort((a, b) => a.y - b.y).forEach((i) => i.draw());
     // reveal of what a returned player did alone: their route, pulsing
     for (const r of input.reveals) for (const path of r.paths) path.forEach((p, i) => {
@@ -289,8 +356,33 @@ export class MapScene {
       const sky = bmp(pickFrame(HAZ.solarStormSky!, t, 180)); if (sky) for (let x = 0; x < w; x += 64) ctx.drawImage(sky, x, 0);
       const r = bmp(pickFrame(HAZ.radiationOverlay!, t, 160)); if (r) { ctx.globalAlpha = 0.35; for (let y = 0; y < h; y += 32) for (let x = 0; x < w; x += 32) ctx.drawImage(r, x, y); ctx.globalAlpha = 1; }
     }
-    if (this.night > 0.02) { ctx.fillStyle = `rgba(6,10,44,${(this.night * 0.5).toFixed(3)})`; ctx.fillRect(0, 0, w, h); }
+    this.nightOverlay(ctx, w, h);
     if (input.view.self.status === "out") { ctx.fillStyle = "rgba(5,7,15,0.55)"; ctx.fillRect(0, 0, w, h); }
+  }
+
+  /**
+   * Night: one dark blue layer over the day ground (no tile blocks show through), with pools of light cut out around
+   * the lit modules and the people, and a few lit windows on the habitat. The pools are three stepped circles, so
+   * they stay pixel art.
+   */
+  private nightOverlay(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+    if (this.night < 0.02) return;
+    try {
+      if (!this.mask) this.mask = document.createElement("canvas");
+      const m = this.mask; if (m.width !== w || m.height !== h) { m.width = w; m.height = h; }
+      const mc = m.getContext("2d"); if (!mc) return;
+      mc.globalCompositeOperation = "source-over"; mc.clearRect(0, 0, w, h);
+      mc.fillStyle = `rgba(7,13,46,${(this.night * 0.66).toFixed(3)})`; mc.fillRect(0, 0, w, h);
+      mc.globalCompositeOperation = "destination-out"; mc.fillStyle = "rgba(0,0,0,0.3)";
+      for (const l of this.lights) for (const k of [1, 0.68, 0.38]) { mc.beginPath(); mc.arc(Math.round(l.x), Math.round(l.y), l.r * k, 0, Math.PI * 2); mc.fill(); }
+      ctx.drawImage(m, 0, 0);
+      // warm light on the ground inside the pools, and the windows
+      ctx.globalCompositeOperation = "lighter"; ctx.fillStyle = `rgba(255,190,90,${(0.07 * this.night).toFixed(3)})`;
+      for (const l of this.lights) { ctx.beginPath(); ctx.arc(Math.round(l.x), Math.round(l.y), l.r * 0.68, 0, Math.PI * 2); ctx.fill(); }
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = "#ffd45e";
+      for (const l of this.lights) for (const wd of l.windows ?? []) ctx.fillRect(Math.round(wd.x), Math.round(wd.y), 3, 2);
+    } catch { /* no 2D canvas for the mask: the map stays in daylight */ }
   }
 
   private caption(ctx: CanvasRenderingContext2D, text: string, w: number): void {
@@ -307,8 +399,16 @@ export class MapScene {
     return out.map((m) => { const ov = this.moduleOverride.get(m.id); return ov ? { ...m, status: ov.status, progress: ov.status === "working" ? 1 : ov.progress / (view.shared?.modules.find((x) => x.id === m.id)?.needed || 3) } : m; });
   }
 
-  private siteList(view: PlayerView): { id: SiteId; pos: Pos; sampled: boolean }[] {
-    const raw = view.shared ? view.shared.sites.map((s) => ({ id: s.id, pos: s.pos, sampled: s.sampled })) : view.surroundings.objects.filter((o: ObjectView) => o.kind === "site").map((o) => ({ id: o.id as SiteId, pos: o.pos, sampled: o.state === "sampled" }));
+  /** Site states: the rules' own when `SiteView.state` exists (unknown, located, sampled, analysed, sent), else derived. */
+  private siteList(view: PlayerView): { id: SiteId; pos: Pos; state: "unknown" | "located" | "sampled" | "analysed" | "sent" }[] {
+    type St = "unknown" | "located" | "sampled" | "analysed" | "sent";
+    const norm = (st: string | undefined, sampled: boolean, analysed: boolean, sent: boolean): St => {
+      if (st === "unknown" || st === "located" || st === "sampled" || st === "analysed" || st === "sent") return st;
+      return sent ? "sent" : analysed ? "analysed" : sampled ? "sampled" : "located";
+    };
+    const raw = view.shared
+      ? view.shared.sites.map((s) => ({ id: s.id, pos: s.pos, state: norm((s as { state?: string }).state, s.sampled, false, s.deliveredMb > 0 && s.deliveredMb >= s.datasetMb) }))
+      : view.surroundings.objects.filter((o: ObjectView) => o.kind === "site").map((o) => ({ id: o.id as SiteId, pos: o.pos, state: norm(o.state, o.state === "sampled", false, false) }));
     // a site is only drawn where its tile is known: fog hides it
     return raw.filter((s) => this.tileChar(view, s.pos.x, s.pos.y) !== "?");
   }
@@ -325,27 +425,30 @@ export class MapScene {
     }
     const s = pickFrame(BASE_ART[key!] ?? BASE_ART.storage1!, t, 300);
     const w = s.rows[0]?.length ?? 16, hh = s.rows.length;
-    blit(s, pos.x * TILE + 8 - Math.floor(w / 2), (pos.y + 1) * TILE - hh);
+    const sx = pos.x * TILE + 8 - Math.floor(w / 2), sy = (pos.y + 1) * TILE - hh;
+    blit(s, sx, sy);
+    if (this.night > 0.3 && status !== "building") this.lights.push({ x: sx + w / 2 - this.cam.x, y: sy + hh * 0.6 - this.cam.y, r: id === "habitat" ? 30 : 20, windows: id === "habitat" ? [{ x: sx + 13 - this.cam.x, y: sy + 17 - this.cam.y }, { x: sx + 21 - this.cam.x, y: sy + 17 - this.cam.y }, { x: sx + 29 - this.cam.x, y: sy + 17 - this.cam.y }] : undefined });
     if (this.clock < this.frostUntil) blit(pickFrame(HAZ.frostModule!, 0), pos.x * TILE + 8 - 16, (pos.y + 1) * TILE - 32, 0.6);
   }
 
-  private drawPerson(blit: (s: Sprite, x: number, y: number, a?: number) => void, id: PlayerId, wk: Walker, t: number): void {
+  private drawPerson(blit: (s: Sprite, x: number, y: number, a?: number) => void, id: PlayerId, wk: Walker, t: number, off: { dx: number; dy: number }): void {
     const who = this.input!.roster[id]; if (!who) return;
     const look = CHARS[who.look], gear = GEAR[who.role];
     const out = (this.people(this.input!.view).get(id)?.out) ?? false;
     const self = id === this.input!.view.self.id;
-    const cut = self && !this.input!.view.self.linked;
+    // a cut-off player is marked for whoever can see them: from their own screen and from the team's shared view
+    const cut = self ? !this.input!.view.self.linked : this.input!.view.shared?.crew.find((c) => c.id === id)?.linked === false;
     let pose = out ? "out" : wk.mode === "walk" ? `walk_${wk.facing}` : wk.mode === "work" ? "work" : wk.mode === "rest" ? "rest" : cut ? "cutoff" : self && this.input!.view.self.carrying.samples.length ? "carry" : `stand_${wk.facing}`;
     const frames = look.poses[pose as keyof typeof look.poses] ?? look.poses.stand_down;
     const fi = Math.floor(t / 160) % frames.length;
-    const px = Math.round(wk.x * TILE + 8 - 8), py = Math.round(wk.y * TILE + TILE - 24 - 1);
+    const px = Math.round(wk.x * TILE + 8 - 8) + off.dx, py = Math.round(wk.y * TILE + TILE - 24 - 1) + off.dy;
+    if (this.night > 0.3 && !out) this.lights.push({ x: px + 8 - this.cam.x, y: py + 14 - this.cam.y, r: 15 });
     // a soft shadow keeps the figure on the ground
-    blit({ rows: ["..aaaaaa..", ".aaaaaaaa."], palette: { a: "rgba(5,7,15,0.35)" } }, px + 3, py + 22);
+    blit(SHADOW, px + 3, py + 22);
     blit(frames[fi]!, px, py);
     if (!out) { const g = (gear.overlays[who.look] as Record<string, Sprite[]>)[pose]; if (g) blit(g[fi % g.length]!, px, py); }
     if (wk.bubble && this.clock < wk.bubble.until) { const e = EXTRA[wk.bubble.key]; if (e?.[0]) blit(e[0], px + 2, py - 12); }
     else if (cut && !out) blit(EXTRA.emote_question![0]!, px + 2, py - 12);
-    void SPEECH;
   }
 }
 
