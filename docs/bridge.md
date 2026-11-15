@@ -45,15 +45,27 @@ in code, and the C# side mirrors it.
   design:    { <group>: id | id[] | null },
   groups:    [ { group, step, multi, options: [ { id, name, summary, stats: [ { label, value, unit } ],
                                                   source: { status, text } } ] } ],
-  requirements: [ { id, label, value, unit, min, max, check } ],
-  resources: [ { kind, used, available, unit, known } ],   // mass, power, budget, data, communications, time
+  requirements: [ { id, label, value, unit, min, max, check, source?, verified? } ],
+  resources: [ { kind, used, available, unit, known, source? } ],   // mass, power, budget, data, communications, time
   issues:    [ { code, severity, resource, step, message } ],
-  attempts:  [ { number, successRate, imagesDelivered, outcome } ]
+  attempts:  [ { number, successRate, imagesDelivered, outcome } ],
+  worlds?:   [ { id, name, open, sunlight, signal, travel } ],    // each of the three: { value, unit, source } | null
+  missions?: [ { id, world, name, summary, open, who, why } ],
+  reserve?:  number                                              // fraction 0 to 1, as last set with setReserve
 }
 ```
 
 `source.status` is `nasa`, `derived` or `team`. `known` is false while the choice that sets a limit has not been
 made yet.
+
+Optional fields, added for the screens of steps 1 and 5:
+
+- `worlds` and `missions` fill the mission select. Only open ones can be chosen. A `null` measure on a locked
+  world is shown as "data coming".
+- `requirement.verified` is set by Unity for build and verify: `true` when the chosen tests verify it, `false`
+  when they do not, absent while not checked yet.
+- `requirement.source` and `resource.source` say where a value or a limit comes from, like `option.source`.
+- `reserve` is the current budget reserve, so the build screen can show what `setReserve` last set.
 
 ## `SimFrame`
 

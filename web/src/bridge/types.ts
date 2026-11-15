@@ -21,15 +21,31 @@ export interface Option { id: string; name: string; summary: string; stats: Opti
 export interface GroupDef { group: Group; step: Step; multi: boolean; options: Option[] }
 export interface Requirement {
   id: string; label: string; value: number; unit: string; min: number; max: number; check: string;
+  /** Optional. Where the value comes from. */
+  source?: Source;
+  /** Optional, set in build and verify: true when the chosen tests verify it, false when not, absent when not checked yet. */
+  verified?: boolean;
 }
 export interface Resource {
   kind: ResourceKind; used: number; available: number; unit: string;
   /** false while the choice that sets the limit has not been made yet */
   known: boolean;
+  /** Optional. Where the limit comes from. */
+  source?: Source;
 }
 export interface Issue {
   code: string; severity: Severity; resource: ResourceKind | null; step: Step; message: string;
 }
+/** A measured value with its source, for the locked worlds' cards. */
+export interface Measure { value: string | number; unit: string; source: Source }
+/** A world on the mission select. null in a measure means the team has not collected it yet. */
+export interface World {
+  id: string; name: string; open: boolean;
+  sunlight: Measure | null; signal: Measure | null; travel: Measure | null;
+}
+/** A mission on the mission select; who needs the data and why, ready to show. */
+export interface MissionCard { id: string; world: string; name: string; summary: string; open: boolean; who: string; why: string }
+
 export interface Attempt { number: number; successRate: number; imagesDelivered: number; outcome: string }
 
 export interface MissionState {
@@ -41,6 +57,11 @@ export interface MissionState {
   resources: Resource[];
   issues: Issue[];
   attempts: Attempt[];
+  /** Optional. Worlds and missions for the mission select (step goals). */
+  worlds?: World[];
+  missions?: MissionCard[];
+  /** Optional. Budget kept in reserve, 0 to 1, as last set with setReserve. */
+  reserve?: number;
 }
 
 // ---- SimFrame ----
