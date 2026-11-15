@@ -1,0 +1,8 @@
+{
+    "name": "SpaceApps.Bridge",
+    "rootNamespace": "SpaceApps.Bridging",
+    "references": [
+        "SpaceApps.Mission"
+    ],
+    "autoReferenced": true
+}
