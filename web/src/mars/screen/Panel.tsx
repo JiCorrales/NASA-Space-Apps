@@ -52,6 +52,7 @@ function GaugeRow({ g, full = false }: { g: GaugeView; full?: boolean }) {
 
 function Picker({ view, onPick }: { view: PlayerView; onPick: (a: ActivityId, t: Target) => void }) {
   const [opt, setOpt] = useState<ActivityOption | null>(null);
+  const [note, setNote] = useState<string | null>(null);
   const tileTargets = (): Target[] => [
     ...(view.shared?.sites.map((s) => ({ kind: "tile" as const, ...s.pos })) ?? []),
     ...view.surroundings.objects.filter((o) => o.kind !== "player").map((o) => ({ kind: "tile" as const, ...o.pos })),
@@ -64,10 +65,10 @@ function Picker({ view, onPick }: { view: PlayerView; onPick: (a: ActivityId, t:
       <ul className="picker__list">
         {!opt && view.options.map((o) => (
           <li key={o.id}>
-            <button type="button" className="opt" disabled={!!o.blocked} title={o.summary}
-              onClick={() => (o.targetKind === "none" ? onPick(o.id, { kind: "none" }) : setOpt(o))}>
-              <span className="opt__top"><Icon name={iconOf(o.id)} /><span className="opt__name">{o.name}</span>{!o.blocked && <span className="opt__tag">{o.skilled ? "SKILLED" : "SLOWER"}</span>}</span>
-              {o.blocked && <span className="opt__why" title={o.blocked}>BLOCKED: {o.blocked}</span>}
+            <button type="button" className="opt" aria-disabled={!!o.blocked} title={o.blocked ?? o.summary}
+              onClick={() => { if (o.blocked) { setNote(`${o.name}: ${o.blocked}`); return; } setNote(null); if (o.targetKind === "none") onPick(o.id, { kind: "none" }); else setOpt(o); }}>
+              <Icon name={iconOf(o.id)} /><span className="opt__name">{o.name}</span>
+              <span className="opt__tag" data-blocked={!!o.blocked}>{o.blocked ? "BLOCKED" : o.skilled ? "SKILLED" : "SLOWER"}</span>
             </button>
           </li>
         ))}
@@ -76,6 +77,7 @@ function Picker({ view, onPick }: { view: PlayerView; onPick: (a: ActivityId, t:
         ))}
         {opt && targets.length === 0 && <li className="note">Nothing to pick here.</li>}
       </ul>
+      <p className="detail__note" role="status">{note ?? (opt ? "" : "Blocked activities say why when you tap them.")}</p>
     </>
   );
 }
