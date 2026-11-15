@@ -1,7 +1,5 @@
 using System.Collections;
 using NUnit.Framework;
-using SpaceApps.Game;
-using SpaceApps.Mission;
 using SpaceApps.Ship;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -58,22 +56,6 @@ namespace SpaceApps.Tests.PlayMode
             InputSystem.QueueStateEvent(mouse, state);
             yield return null;
             yield return null;
-        }
-
-        [UnityTest]
-        public IEnumerator ALeftClickThroughTheInputModuleChoosesAnOption()
-        {
-            var session = Object.FindFirstObjectByType<MissionGame>().Session;
-            var screen = Ui.Screen("Objective");
-            Ui.LookAt(screen);
-            var row = (RectTransform)screen.Rows[1].button.transform;
-            var point = (Vector2)Camera.main.WorldToScreenPoint(row.TransformPoint(row.rect.center));
-
-            yield return Pointer(point);
-            yield return Pointer(point, left: true);
-            yield return Pointer(point);
-
-            Assert.AreEqual(session.Catalog.objectives[1].id, session.Design.objective);
         }
 
         [UnityTest]

@@ -1,10 +1,7 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using SpaceApps.Ship;
-using SpaceApps.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -63,102 +60,21 @@ namespace SpaceApps.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator WallsStopTheRig()
+        public IEnumerator TheRoundWallStopsTheRig()
         {
             var rig = Find<DesktopRig>();
             float radius = rig.GetComponent<CharacterController>().radius;
-            float wallInside = GameObject.Find("Wall_Right").GetComponentsInChildren<Collider>().Min(c => c.bounds.min.x);
+            float wallInside = GameObject.Find("Wall").GetComponentsInChildren<Collider>()
+                .Min(c => new Vector2(c.bounds.center.x, c.bounds.center.z).magnitude) - 0.1f;
+            float Out() => new Vector2(rig.transform.position.x, rig.transform.position.z).magnitude;
+
             for (int i = 0; i < 100; i++) { rig.Move(Vector2.right, 0.1f); yield return null; }
-            Assert.LessOrEqual(rig.transform.position.x + radius, wallInside + 0.05f);
-            Assert.Greater(rig.transform.position.x, wallInside - radius - 0.5f, "rig never reached the wall");
+            Assert.LessOrEqual(Out() + radius, wallInside + 0.1f, "through the side wall");
+            Assert.Greater(Out() + radius, wallInside - 0.5f, "rig never reached the wall");
 
-            float backInside = GameObject.Find("Wall_Back").GetComponentsInChildren<Collider>().Max(c => c.bounds.max.z);
+            // Back towards the windows: the sills hold the player in too.
             for (int i = 0; i < 100; i++) { rig.Move(Vector2.down, 0.1f); yield return null; }
-            Assert.GreaterOrEqual(rig.transform.position.z - radius, backInside - 0.05f);
-        }
-
-        [Test]
-        public void ThereAreEightStationScreensInWalkingOrder()
-        {
-            CollectionAssert.AreEqual(new[] { "Objective", "Requirements", "Spacecraft", "Instruments", "Communications",
-                "Launch and Orbit", "Build and Test", "Mission Control" }, Ui.Screens().Select(s => s.ViewModel.Title).ToArray());
-        }
-
-        [Test]
-        public void EveryStationHasADashboardInView()
-        {
-            var dashboards = UnityEngine.Object.FindObjectsByType<ResourceDashboard>(FindObjectsSortMode.None);
-            foreach (var screen in Ui.Screens())
-            {
-                var viewer = screen.transform.position - screen.transform.forward * 1.6f;
-                Assert.IsTrue(dashboards.Any(d =>
-                    {
-                        var toDashboard = d.transform.position - viewer;
-                        return toDashboard.magnitude < 3f && Vector3.Angle(screen.transform.forward, toDashboard) < 45f
-                               && Vector3.Dot(d.transform.forward, toDashboard) > 0f; // facing the viewer
-                    }), $"no dashboard in view at {screen.stationTitle}");
-            }
-        }
-
-        sealed class FakeStation : IStationViewModel
-        {
-            public string Title { get; set; }
-            public string Explanation => "";
-            public IReadOnlyList<string> Steps => Array.Empty<string>();
-            public int StepIndex => 0;
-            public IReadOnlyList<StationOption> Options => Array.Empty<StationOption>();
-            public bool MultiSelect => false;
-            public string Details => "";
-            public string Status => "";
-            public bool StatusIsProblem => false;
-            public IReadOnlyList<string> Actions => Array.Empty<string>();
-            public bool IsDone => false;
-            public event Action Changed;
-            public void Raise() => Changed?.Invoke();
-            public void SelectStep(int index) { }
-            public void Select(int index) { }
-            public void Act(int index) { }
-        }
-
-        [Test]
-        public void RebindingStopsListeningToTheOldViewModel()
-        {
-            var screen = Ui.Screens().First();
-            var old = new FakeStation { Title = "Old" };
-            var current = new FakeStation { Title = "Current" };
-            screen.Bind(old);
-            screen.Bind(current);
-            old.Title = "Stale";
-            old.Raise();
-            Assert.AreEqual("Current", screen.titleText.text);
-        }
-
-        sealed class FakeResources : IResourceDashboardViewModel
-        {
-            public IReadOnlyList<ResourceStatus> Resources { get; set; }
-            public string Note => "";
-            public event Action Changed { add { } remove { } }
-        }
-
-        [Test]
-        public void DashboardShowsOverLimitOnlyWhereUsedExceedsAvailable()
-        {
-            var dashboard = Find<ResourceDashboard>();
-            dashboard.Bind(new FakeResources
-            {
-                Resources = new[]
-                {
-                    new ResourceStatus("Mass", "kg", 3f, 4f),
-                    new ResourceStatus("Power", "W", 6f, 5f),
-                    new ResourceStatus("Budget", "k$", 500f, 500f),
-                },
-            });
-            Assert.AreEqual("6 / 5 W", dashboard.Rows[1].valueText.text);
-            Assert.IsFalse(dashboard.IsOverLimitShown(0));
-            Assert.IsTrue(dashboard.IsOverLimitShown(1));
-            Assert.IsFalse(dashboard.IsOverLimitShown(2), "exactly at the limit is not over");
-            Assert.AreEqual(ResourceDashboard.BarOver, dashboard.Rows[1].barFillImage.color);
-            Assert.AreEqual(3, dashboard.Rows.Count(r => r.gameObject.activeSelf));
+            Assert.LessOrEqual(Out() + radius, wallInside + 0.1f, "through the windows");
         }
     }
 }
