@@ -110,7 +110,8 @@ export class MarsWorld {
     this.crew = o.crew ?? DEFAULT_CREW;
     this.startedAt = o.startedAt ?? new Date(0).toISOString();
     this.map = generateMap(o.seed);
-    const offsets: Pos[] = [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }];
+    // four distinct tiles around the lander, none on a module's tile
+    const offsets: Pos[] = [{ x: -1, y: 1 }, { x: 1, y: 1 }, { x: -1, y: -1 }, { x: 1, y: -1 }];
     this.players = this.crew.map((c, i) => createPlayer(c.role, i as PlayerId, c.name, c.look, { x: this.map.base.x + offsets[i]!.x, y: this.map.base.y + offsets[i]!.y }));
     this.modules = Object.fromEntries(MODULE_IDS.map((id) => [id, { built: MODULES[id].builtAtStart, progress: 0, wear: 0 }])) as MarsWorld["modules"];
     const days = Math.max(1, RUN_SOLS + this.caps.supplyDays) * this.players.length;
@@ -359,6 +360,11 @@ export class MarsWorld {
   }
 
   private resolvePlayer(p: Player, c: Choice) {
+    this.resolvePlayerWork(p, c);
+    this.spread(p);
+  }
+
+  private resolvePlayerWork(p: Player, c: Choice) {
     let act = ACTIVITIES[c.activity], t = c.target;
     if ((p.energy <= 5 || p.rest <= 5) && act.id !== "rest" && act.id !== "shelter") {
       this.emit("work", [p.id], `${p.name} was too exhausted to do more than rest.`, { ok: false, activity: act.id });
@@ -418,6 +424,24 @@ export class MarsWorld {
         this.emit("gauge", [p.id], `${p.name} was hurt in the attempt.`, { amount: TEAM.accidentBody.value });
       }
     }
+  }
+
+  /** Two people never end a move on one tile when a free tile beside them exists. */
+  private spread(p: Player) {
+    const taken = (x: number, y: number) => this.players.some((q) => q !== p && q.active && q.position.x === x && q.position.y === y);
+    if (!taken(p.position.x, p.position.y)) return;
+    const wasBase = this.atBase(p);
+    let best: Pos | null = null, bd = Infinity;
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      if (!dx && !dy) continue;
+      const x = p.position.x + dx, y = p.position.y + dy;
+      const t = this.map.tiles[y]?.[x];
+      if (t === undefined || t === "#" || taken(x, y)) continue;
+      if (wasBase && cheb({ x, y }, this.map.base) > 2) continue;
+      const d = Math.abs(dx) + Math.abs(dy) + tileCost(t) * 0.1;
+      if (d < bd) { bd = d; best = { x, y }; }
+    }
+    if (best) p.position = best;
   }
 
   private stepCost(step: Pos): number { return tileCost(this.map.tiles[step.y]![step.x]!); }
