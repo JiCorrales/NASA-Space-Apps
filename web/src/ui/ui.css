@@ -1,0 +1,46 @@
+.frame { box-sizing: border-box; min-height: 100%; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.frame__head { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-bottom: 2px solid var(--edge); padding-bottom: 12px; }
+.frame__title { font-size: 16px; color: var(--accent); }
+.frame__steps { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; font-size: 12px; color: var(--text-2); }
+.frame__steps li { padding: 2px 6px; border: 2px solid var(--edge); }
+.frame__steps li[aria-current="step"] { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+.frame__body { flex: 1; background: var(--panel); border: 2px solid var(--edge); padding: 16px; }
+
+.pxbtn { font: 12px var(--font-pixel); color: var(--text); background: var(--panel); border: 2px solid var(--edge);
+  box-shadow: 4px 4px 0 var(--edge); padding: 10px 14px; cursor: pointer; }
+.pxbtn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.pxbtn:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--edge); }
+.pxbtn:disabled { color: var(--text-2); cursor: not-allowed; border-style: dashed; }
+.pxbtn--primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+.card { display: block; width: 100%; text-align: left; font: 13px var(--font-mono); color: var(--text); background: var(--panel);
+  border: 2px solid var(--edge); padding: 12px; cursor: pointer; }
+.card:hover { border-color: var(--accent); }
+.card[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+.card__name { font: 11px var(--font-pixel); line-height: 1.5; display: flex; justify-content: space-between; gap: 8px; }
+.card__mark { color: var(--accent); white-space: nowrap; }
+.card__summary { color: var(--text-2); margin: 8px 0; }
+.card__stats { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0; padding: 0; list-style: none; }
+.card__stats b { font-weight: 600; }
+.card__foot { margin-top: 8px; }
+
+.src { font: 10px var(--font-pixel); color: var(--text); background: none; border: 2px solid var(--edge); padding: 4px 6px; cursor: pointer; }
+.src[data-status="nasa"] { border-color: var(--accent); }
+.src[data-status="team"] { border-style: dashed; }
+.src__text { display: block; margin-top: 6px; font: 12px var(--font-mono); color: var(--text-2); }
+
+.res { display: grid; gap: 4px; }
+.res__row { display: flex; justify-content: space-between; font-size: 12px; }
+.res__label { font-family: var(--font-pixel); font-size: 10px; text-transform: uppercase; }
+.res__track { height: 12px; border: 2px solid var(--edge); background: var(--bg); position: relative; }
+.res__fill { height: 100%; background: var(--ok); }
+.res[data-level="near"] .res__fill { background: var(--warning); }
+.res[data-level="over"] .res__fill { background: var(--critical); }
+.res[data-level="unknown"] .res__track { border-style: dashed; }
+.res__state { font-family: var(--font-pixel); font-size: 10px; }
+
+.issue { display: flex; gap: 8px; padding: 8px 10px; border: 2px solid var(--edge); border-left-width: 6px; font-size: 13px; }
+.issue[data-severity="info"] { border-left-color: var(--accent); }
+.issue[data-severity="warning"] { border-left-color: var(--warning); }
+.issue[data-severity="critical"] { border-left-color: var(--critical); }
+.issue__tag { font: 10px var(--font-pixel); white-space: nowrap; }
