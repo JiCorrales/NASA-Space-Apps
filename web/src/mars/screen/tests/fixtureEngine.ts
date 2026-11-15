@@ -30,8 +30,8 @@ function tileAt(x: number, y: number): string {
 }
 
 export const FIXTURE_CREW: CrewSetup[] = [
-  { name: "Ines", role: "commander", look: "amber" }, { name: "Marco", role: "engineer", look: "teal" },
-  { name: "Aiko", role: "scientist", look: "violet" }, { name: "Zed", role: "comms", look: "coral" },
+  { name: "Ines", role: "commander", look: "broad" }, { name: "Marco", role: "engineer", look: "tall" },
+  { name: "Aiko", role: "scientist", look: "compact" }, { name: "Zed", role: "comms", look: "round" },
 ];
 
 const SKILLED: Record<Role, ActivityId[]> = {

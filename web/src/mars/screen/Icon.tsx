@@ -1,6 +1,6 @@
 import type { ActivityId, GaugeId, ResourceView } from "../types";
 import type { Sprite } from "../art/paint";
-import { CHARS, GEAR, ICON, LOOK_ART, spriteUrl } from "./sprites";
+import { CHARS, GEAR, ICON, spriteUrl } from "./sprites";
 import type { Look, Role } from "../types";
 
 /** A pixel sprite as an image: whole pixels, scaled by an integer, never smoothed. Decorative: the text beside it says it all. */
@@ -24,7 +24,7 @@ export const ACTIVITY_ICON: Record<ActivityId, string> = {
 export function Portrait({ look, role }: { look: Look; role: Role }) {
   return (
     <span className="portrait">
-      <Pix sprite={CHARS[LOOK_ART[look]].portrait} scale={1} />
+      <Pix sprite={CHARS[look].portrait} scale={1} />
       <Pix sprite={GEAR[role].badge} scale={1} className="portrait__badge" />
     </span>
   );

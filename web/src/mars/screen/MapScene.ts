@@ -5,7 +5,7 @@
 import type { CrewSetup, ModuleId, ModuleStatus, ObjectView, PlayerId, PlayerView, Pos, SiteId, SolEvent, SolReport } from "../types";
 import type { Sprite } from "../art/paint";
 import { hash } from "../art/worldkit";
-import { BASE_ART, CHARS, EXTRA, GEAR, HAZ, LOOK_ART, SAT, T, bmp, pickFrame } from "./sprites";
+import { BASE_ART, CHARS, EXTRA, GEAR, HAZ, SAT, T, bmp, pickFrame } from "./sprites";
 
 export const TILE = 16;
 const WALK_TILES_PER_S = 6;
@@ -331,7 +331,7 @@ export class MapScene {
 
   private drawPerson(blit: (s: Sprite, x: number, y: number, a?: number) => void, id: PlayerId, wk: Walker, t: number): void {
     const who = this.input!.roster[id]; if (!who) return;
-    const look = CHARS[LOOK_ART[who.look]], gear = GEAR[who.role];
+    const look = CHARS[who.look], gear = GEAR[who.role];
     const out = (this.people(this.input!.view).get(id)?.out) ?? false;
     const self = id === this.input!.view.self.id;
     const cut = self && !this.input!.view.self.linked;
@@ -342,7 +342,7 @@ export class MapScene {
     // a soft shadow keeps the figure on the ground
     blit({ rows: ["..aaaaaa..", ".aaaaaaaa."], palette: { a: "rgba(5,7,15,0.35)" } }, px + 3, py + 22);
     blit(frames[fi]!, px, py);
-    if (!out) { const g = (gear.overlays[LOOK_ART[who.look]] as Record<string, Sprite[]>)[pose]; if (g) blit(g[fi % g.length]!, px, py); }
+    if (!out) { const g = (gear.overlays[who.look] as Record<string, Sprite[]>)[pose]; if (g) blit(g[fi % g.length]!, px, py); }
     if (wk.bubble && this.clock < wk.bubble.until) { const e = EXTRA[wk.bubble.key]; if (e?.[0]) blit(e[0], px + 2, py - 12); }
     else if (cut && !out) blit(EXTRA.emote_question![0]!, px + 2, py - 12);
     void SPEECH;

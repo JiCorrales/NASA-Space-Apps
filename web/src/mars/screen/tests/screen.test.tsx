@@ -134,8 +134,8 @@ describe("the result card", () => {
 
 describe("the hand-over from Act 1", () => {
   const crew = [
-    { name: "Uno", role: "scientist", look: "coral" }, { name: "Dos", role: "comms", look: "amber" },
-    { name: "Tres", role: "commander", look: "teal" }, { name: "Cuatro", role: "engineer", look: "violet" },
+    { name: "Uno", role: "scientist", look: "round" }, { name: "Dos", role: "comms", look: "broad" },
+    { name: "Tres", role: "commander", look: "tall" }, { name: "Cuatro", role: "engineer", look: "compact" },
   ];
   it("starts with the crew of mars.handoff and offers 'Your design', selected", () => {
     localStorage.setItem(HANDOFF_KEY, JSON.stringify({ design: { format: "6u" }, extras: {}, crew, capabilities: {} }));
