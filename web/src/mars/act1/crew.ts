@@ -1,19 +1,11 @@
 // Crew setup: four players, each with one of the four looks and, separately, one of the four roles. Every role is
 // taken once; looks may repeat (a look is only how a character is drawn). Pure logic; CrewScreen draws it.
 
-import { ROLES, type CrewSetup, type Look, type Role } from "./types";
+import { LOOKS, ROLES, type CrewSetup, type Look, type Role } from "./types";
 
-/** The art's four builds (web/src/mars/art/characters.ts). */
-export type ArtLook = "round" | "broad" | "tall" | "compact";
-export const ART_LOOKS: readonly ArtLook[] = ["round", "broad", "tall", "compact"];
-
-/**
- * The Act 2 contract names looks by colour; the art names them by build. Each build has its trim colour in the
- * B art (round blue-teal, broad amber, compact violet, tall green), so they pair as below. To be unified with
- * Act 2 when both land.
- */
-export const LOOK_OF_ART: Record<ArtLook, Look> = { round: "teal", broad: "amber", compact: "violet", tall: "coral" };
-export const ART_OF_LOOK: Record<Look, ArtLook> = { teal: "round", amber: "broad", violet: "compact", coral: "tall" };
+/** The four looks are the art's four builds (web/src/mars/art/characters.ts): the same names as the contract's. */
+export const ART_LOOKS: readonly Look[] = LOOKS;
+export type ArtLook = Look;
 
 export const ROLE_NAME: Record<Role, string> = {
   commander: "Commander", engineer: "Engineer", scientist: "Scientist", comms: "Communications officer",
@@ -24,7 +16,7 @@ export const ROLE_SKILLS: Record<Role, string> = {
   scientist: "Geology, analysis, navigation",
   comms: "Radio, relay, forecasting",
 };
-export const LOOK_NAME: Record<ArtLook, string> = { round: "Round", broad: "Broad", tall: "Tall", compact: "Compact" };
+export const LOOK_NAME: Record<Look, string> = { round: "Round", broad: "Broad", tall: "Tall", compact: "Compact" };
 
 /** A seat at the table: the look and role picked so far. */
 export interface Seat { name: string; look: ArtLook | null; role: Role | null }
@@ -61,5 +53,5 @@ export const crewComplete = (seats: Seat[]) =>
 /** The crew in the Act 2 contract's form. */
 export function toCrewSetup(seats: Seat[]): CrewSetup[] {
   if (!crewComplete(seats)) throw new Error("The crew is not complete");
-  return seats.map((s, i) => ({ name: s.name.trim() || `Player ${i + 1}`, role: s.role!, look: LOOK_OF_ART[s.look!] }));
+  return seats.map((s, i) => ({ name: s.name.trim() || `Player ${i + 1}`, role: s.role!, look: s.look! }));
 }
