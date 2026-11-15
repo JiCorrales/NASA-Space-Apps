@@ -1,3 +1,4 @@
+import { createFlightStandin } from "./flightStandin";
 import type {
   GroupDef, Group, MissionCard, MissionState, Option, PageToUnity, Resource, ResourceKind, Issue, Source, Step,
   StepStatus, UnityToPage, World,
@@ -206,6 +207,7 @@ const round = (n: number) => Math.round(n * 100) / 100;
 
 export function createStandin(emit: (m: UnityToPage) => void) {
   let state = recompute(initial());
+  const flight = createFlightStandin(emit);
   const push = () => emit({ type: "state", payload: state });
   const setStatus = (step: Step, status: StepStatus) => {
     state = { ...state, steps: state.steps.map((s) => (s.step === step ? { ...s, status } : s)) };
@@ -238,7 +240,7 @@ export function createStandin(emit: (m: UnityToPage) => void) {
         push(); return;
       }
       case "close": emit({ type: "closeScreen", payload: {} }); return;
-      default: return; // fly and command need the simulation, which only Unity has
+      case "fly": case "command": flight.handle(msg); return; // replays the recorded flight
     }
   }
   return { handle };
