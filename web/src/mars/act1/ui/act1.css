@@ -78,9 +78,9 @@
 .a1-attempts li span { font: 10px var(--font-pixel); border: 2px solid var(--edge); padding: 2px 4px; margin: 0 4px; }
 
 /* ---- step 6 ---- */
-.a1-stage { position: relative; width: 100%; aspect-ratio: 16 / 9; max-height: 52vh; overflow: hidden; border: 2px solid var(--edge); background: var(--bg); margin: 0 auto; }
+.a1-stage { position: relative; width: min(100%, calc(58vh * 16 / 9)); aspect-ratio: 16 / 9; overflow: hidden; border: 2px solid var(--edge); background: var(--bg); margin: 0 auto; }
 .a1-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; display: block; }
-.a1-stage--launch { aspect-ratio: 640 / 206; max-height: none; }
+.a1-stage--launch { aspect-ratio: 640 / 206; width: 100%; }
 /* the launch scene fills only the top 206 rows of its 640 x 360 grid (the cockpit window): show just those */
 .a1-stage--launch canvas { inset: 0 auto auto 0; height: auto; aspect-ratio: 16 / 9; object-fit: fill; }
 .a1-scene { width: 100%; height: 100%; image-rendering: pixelated; display: block; }

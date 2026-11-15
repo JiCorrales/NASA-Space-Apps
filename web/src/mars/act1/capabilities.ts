@@ -61,7 +61,7 @@ export function describeCapabilities(c: RelayCapabilities, region: string): stri
   lines.push(`Before anyone walks, the map around the base at ${region} is known ${c.mapRadiusStart} tiles out; reading the satellite's maps can push it to ${c.mapRadiusMax}.`);
   lines.push(c.passesPerSol === 1 && c.passMinutes >= 240
     ? `The satellite stays over the base all sol; its radio is on ${Math.round(c.passMinutes / 60)} hours of each sol.`
-    : `It passes over the base ${c.passesPerSol} times a sol, ${c.passMinutes} minutes each time, on ${Math.round(c.passSolFraction * 30)} of every 30 sols.`);
+    : `It passes over the base ${c.passesPerSol} times a sol, ${c.passMinutes} minutes each time, ${c.passSolFraction >= 0.995 ? "every sol" : `on ${Math.round(c.passSolFraction * 30)} of every 30 sols`}.`);
   lines.push(`On a sol with a pass it takes up to ${c.relayMbPerSol.toLocaleString("en-US")} Mb from the base; the Deep Space Network brings ${c.dsnMbPerSol.toLocaleString("en-US")} Mb a sol down to Earth.`);
   lines.push(c.warningLeadSols > 0
     ? `When a dust storm forms, word of it reaches the crew ${c.warningLeadSols} sol${c.warningLeadSols === 1 ? "" : "s"} before it arrives.`
