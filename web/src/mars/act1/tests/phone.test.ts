@@ -1,8 +1,8 @@
-import phone from "../../../screens/phone.css?raw";
-import act1 from "../ui/act1.css?raw";
-import launch from "../launch/launch.css?raw";
+// The test reads the CSS files straight from disk.
+import { readFileSync } from "node:fs";
 
-const files = [phone, act1, launch];
+const read = (f: string): string => readFileSync(f, "utf8");
+const files = ["src/screens/phone.css", "src/mars/act1/ui/act1.css", "src/mars/act1/launch/launch.css"].map(read);
 
 /** The text inside every `@media (max-width: 640px) { ... }` block, found by matching braces. */
 function phoneBlocks(css: string): string[] {
