@@ -10,6 +10,7 @@ import {
 } from "./data";
 import { defaultRequirements, evaluate, meets, HELD_SOLS, type Evaluation, type Requirements } from "./model";
 import { capabilitiesFromDesign } from "./capabilities";
+import type { Send } from "../../screens/send";
 import { planLaunch, type LaunchPlan } from "./launchSequence";
 import type { Act1Design, Act1Extras, RelayCapabilities } from "./types";
 
@@ -136,8 +137,7 @@ export class MarsSession {
   }
 
   /** A `send` for the screens. */
-  readonly send = <T extends PageToUnity["type"]>(type: T, payload: Extract<PageToUnity, { type: T }>["payload"]) =>
-    this.handle({ type, payload } as PageToUnity);
+  readonly send: Send = (type, payload) => this.handle({ type, payload } as PageToUnity);
 
   get design(): Act1Design { return this.s.design; }
   get reserve(): number { return this.s.reserve; }
