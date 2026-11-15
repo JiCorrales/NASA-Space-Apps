@@ -61,6 +61,6 @@ export const velocityText = (kms: number) => `${Math.max(0, kms).toFixed(2)} km/
 
 /** Words of a poll light, never colour alone. */
 export function pollWord(go: boolean | null): { state: "go" | "nogo" | "wait"; word: string } {
-  if (go === null) return { state: "wait", word: "···" };
+  if (go === null) return { state: "wait", word: "—" };
   return go ? { state: "go", word: "GO" } : { state: "nogo", word: "NO-GO" };
 }

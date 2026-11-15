@@ -31,15 +31,17 @@ const ORBIT_TOP = 50;
 const RO = CY - ORBIT_TOP;
 /** Launch pad, mission building and orbit insertion columns: each clear of the window struts. */
 const XP = 300;
-const XB = 246;
+const XB = 238;
 const XI = 540;
+/** Every sprite pixel is an S x S block of the grid: big enough to read as pixel art at 1366 x 768. */
+const S = 2;
 
 export const surfaceY = (x: number) => Math.round(CY - Math.sqrt(R * R - (x - CX) ** 2));
 export const orbitY = (x: number) => Math.round(CY - Math.sqrt(RO * RO - (x - CX) ** 2));
 
 /** Point and direction of the ascent at t (0 to 1): a curve from the pad up and over to the orbit. */
 export function ascent(t: number) {
-  const p0 = { x: XP, y: surfaceY(XP) - 3 };
+  const p0 = { x: XP, y: surfaceY(XP) - 2 * S };
   const p2 = { x: XI, y: orbitY(XI) };
   const p1 = { x: XP, y: p2.y + 4 };
   const u = 1 - t;
@@ -65,7 +67,10 @@ function rng(seed: number) {
   };
 }
 const rnd = rng(11);
-const STARS = Array.from({ length: 150 }, () => ({ x: Math.floor(rnd() * W), y: 18 + Math.floor(rnd() * 90), p: rnd() * 10, big: rnd() < 0.08 }));
+/** Where the HUD labels sit over the window, in canvas pixels: no star twinkles behind their text. */
+const UNDER_HUD = [{ x0: 48, x1: 172, y0: 22, y1: 46 }, { x0: 536, x1: 632, y0: 24, y1: 46 }];
+const STARS = Array.from({ length: 150 }, () => ({ x: Math.floor(rnd() * W), y: 18 + Math.floor(rnd() * 90), p: rnd() * 10, big: rnd() < 0.08 }))
+  .filter((s) => !UNDER_HUD.some((r) => s.x >= r.x0 && s.x <= r.x1 && s.y >= r.y0 && s.y <= r.y1));
 const CLOUDS = Array.from({ length: 6 }, () => ({ x: rnd() * W, y: Math.round(118 + rnd() * 34), len: 14 + Math.floor(rnd() * 22), v: 1.5 + rnd() * 2.5 }));
 
 function newCanvas(w: number, h: number): { cv: HTMLCanvasElement; c: Ctx } | null {
@@ -113,23 +118,23 @@ function paintBackdrop(c: Ctx): void {
   // The orbit, dotted.
   c.fillStyle = "#48c6ff";
   for (let x = 0; x < W; x += 3) c.fillRect(x, orbitY(x), 1, 1);
-  // Mission building beside the pad.
-  const yb = surfaceY(XB);
+  // Mission building beside the pad, and the pad and tower, in S x S blocks.
+  const b = (x: number, y: number, w: number, h: number) => c.fillRect(x * S, y * S, w * S, h * S);
+  const bx = XB / S, by = Math.round(surfaceY(XB) / S);
   c.fillStyle = "#3a4458";
-  c.fillRect(XB - 10, yb - 16, 20, 16);
-  c.fillRect(XB + 10, yb - 9, 9, 9);
+  b(bx - 10, by - 16, 20, 16);
+  b(bx + 10, by - 9, 9, 9);
   c.fillStyle = "#8fa3b8";
-  c.fillRect(XB - 11, yb - 17, 22, 1);
-  c.fillRect(XB - 4, yb - 8, 8, 8);
+  b(bx - 11, by - 17, 22, 1);
+  b(bx - 4, by - 8, 8, 8);
   c.fillStyle = "#05070f";
-  c.fillRect(XB - 3, yb - 7, 6, 7);
-  // Launch pad and tower.
-  const yp = surfaceY(XP);
+  b(bx - 3, by - 7, 6, 7);
+  const px = XP / S, py = Math.round(surfaceY(XP) / S);
   c.fillStyle = "#8fa3b8";
-  c.fillRect(XP - 9, yp - 2, 18, 2);
+  b(px - 9, py - 2, 18, 2);
   c.fillStyle = "#4b5a6b";
-  c.fillRect(XP - 8, yp - 32, 2, 30);
-  for (let k = 0; k < 10; k++) c.fillRect(XP - 8, yp - 30 + k * 3, 4, 1);
+  b(px - 8, py - 32, 2, 30);
+  for (let k = 0; k < 10; k++) b(px - 8, py - 30 + k * 3, 4, 1);
 }
 
 interface Particle { x: number; y: number; vx: number; vy: number; life: number; white?: boolean }
@@ -170,11 +175,11 @@ export class LaunchScene {
       const a = Math.atan2(pose.dy, pose.dx);
       if (l.stage === "liftoff") this.shake = 1.2;
       if (l.stage === "staging") {
-        this.debris.push({ rows: STAGE1, x: pose.x - Math.cos(a) * 12, y: pose.y - Math.sin(a) * 12, vx: -Math.cos(a) * 4, vy: 2, rot: a + Math.PI / 2, vr: 0.9, life: 1 });
+        this.debris.push({ rows: STAGE1, x: pose.x - Math.cos(a) * 12 * S, y: pose.y - Math.sin(a) * 12 * S, vx: -Math.cos(a) * 4 * S, vy: 2 * S, rot: a + Math.PI / 2, vr: 0.9, life: 1 });
       }
       if (l.stage === "fairing") {
-        [-1, 1].forEach((side, i) => this.debris.push({ rows: FAIRING_HALVES[i]!, x: pose.x + Math.cos(a) * 14, y: pose.y + Math.sin(a) * 14,
-          vx: -Math.sin(a) * 10 * side, vy: Math.cos(a) * 10 * side, rot: a + Math.PI / 2, vr: 2.5 * side, life: 1 }));
+        [-1, 1].forEach((side, i) => this.debris.push({ rows: FAIRING_HALVES[i]!, x: pose.x + Math.cos(a) * 18 * S, y: pose.y + Math.sin(a) * 18 * S,
+          vx: -Math.sin(a) * 10 * S * side, vy: Math.cos(a) * 10 * S * side, rot: a + Math.PI / 2, vr: 2.5 * side, life: 1 }));
       }
     }
     // The vehicle is lost during the climb: it breaks up where it is.
@@ -184,12 +189,12 @@ export class LaunchScene {
       const pose = ascent(clamp(this.p));
       const pieces: Rows[] = [rocketBody(l.vehicle, { booster: false, fairing: false }).slice(0, 6), STAGE2, ...(at < 3 ? [STAGE1] : []), ...FAIRING_HALVES];
       for (const rows of pieces) {
-        this.debris.push({ rows, x: pose.x, y: pose.y - 10, vx: (Math.random() - 0.5) * 24, vy: -4 - Math.random() * 6,
+        this.debris.push({ rows, x: pose.x, y: pose.y - 10 * S, vx: (Math.random() - 0.5) * 24 * S, vy: (-4 - Math.random() * 6) * S,
           rot: Math.random() * 6, vr: (Math.random() - 0.5) * 6, life: 1.6 });
       }
       for (let i = 0; i < 60; i++) {
         const ang = Math.random() * Math.PI * 2, v = 6 + Math.random() * 22;
-        this.parts.push({ x: pose.x, y: pose.y - 10, vx: Math.cos(ang) * v, vy: Math.sin(ang) * v, life: 1 });
+        this.parts.push({ x: pose.x, y: pose.y - 10 * S, vx: Math.cos(ang) * v * S, vy: Math.sin(ang) * v * S, life: 1 });
       }
       this.shake = 0.5;
     }
@@ -211,17 +216,18 @@ export class LaunchScene {
       const pad = this.p < 0.05;
       const n = Math.ceil((pad ? 300 : 120) * dt);
       for (let i = 0; i < n; i++) {
-        this.parts.push({ x: pose.x, y: pose.y + 2, vx: -Math.cos(ang) * 8 + (Math.random() - 0.5) * (pad ? 60 : 10),
-          vy: -Math.sin(ang) * 8 + (Math.random() - 0.5) * 6, life: 1 });
+        this.parts.push({ x: pose.x, y: pose.y + 2 * S, vx: (-Math.cos(ang) * 8 + (Math.random() - 0.5) * (pad ? 60 : 10)) * S,
+          vy: (-Math.sin(ang) * 8 + (Math.random() - 0.5) * 6) * S, life: 1 });
       }
     } else if (at === 0 && l.outcome === null && Math.random() < dt * 6) {
-      this.parts.push({ x: XP + (Math.random() < 0.5 ? -4 : 4), y: pose.y - 14 - Math.random() * 6, vx: (Math.random() - 0.5) * 6, vy: -3, life: 0.8, white: true });
+      this.parts.push({ x: XP + (Math.random() < 0.5 ? -5 : 5) * S, y: pose.y - (14 + Math.random() * 6) * S, vx: (Math.random() - 0.5) * 6 * S, vy: -3 * S, life: 0.8, white: true });
     }
     this.parts = this.parts.filter((q) => (q.life -= dt * 0.8) > 0);
     for (const q of this.parts) {
       q.x += q.vx * dt; q.y += q.vy * dt; q.vx *= 0.97; q.vy = q.vy * 0.97 - 1.5 * dt;
     }
-    this.debris = this.debris.filter((b) => (b.life -= dt * 0.35) > 0);
+    // Debris fades, and is gone once it reaches the ground.
+    this.debris = this.debris.filter((b) => (b.life -= dt * 0.35) > 0 && b.y < surfaceY(clamp(b.x, 0, W - 1)) - 2);
     for (const b of this.debris) {
       b.x += b.vx * dt; b.y += b.vy * dt; b.vy += 9 * dt; b.rot += b.vr * dt;
     }
@@ -264,11 +270,11 @@ export class LaunchScene {
     // Tower light: red while counting, amber blinking in a hold, steady red once scrubbed.
     const yp = surfaceY(XP);
     c.fillStyle = l.outcome === "scrubbed" ? "#ff6464" : l.stage === "hold" ? (blink ? "#f3c04f" : "#5e4a1a") : blink ? "#ff6464" : "#5e2a30";
-    c.fillRect(XP - 8, yp - 34, 2, 2);
+    c.fillRect(XP - 8 * S, Math.round(yp / S) * S - 34 * S, 2 * S, 2 * S);
     // Lights in the mission building, busy while the count goes on.
     const yb = surfaceY(XB);
     c.fillStyle = at <= 1 && Math.floor(t * 3.3) % 2 ? "#ffd23f" : "#ff9a3c";
-    for (let i = 0; i < 3; i++) c.fillRect(XB - 8 + i * 6, yb - 13, 3, 2);
+    for (let i = 0; i < 3; i++) c.fillRect(XB + (-8 + i * 6) * S, Math.round(yb / S) * S - 13 * S, 3 * S, 2 * S);
 
     // The trail of the climb so far.
     if (this.p > 0) {
@@ -282,11 +288,11 @@ export class LaunchScene {
     for (const q of this.parts) {
       c.fillStyle = q.white ? (q.life > 0.4 ? "#eef1f6" : "#8fa3b8")
         : q.life > 0.85 ? "#ffd23f" : q.life > 0.7 ? "#ff7a2e" : q.life > 0.35 ? "#c9c3e8" : "#6e66a0";
-      const sz = q.life > 0.7 && !q.white ? 1 : 2;
+      const sz = q.life > 0.7 && !q.white ? 2 : 3;
       c.fillRect(Math.round(q.x), Math.round(q.y), sz, sz);
     }
     for (const b of this.debris) {
-      if (b.life > 0.2 || Math.floor(t * 12) % 2) blit(c, b.rows, b.x, b.y, snap(b.rot), undefined, undefined, this.broken ? GREY : undefined);
+      if (b.life > 0.2 || Math.floor(t * 12) % 2) blit(c, b.rows, b.x, b.y, snap(b.rot), undefined, undefined, this.broken ? GREY : undefined, S);
     }
 
     // The rocket.
@@ -299,11 +305,11 @@ export class LaunchScene {
       const flame = fire ? (at < STAGE_ORDER.staging ? BIGFLAME : FLAME)[Math.floor(t * 11) % 2]! : [];
       let rx = pose.x, ry = pose.y;
       if (this.sep > 0) {
-        rx += Math.cos(ang) * this.sep * 22;
-        ry += Math.sin(ang) * this.sep * 22 - this.sep * 6;
+        rx += Math.cos(ang) * this.sep * 22 * S;
+        ry += Math.sin(ang) * this.sep * 22 * S - this.sep * 6 * S;
       }
-      if (this.sep < 1) blit(c, [...body, ...flame], rx, ry, rot, 3, body.length - 1);
-      else if (Math.floor(t * 6) % 2) blit(c, body, rx, ry, rot, 3, body.length - 1, GREY);
+      if (this.sep < 1) blit(c, [...body, ...flame], rx, ry, rot, 3, body.length - 1, undefined, S);
+      else if (Math.floor(t * 6) % 2) blit(c, body, rx, ry, rot, 3, body.length - 1, GREY, S);
     }
 
     // The CubeSat, leaving along the orbit after separation.
@@ -314,12 +320,12 @@ export class LaunchScene {
       }
       const sx = Math.round(XI + this.sat * 80), sy = orbitY(sx);
       const lost = l.outcome === "lost";
-      if (lost) blit(c, SAT, sx, sy, Math.round(t * 6.7) * (Math.PI / 4), 1, 1, GREY);
+      if (lost) blit(c, SAT, sx, sy, Math.round(t * 6.7) * (Math.PI / 4), 1, 1, GREY, S);
       else {
         // The wings show open only once Unity says the deployment is done.
         const open = at > STAGE_ORDER.deploy || l.outcome === "ok";
-        paint(c, open ? SAT_OPEN : SAT, sx - (open ? 4 : 1), sy - 1);
-        if (Math.floor(t * 2.5) % 2) { c.fillStyle = "#62d394"; c.fillRect(sx, sy - 4, 1, 1); }
+        paint(c, open ? SAT_OPEN : SAT, sx - (open ? 4 : 1) * S, sy - S, undefined, S);
+        if (Math.floor(t * 2.5) % 2) { c.fillStyle = "#62d394"; c.fillRect(sx, sy - 4 * S, S, S); }
       }
     }
   }
