@@ -73,6 +73,16 @@ in it and are kept for later versions ([09-future-work/](09-future-work/)):
 | [exoplanet-archive.md](09-future-work/exoplanet-archive.md) | Confirmed exoplanets as possible science results | [exoplanet-archive-pscomppars.csv](09-future-work/data/exoplanet-archive-pscomppars.csv) |
 | [dsn-link-design-handbook.md](09-future-work/dsn-link-design-handbook.md) | Deep Space Network link design modules | PDFs in [pdf/dsn-810-005/](pdf/dsn-810-005/) |
 
+## Mars surface (second act)
+
+Not an objective of the first version. Real numbers about conditions on the surface of Mars, radiation, dust, relay,
+crew health and published human-mission plans, for a later act ([10-mars-surface/](10-mars-surface/)):
+
+| Note | What it holds | Data |
+|---|---|---|
+| [README.md](10-mars-surface/README.md) | Index of the folder, the numbers most useful for gameplay and the disagreements between sources | [mars-surface-numbers.csv](10-mars-surface/data/mars-surface-numbers.csv): 201 rows with `kind` measured, derived, plan or not-found |
+| [mars-basics.md](10-mars-surface/mars-basics.md), [mars-temperature.md](10-mars-surface/mars-temperature.md), [mars-dust-and-power.md](10-mars-surface/mars-dust-and-power.md), [mars-radiation.md](10-mars-surface/mars-radiation.md), [mars-communications.md](10-mars-surface/mars-communications.md), [mars-orbiter-support.md](10-mars-surface/mars-orbiter-support.md), [mars-human-exploration.md](10-mars-surface/mars-human-exploration.md), [mars-crew-health.md](10-mars-surface/mars-crew-health.md), [mars-hazard-events.md](10-mars-surface/mars-hazard-events.md) | One note per topic, each claim with its source and quoted sentence | Same CSV |
+
 ## Source documents
 
 All downloaded PDFs are in [pdf/](pdf/), in their original subfolders. The note for each source links to
