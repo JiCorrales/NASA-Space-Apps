@@ -559,3 +559,26 @@ describe("the satellite shapes what the crew has", () => {
     expect(w.caps.relayMbPerSol).toBeGreaterThan(p.caps.relayMbPerSol);
   });
 });
+
+describe("four people are four visible people", () => {
+  it("start on four different tiles around the lander", () => {
+    for (let seed = 1; seed <= 20; seed++) {
+      const w = fresh(seed);
+      const keys = new Set(w.players.map((p) => `${p.position.x},${p.position.y}`));
+      expect(keys.size).toBe(4);
+      for (const p of w.players) expect(w.atBase(p)).toBe(true);
+    }
+  });
+
+  it("never end a move on the same tile when a free tile is next to them", () => {
+    for (let seed = 1; seed <= 12; seed++) {
+      const w = fresh(seed, GOOD_DESIGN, []);
+      const site = w.siteOf("site-1").pos;
+      for (let i = 0; i < 6; i++) {
+        step(w, ...([0, 1, 2, 3] as PlayerId[]).map((id) => pick(id, "travel", { kind: "tile", x: site.x, y: site.y })));
+        const keys = w.players.filter((p) => p.active).map((p) => `${p.position.x},${p.position.y}`);
+        expect(new Set(keys).size).toBe(keys.length);
+      }
+    }
+  });
+});
