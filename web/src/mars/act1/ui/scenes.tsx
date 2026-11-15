@@ -56,9 +56,6 @@ const drawCruise: Draw = (c, p, t) => {
   const s = ship[Math.floor(t * 3) % ship.length]!;
   const sz = spriteSize(s);
   paint(c, s, Math.round(W / 2 - sz.w / 2 - 20 + p * 30), Math.round(70 + Math.sin(t * 1.5) * 2), 1);
-  // dotted path
-  c.fillStyle = "#2b3852";
-  for (let x = 40; x < W - 90; x += 8) c.fillRect(x, 108 + Math.round(Math.sin(x / 40) * 2) + 22, 3, 1);
 };
 
 export function CruiseScene({ progress }: { progress: number }) {

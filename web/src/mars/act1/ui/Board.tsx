@@ -42,7 +42,7 @@ export function Board({ state, crew, launches, onMars, onOpen }: {
                   <span className="a1-step__n">{i + 1}</span>
                   <span className="a1-step__name">{stepName(step)}</span>
                   <span className="a1-step__state"><b aria-hidden="true">{MARK[status]}</b> {WORD[status]}</span>
-                  <span className="a1-step__blurb">{status === "problem" && issue ? issue.message : BLURB[step]}</span>
+                  <span className="a1-step__blurb">{status === "problem" ? (issue?.message ?? (step === "fly" ? "The last launch did not reach orbit. Open it to read the report and try again." : BLURB[step])) : BLURB[step]}</span>
                 </button>
               </li>
             );
