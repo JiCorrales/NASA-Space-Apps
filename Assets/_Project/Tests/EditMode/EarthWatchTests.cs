@@ -105,7 +105,11 @@ namespace SpaceApps.Mission.Tests
         public void PlayerFacingTextUsesNamesAndGrammarNotIds()
         {
             var session = new EarthWatchSession(catalog);
-            var still = session.Issues().First(i => i.code == "incomplete-earth-watch").message;
+            var incomplete = session.Issues().Where(i => i.code == "incomplete-earth-watch").ToList();
+            var still = string.Join("\n", incomplete.Select(i => i.message));
+            // Each missing choice is reported on the step where it is made.
+            StringAssert.Contains("how often to see the region", incomplete.Single(i => i.step == "concept").message);
+            StringAssert.Contains("attitude control", incomplete.Single(i => i.step == "design").message);
             StringAssert.Contains("attitude control", still);
             StringAssert.Contains("backup station", still);
             StringAssert.DoesNotContain("backupStation", still);
@@ -532,7 +536,10 @@ namespace SpaceApps.Mission.Tests
             Assert.AreEqual("o,l,l,l,l,l", Status());
             Assert.IsFalse(s.CompleteStep("design"), "a locked step cannot be finished");
             Assert.IsTrue(s.CompleteStep("goals"));
+            Assert.AreEqual("p,o,l,l,l,l", Status(), "a step finished with a choice skipped shows a problem, and the next one still opens");
+            s.Choose("region", "amazon");
             Assert.AreEqual("d,o,l,l,l,l", Status());
+            s.Choose("orbit", "sso-550"); s.Choose("revisit", "weekly");
             s.CompleteStep("concept"); s.CompleteStep("requirements");
             Assert.AreEqual("d,d,d,o,l,l", Status());
             Assert.IsTrue(s.CompleteStep("goals"), "a finished step can be reopened and finished again");
@@ -739,6 +746,7 @@ namespace SpaceApps.Mission.Tests
 
             w.Send("completeStep", "{\"step\":\"design\"}");
             Assert.AreEqual("locked", w.Session.StatusOf("design"), "a locked step stays locked");
+            w.Send("choose", "{\"group\":\"region\",\"id\":\"amazon\"}");
             w.Send("completeStep", "{\"step\":\"goals\"}");
             Assert.AreEqual("done", w.Session.StatusOf("goals"));
             Assert.AreEqual("open", w.Session.StatusOf("concept"));
