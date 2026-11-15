@@ -1,6 +1,6 @@
 # Software requirements specification (ERS): Space Mission Design Game
 
-> Draft 0.2, 2026-11-14. Structure: ISO/IEC/IEEE 29148:2018, clause 9.6, following the team's QA template for
+> Draft 0.3, 2026-11-14. Structure: ISO/IEC/IEEE 29148:2018, clause 9.6, following the team's QA template for
 > an ERS (rubric criteria ERS-01 to ERS-09, noted next to each section). Basis: the challenge statement, the
 > submission and judging guides, the research in `Resources/` and the decisions made on 2026-11-14. Nothing in
 > this document has been validated by the team yet: assumptions are marked ASM and the open decisions are in
@@ -166,6 +166,20 @@ Mission objective (MIS)
 ```
 
 A diagram of this model can be added once the team settles the decisions of section 12.
+
+### 4.3 Correspondence with NASA's process
+
+NASA's own outline of how a mission is designed and developed (R-09, slide 10) has six steps. The functions
+of 4.1 cover them as follows.
+
+| NASA step | Function in this document | Covered |
+|---|---|---|
+| Identify Need & Goals | MIS, mission objective | Yes |
+| Define Concept | none | No: nothing asks the player how the mission will operate *(DA-16)* |
+| Define Requirements | MIS, requirements | In part: shown, and set by the player only if DA-03 decides so |
+| Design | SPC, INS, LAO, with RES | Yes |
+| Build & Verify | none | No: the statement does not list it, so no requirement covers building and testing *(DA-16)* |
+| Implement | SIM | Yes |
 
 ## 5. User characteristics
 
@@ -497,6 +511,7 @@ In the order they should be taken: each one unblocks the ones below it.
 | DA-13 | Who sets the values the research leaves undefined; the target share of NASA values; whether to compute orbit data with NASA's GMAT | Team | REQ-DAT-002 to REQ-DAT-005, GOAL-03 |
 | DA-14 | Where the browser build is hosted | Jose | 3.8, REQ-SUB-004 |
 | DA-15 | Who takes each work package and on which computer; demo as video or slides and who makes it; who writes the project page; what to do with research notes that are in Spanish | Team | Annex A, REQ-SUB-002, REQ-SUB-003, NOR-01 |
+| DA-16 | Whether the game follows all six steps of NASA's process: add a "define concept" step between the objective and the requirements, and make building and testing a function of the game. Take it together with DA-03 | Team | 4.3, REQ-SHP-002 |
 
 Decided on 2026-11-14 and not open: the first version is one uncrewed CubeSat mission in low Earth orbit
 (ASM-03), and it has no crew health module (9.4).
@@ -513,6 +528,7 @@ Decided on 2026-11-14 and not open: the first version is one uncrewed CubeSat mi
 | R-06 | `CONTRIBUTING.md` in this repository |
 | R-07 | Unity Companion License, http://www.unity3d.com/legal/licenses/Unity_Companion_License |
 | R-08 | ISO/IEC/IEEE 29148:2018, Systems and software engineering, Life cycle processes, Requirements engineering (structure of this document) |
+| R-09 | NASA, "Design and Develop Science Missions", Systems Engineering webinar of the Access to Space for All series, 26 March 2025, slide 10, https://www.nasa.gov/wp-content/uploads/2025/04/250323-design-and-develop-science-mission.pdf |
 
 ## Annex A. Proposed division of the work
 
@@ -539,3 +555,4 @@ validates.
 |---|---|---|
 | 0.1 | 2026-11-14 | First draft, as a flat list of requirements |
 | 0.2 | 2026-11-14 | Rewritten on the team's QA template for an ERS (ISO/IEC/IEEE 29148:2018, clause 9.6); requirement IDs changed to `REQ-<MODULE>-NNN`; open decisions put in the order they should be taken |
+| 0.3 | 2026-11-14 | Added 4.3, the correspondence with NASA's six-step process, with DA-16 and R-09 |
