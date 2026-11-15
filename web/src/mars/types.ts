@@ -71,7 +71,17 @@ export type TileChar = "." | "," | "~" | "^" | "#" | "?";
 /** A rectangle of the map as rows of TileChar. Row 0 is y = y0, column 0 is x = x0. */
 export interface MapPatch { x0: number; y0: number; width: number; height: number; rows: string[] }
 
-export interface SiteView { id: SiteId; name: string; pos: Pos; sampled: boolean; analysed: boolean; sentMb: number; datasetMb: number; deliveredMb: number }
+export type SiteStatus = "unknown" | "located" | "visited" | "sampled" | "analysed" | "sent" | "delivered";
+
+/**
+ * A site the team knows of. `state`: "located" (the satellite or a map reading placed it, nobody has been near),
+ * "visited" (someone saw it), "sampled", "analysed", "sent" (data on its way up) or "delivered" (reached Earth).
+ * Sites still under fog are not listed (that would give away where they are): see `SharedView.hiddenSites`.
+ */
+export interface SiteView {
+  id: SiteId; name: string; pos: Pos; sampled: boolean; analysed: boolean; sentMb: number; datasetMb: number; deliveredMb: number;
+  state: SiteStatus; visited: boolean;
+}
 
 export type SkyState = "clear" | "hazy" | "dust" | "dark";
 
@@ -125,7 +135,12 @@ export interface ActivityOption {
 
 export type ObjectKind = "module" | "site" | "player";
 /** `state`: modules "absent" | "building" | "working" | "damaged" | "dusty"; sites "sampled" | "unsampled"; players their role. */
-export interface ObjectView { kind: ObjectKind; id: string; label: string; pos: Pos; state: string }
+export interface ObjectView {
+  kind: ObjectKind; id: string; label: string; pos: Pos; state: string;
+  /** Players only: the player is out of action (draw them collapsed). */
+  out?: boolean;
+  look?: Look;
+}
 
 /** What a player sees with their own eyes: a window of the map, the sky and what is in it. Always available. */
 export interface Surroundings { patch: MapPatch; sky: SkyState; objects: ObjectView[] }
@@ -181,6 +196,8 @@ export interface CrewView {
 export interface SharedView {
   map: { width: number; height: number; rows: string[]; base: Pos; knownRadius: number };
   sites: SiteView[];
+  /** How many sites are still under fog (state "unknown"). */
+  hiddenSites: number;
   /** Sites whose sample is in the lab, waiting to be analysed. */
   labSamples: SiteId[];
   modules: ModuleView[];
@@ -243,6 +260,9 @@ export interface SolEvent {
   module?: ModuleId;
   site?: SiteId;
   amount?: number;
+  /** Gauge changes during the sol: which gauge of `players[0]` and its new value at that moment. */
+  gauge?: GaugeId;
+  value?: number;
 }
 
 export interface SolReport {

@@ -51,7 +51,9 @@ function sharedView(w: MarsWorld): SharedView {
   void V;
   const sites: SiteView[] = w.siteIds().filter((id) => w.siteKnown(id)).map((id) => {
     const s = w.sites[id], site = w.siteOf(id);
-    return { id, name: site.name, pos: site.pos, sampled: s.sampled, analysed: s.analysed, sentMb: Math.round(s.sentMb), datasetMb: TEAM.datasetMb.value, deliveredMb: Math.round(s.earthMb) };
+    const visited = w.seen[w.idx(site.pos)] === 1;
+    const state = w.siteDelivered(id) ? "delivered" : s.sentMb > 0 ? "sent" : s.analysed ? "analysed" : s.sampled ? "sampled" : visited ? "visited" : "located";
+    return { id, name: site.name, pos: site.pos, sampled: s.sampled, analysed: s.analysed, state: state as SiteView["state"], visited, sentMb: Math.round(s.sentMb), datasetMb: TEAM.datasetMb.value, deliveredMb: Math.round(s.earthMb) };
   });
   const modules: ModuleView[] = MODULE_IDS.map((id) => {
     const st = w.modules[id], def = MODULES[id];
@@ -87,7 +89,7 @@ function sharedView(w: MarsWorld): SharedView {
   ];
   return {
     map: { width: m.width, height: m.height, rows: patch(w, 0, 0, m.width - 1, m.height - 1, (x, y) => w.tileKnown(x, y)).rows, base: m.base, knownRadius: Math.round(w.knownRadius * 10) / 10 },
-    sites, labSamples: w.siteIds().filter((id) => w.sites[id].inLab && !w.sites[id].analysed), modules, resources, forecast: warnings(w),
+    sites, hiddenSites: 3 - sites.length, labSamples: w.siteIds().filter((id) => w.sites[id].inLab && !w.sites[id].analysed), modules, resources, forecast: warnings(w),
     tasks: TASKS.map((t) => ({ id: t.id, name: t.name, summary: t.summary, done: t.isDone(w), failed: t.isFailed(w), ...(() => { const p = t.progress(w); return { progress: p.done, total: p.total }; })() })),
     satellite: sat, crew, news: [...w.news],
   };
@@ -109,7 +111,7 @@ function surroundings(w: MarsWorld, p: Player): Surroundings {
     const s = w.siteOf(id);
     if (near(s.pos)) objects.push({ kind: "site", id, label: s.name, pos: s.pos, state: w.sites[id].sampled ? "sampled" : "unsampled" });
   }
-  for (const q of w.players) if (q.id !== p.id && q.active && near(q.position)) objects.push({ kind: "player", id: String(q.id), label: q.name, pos: { ...q.position }, state: q.role });
+  for (const q of w.players) if (q.id !== p.id && near(q.position)) objects.push({ kind: "player", id: String(q.id), label: q.name, pos: { ...q.position }, state: q.role, out: !q.active, look: q.look });
   return { patch: patch(w, x0, y0, x1, y1), sky: skyOf(w), objects };
 }
 
