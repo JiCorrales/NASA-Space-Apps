@@ -21,7 +21,7 @@ namespace SpaceApps.Ship.Editor
     /// change this file and rerun it (menu Space Apps/Build Ship Scene, or
     /// -executeMethod SpaceApps.Ship.Editor.ShipBuilder.Build). 1 unit = 1 m.
     /// </summary>
-    public static class ShipBuilder
+    public static partial class ShipBuilder
     {
         // Walking order. Change names, text or count here; the corridor length follows.
         static readonly (string title, string explanation)[] Stations =
@@ -97,11 +97,13 @@ namespace SpaceApps.Ship.Editor
 
             EnsureFolder(MaterialsDir);
 
-            var hull = Mat("Hull", new Color(0.55f, 0.58f, 0.62f));
+            // The bare hull is darker than the plates mounted on it, so the gaps between plates read as seams.
+            var hull = Mat("Hull", new Color(0.3f, 0.32f, 0.36f));
             var floor = Mat("Floor", new Color(0.18f, 0.2f, 0.24f));
             var frame = Mat("Frame", new Color(0.08f, 0.09f, 0.11f));
             var desk = Mat("Desk", new Color(0.3f, 0.32f, 0.36f));
             var accent = Mat("Accent", new Color(0.1f, 0.6f, 0.8f), emission: new Color(0.2f, 1.2f, 1.6f));
+            ArtMaterials(floor);
             var earthTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(EarthTexturePath);
             if (earthTexture == null) Debug.LogWarning($"[ShipBuilder] {EarthTexturePath} missing; the Earth will be plain blue.");
             var earth = Mat("Earth", earthTexture ? Color.white : new Color(0.2f, 0.35f, 0.8f), texture: earthTexture);
@@ -233,12 +235,16 @@ namespace SpaceApps.Ship.Editor
             Box("Front Right", front, new Vector3((pane + w / 2f) / 2f, Height / 2f, zf), new Vector3(w / 2f - pane, Height, t), hull);
             Box("Front Sill", front, new Vector3(0f, WindowBottom / 2f, zf), new Vector3(2f * pane, WindowBottom, t), hull);
             Box("Front Lintel", front, new Vector3(0f, (WindowTop + Height) / 2f, zf), new Vector3(2f * pane, Height - WindowTop, t), hull);
+            FrontWindowFrame(front, zf, pane);
 
             Box("Ceiling Strip", root, new Vector3(0f, Height - 0.01f, midZ), new Vector3(0.3f, 0.02f, length - 1f), accent, collider: false);
             Box("Floor Guide Left", root, new Vector3(-HalfWidth + 0.6f, 0.005f, midZ), new Vector3(0.05f, 0.01f, length - 1f), accent, collider: false);
             Box("Floor Guide Right", root, new Vector3(HalfWidth - 0.6f, 0.005f, midZ), new Vector3(0.05f, 0.01f, length - 1f), accent, collider: false);
 
-            for (float z = 2f; z < length; z += 4f)
+            var lightZs = new List<float>();
+            for (float z = 2f; z < length; z += 4f) lightZs.Add(z);
+            HullDressing(root, length, lightZs.ToArray());
+            foreach (float z in lightZs)
             {
                 var light = new GameObject($"Light {z:0}").AddComponent<Light>();
                 light.transform.SetParent(root.transform, false);
@@ -251,10 +257,9 @@ namespace SpaceApps.Ship.Editor
             return root;
         }
 
-        /// <summary>A side wall with a window in every gap of at least 1.2 m between mounts; solid stretches in 3 m pieces.</summary>
-        static void SideWall(GameObject wall, float x, float length, List<(float from, float to)> mounts, Material hull, Material accent)
+        /// <summary>Window openings along one side wall: every gap of at least 1.2 m between mounts, 0.1 m clear of them.</summary>
+        static List<(float from, float to)> Windows(List<(float from, float to)> mounts, float length)
         {
-            const float t = WallThickness;
             var windows = new List<(float from, float to)>();
             float cursor = 0.3f;
             foreach (var (from, to) in mounts.Append((length - 0.3f, length)))
@@ -262,6 +267,14 @@ namespace SpaceApps.Ship.Editor
                 if (from - cursor >= 1.2f) windows.Add((cursor + 0.1f, from - 0.1f));
                 cursor = Mathf.Max(cursor, to);
             }
+            return windows;
+        }
+
+        /// <summary>A side wall with a window in every gap of at least 1.2 m between mounts; solid stretches in 3 m pieces.</summary>
+        static void SideWall(GameObject wall, float x, float length, List<(float from, float to)> mounts, Material hull, Material accent)
+        {
+            const float t = WallThickness;
+            var windows = Windows(mounts, length);
 
             int piece = 0;
             void Solid(float from, float to)
@@ -270,6 +283,7 @@ namespace SpaceApps.Ship.Editor
                 {
                     float end = Mathf.Min(to, z + StationSpacing);
                     Box($"{wall.name} {piece++}", wall, new Vector3(x, Height / 2f, (z + end) / 2f), new Vector3(t, Height, end - z), hull);
+                    WallPlates(wall, x, Mathf.Max(z, 0.02f), Mathf.Min(end, length - 0.02f), 0f, Height);
                 }
             }
 
@@ -282,6 +296,9 @@ namespace SpaceApps.Ship.Editor
                 Box($"{wall.name} Window {i} Sill", wall, new Vector3(x, WindowBottom / 2f, mid), new Vector3(t, WindowBottom, span), hull);
                 Box($"{wall.name} Window {i} Lintel", wall, new Vector3(x, (WindowTop + Height) / 2f, mid), new Vector3(t, Height - WindowTop, span), hull);
                 Box($"{wall.name} Window {i} Light", wall, new Vector3(x, WindowBottom + 0.01f, mid), new Vector3(t + 0.04f, 0.02f, span), accent, collider: false);
+                WallPlates(wall, x, from, to, 0f, WindowBottom);
+                WallPlates(wall, x, from, to, WindowTop, Height);
+                WindowFrame(wall, x, from, to, $"{wall.name} Window {i}");
                 solidFrom = to;
             }
             Solid(solidFrom, length + t);
@@ -313,7 +330,7 @@ namespace SpaceApps.Ship.Editor
             const float w = ScreenWidthPx, h = ScreenHeightPx;
             var root = new GameObject("StationScreen");
             Box("Frame", root, new Vector3(0f, 0f, 0.03f), new Vector3(w * ScreenScale + 0.08f, h * ScreenScale + 0.08f, 0.05f), frameMat, collider: false);
-            Box("Desk", root, new Vector3(0f, -ScreenHeight + 0.375f, -0.22f), new Vector3(1.3f, 0.75f, 0.4f), deskMat);
+            Console(root);
 
             var canvas = WorldCanvas(root, new Vector2(w, h), ScreenScale);
             Panel("Background", canvas, new Color(0.04f, 0.06f, 0.1f, 0.97f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
