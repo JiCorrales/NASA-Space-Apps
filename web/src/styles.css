@@ -1,3 +1,4 @@
 #root { position: fixed; inset: 0; pointer-events: none; }
 .shell { position: fixed; inset: 0; pointer-events: auto; background: rgba(5, 7, 15, 0.8); overflow: auto; }
 .devbar { position: fixed; left: 8px; bottom: 8px; z-index: 10; pointer-events: auto; display: flex; gap: 4px; }
+#unity-canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; background: var(--bg); }
