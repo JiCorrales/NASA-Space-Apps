@@ -28,6 +28,8 @@ pnpm dev      # then open /mars-act1.html (the design) or /mars.html (the 30 sol
 pnpm test     # the rules, the screens and the balance
 ```
 
+Play it at https://tradeoff-lapeace.vercel.app. How to play: [docs/user-manual.md](docs/user-manual.md).
+
 See [web/README.md](web/README.md) for the pages and builds.
 
 ## Requirements for the Unity project
