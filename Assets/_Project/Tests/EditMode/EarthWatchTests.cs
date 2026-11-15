@@ -102,6 +102,28 @@ namespace SpaceApps.Mission.Tests
         }
 
         [Test]
+        public void PlayerFacingTextUsesNamesAndGrammarNotIds()
+        {
+            var session = new EarthWatchSession(catalog);
+            var still = session.Issues().First(i => i.code == "incomplete-earth-watch").message;
+            StringAssert.Contains("attitude control", still);
+            StringAssert.Contains("backup station", still);
+            StringAssert.DoesNotContain("backupStation", still);
+
+            var all = string.Join("\n", session.Groups().SelectMany(g => g.options).Select(o => o.summary));
+            StringAssert.DoesNotContain("uhf-437", all);
+            StringAssert.DoesNotContain("(s)", all);
+            StringAssert.DoesNotContain(" a 80 ", all);
+            StringAssert.Contains("1 antenna,", all);
+            StringAssert.Contains("3 antennas,", all);
+
+            var oneMonth = session.Groups().First(g => g.group == "tests").options.SelectMany(o => o.stats)
+                .Where(s => s.label == "Time" && s.value == 1f);
+            Assert.IsNotEmpty(oneMonth);
+            foreach (var s in oneMonth) Assert.AreEqual("month", s.unit);
+        }
+
+        [Test]
         public void ASloppyDesignFailsOften()
         {
             var d = Sensible();
