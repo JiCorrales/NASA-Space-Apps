@@ -80,7 +80,8 @@ Optional fields, added for the screens of steps 1 and 5:
   commands: [ { name, label, enabled, active } ],
   log: [ { week, text, kind } ],                     // kind: info | alert | good
   report: null | { successRate, imagesDelivered, factors: [ { label, value } ], lostBecause,
-                   decisions: [ string ], suggestion, images: [ ... 52 states ] }
+                   decisions: [ string ], suggestion, images: [ ... 52 states ],
+                   outcome }  // outcome: Success | Too few images | Satellite lost | Requirements not met
 }
 ```
 

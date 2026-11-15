@@ -72,6 +72,8 @@ export interface LogLine { week: number; text: string; kind: "info" | "alert" | 
 export interface Report {
   successRate: number; imagesDelivered: number; factors: { label: string; value: string | number }[];
   lostBecause: string; decisions: string[]; suggestion: string; images: WeekState[];
+  /** Success, Too few images, Satellite lost or Requirements not met. Sent by Unity; the stand-in may omit it. */
+  outcome?: string;
 }
 export interface SimFrame {
   week: number; day: number; speed: "detail" | "fast" | "paused";
