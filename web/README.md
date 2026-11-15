@@ -25,6 +25,13 @@ pnpm build       # output in web/dist
   CubeSat (SVG rectangles, no image files) and the pieces the five screens share; `tests/` renders each screen
   from the stand-in's fixture state.
 - `src/cockpit/` : step fly (cockpit agent).
+- `src/mars/screen/` + `mars.html` : the Act 2 (Mars) screen, its own page and build (`vite.mars.config.ts`, run
+  after the main build into the same `dist/`). Four panels, one per player, each drawn only from that player's
+  `PlayerView`; `useMarsRun` owns one `MarsWorld`, the demo controllers and the phase machine (briefing, choosing
+  with the two rounds, playing, evening, ended); the maps are canvases animated from refs. Wide windows show a
+  2 x 2 grid, narrow ones (under 1100 px) one panel at a time behind four tabs. It reads the Act 1 hand-over from
+  `localStorage` key `mars.handoff` and appends each run to `mars.history`. `?seed=N&design=good|middling|poor`
+  and `paused=1` help with screenshots; `?engine=fixture` runs the small stand-in used by the tests.
 - `src/sound.ts` : 8-bit sound effects made with the Web Audio API (no audio files): a click on every button,
   and the flight events of step fly. `SOUND ON/OFF` in the cockpit mutes them; the choice is kept in localStorage.
 - `src/App.tsx` : the shell. Shows nothing until `openScreen`, hides on `closeScreen`, Escape sends `close`.
