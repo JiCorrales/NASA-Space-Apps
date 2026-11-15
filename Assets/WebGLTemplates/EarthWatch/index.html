@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{{ PRODUCT_NAME }}}</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #05070f; overflow: hidden; }
+      /* Same rule as web/src/styles.css, so the canvas fills the window before the page stylesheet arrives. */
+      #unity-canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+      #loading { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+                 color: #9fb3c8; font: 14px monospace; pointer-events: none; }
+    </style>
+    <!-- The React page, built from web/ and copied here as page/ by the build (see CONTRIBUTING, Builds). -->
+    <link rel="stylesheet" href="page/assets/page.css">
+  </head>
+  <body>
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+    <div id="root"></div>
+    <div id="loading">Loading 0%</div>
+    <script>
+      var buildUrl = "Build";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+        frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+#if USE_WASM
+        codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+        symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+#endif
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+      };
+      var loader = document.createElement("script");
+      loader.src = buildUrl + "/{{{ LOADER_FILENAME }}}";
+      loader.onload = function () {
+        createUnityInstance(document.querySelector("#unity-canvas"), config, function (progress) {
+          document.querySelector("#loading").textContent = "Loading " + Math.round(progress * 100) + "%";
+        }).then(function (instance) {
+          document.querySelector("#loading").remove();
+          window.unityInstance = instance;
+          // The page may have loaded first and asked a stand-in for its state: tell it Unity is here.
+          window.dispatchEvent(new Event("unityready"));
+        }).catch(function (message) {
+          document.querySelector("#loading").textContent = "Could not start the game: " + message;
+        });
+      };
+      document.body.appendChild(loader);
+    </script>
+    <script type="module" src="page/assets/page.js"></script>
+  </body>
+</html>
