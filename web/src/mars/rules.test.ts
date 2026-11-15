@@ -24,7 +24,7 @@ describe("structure", () => {
       expect(p.activities.length).toBeGreaterThan(3);
     }
     // each role's own list differs from the others'
-    const own = w.players.map((p) => p.activities.map((a) => a.id).filter((id) => !["rest", "shelter", "travel"].includes(id)).join());
+    const own = w.players.map((p) => p.activities.map((a) => a.id).filter((id) => !["rest", "shelter", "travel", "handOver"].includes(id)).join());
     expect(new Set(own).size).toBe(4);
   });
 
@@ -667,5 +667,73 @@ describe("what the screen needs the view to say", () => {
     expect(lastWork).toBeGreaterThan(-1);
     // evening lines stay readable: no gauge spam
     expect(r.lines.join(" ")).not.toMatch(/is now/);
+  });
+});
+
+describe("helping each other", () => {
+  const near = (w: MarsWorld, d: number) => ({ x: w.map.base.x + d, y: w.map.base.y });
+
+  it("a player hands a teammate beside them what they carry: samples, supplies and a spare part", () => {
+    const w = fresh(2, GOOD_DESIGN, []);
+    const [a, b] = [w.players[2]!, w.players[1]!];
+    a.position = near(w, 5); b.position = { x: a.position.x, y: a.position.y + 1 };
+    a.carry = { rations: 6, samples: ["site-1"], spares: 1 };
+    w.choose(pick(2, "handOver", { kind: "player", id: 1 }));
+    w.resolveSol();
+    expect(b.carry.samples).toEqual(["site-1"]);
+    expect(a.carry.samples).toEqual([]);
+    expect(b.carry.rations).toBe(2); // 3 handed over, 1 eaten tonight (away from the base)
+    expect(a.carry.rations).toBe(2); // 6 - 3 handed over - 1 eaten
+    expect(b.carry.spares).toBe(1);
+  });
+
+  it("any role can hand over, and the sample reaches the base sooner by relay", () => {
+    for (const giver of [0, 1, 2, 3] as PlayerId[]) {
+      const w = fresh(2, GOOD_DESIGN, []);
+      const p = w.players[giver]!, q = w.players[(giver + 1) % 4]!;
+      p.position = near(w, 8); q.position = { x: p.position.x, y: p.position.y + 1 };
+      p.carry.samples = ["site-2"];
+      expect(w.choose(pick(giver, "handOver", { kind: "player", id: q.id })).ok).toBe(true);
+      w.resolveSol();
+      expect(q.carry.samples).toEqual(["site-2"]);
+    }
+  });
+
+  it("nothing to hand over is refused", () => {
+    const w = fresh(2, GOOD_DESIGN, []);
+    expect(w.choose(pick(2, "handOver", { kind: "player", id: 1 })).ok).toBe(false);
+  });
+
+  it("brings supplies out to a teammate away from the base and restores their air, water and food", () => {
+    for (const bringer of [0, 3] as PlayerId[]) {
+      const w = fresh(2, GOOD_DESIGN, []);
+      w.modules.array.built = true;
+      const far = w.players[2]!;
+      far.position = near(w, 5); far.air = far.water = far.food = 20;
+      const stock = w.rationsInStock();
+      expect(w.choose(pick(bringer, "bringSupplies", { kind: "player", id: 2 })).ok).toBe(true);
+      const r = w.resolveSol();
+      expect(r.events.some((e) => e.kind === "supplies" && /loaded/.test(e.text))).toBe(true);
+      expect(w.rationsInStock()).toBeLessThan(stock); // loaded at the base
+      expect(far.carry.rations).toBeGreaterThan(0);
+      expect(far.air).toBeGreaterThan(20);
+      expect(far.water).toBeGreaterThan(20);
+      expect(far.food).toBeGreaterThan(20);
+    }
+  });
+
+  it("the commander's logistics carries more in one load", () => {
+    const load = (who: PlayerId) => { const w = fresh(2, GOOD_DESIGN, []); w.players[2]!.position = near(w, 4); w.choose(pick(who, "bringSupplies", { kind: "player", id: 2 })); w.resolveSol(); return w.players[2]!.carry.rations; };
+    expect(load(0)).toBeGreaterThan(load(3));
+  });
+
+  it("a spare part loaded for someone can be used by them away from the stores", () => {
+    const w = fresh(2, GOOD_DESIGN, []);
+    w.players[1]!.carry.spares = 1; w.stock.spares = 0;
+    w.players[0]!.commIntegrity = 20;
+    w.choose(pick(1, "repair", { kind: "player", id: 0 }));
+    w.resolveSol();
+    expect(w.players[1]!.carry.spares).toBe(0);
+    expect(w.players[0]!.commIntegrity).toBeGreaterThan(20);
   });
 });

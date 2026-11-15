@@ -160,3 +160,25 @@ describe("balance", () => {
 });
 
 void step;
+
+describe("the demo helps its teammates", () => {
+  it("the commander brings supplies to a teammate away from the base with an empty pack", () => {
+    const w = fresh(2, GOOD_DESIGN, []);
+    w.modules.antenna.built = true;
+    w.players[2]!.position = { x: w.map.base.x + 6, y: w.map.base.y };
+    w.players[2]!.carry.rations = 0;
+    const view = w.viewFor(0);
+    expect(view.shared).not.toBeNull();
+    expect(new DemoController(0).choose(view)).toMatchObject({ activity: "bringSupplies", target: { kind: "player", id: 2 } });
+  });
+
+  it("a carrier far from the base hands the sample to a teammate who is nearer home", () => {
+    const w = fresh(2, GOOD_DESIGN, []);
+    w.modules.antenna.built = true;
+    const a = w.players[2]!, b = w.players[0]!;
+    a.position = { x: w.map.base.x + 14, y: w.map.base.y }; b.position = { x: a.position.x - 1, y: a.position.y };
+    a.carry.samples = ["site-2"];
+    const c = new DemoController(2).choose(w.viewFor(2));
+    expect(c).toMatchObject({ activity: "handOver", target: { kind: "player", id: 0 } });
+  });
+});

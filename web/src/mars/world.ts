@@ -380,6 +380,7 @@ export class MarsWorld {
       this.emit("work", [p.id], `${p.name} could not ${act.name.toLowerCase()}: ${b.reason}`, { ok: false, activity: act.id, target: t, at: p.position });
       act = ACTIVITIES.rest; t = NO_TARGET;
     }
+    act.prepare?.(this, p, t);
     const where = act.where(this, p, t);
     let fraction = 1, moved = false, arrived = true;
     if (where && cheb(p.position, where) > act.reach) {

@@ -108,10 +108,45 @@ class Turn {
   linked() {
     const sh = this.v.shared!;
     if (this.weary()) return this.rest();
+    const carrier = this.carrierHome();
+    if (carrier) return carrier;
     const first = {
       commander: () => this.commander(sh), engineer: () => this.engineer(sh), scientist: () => this.scientist(sh), comms: () => this.comms(sh),
     }[this.me.role]();
     return first ?? this.rest();
+  }
+
+  /** Carrying a sample away from the base: hand it to a teammate who is nearer home, else walk home. */
+  private carrierHome() {
+    if (this.me.carrying.samples.length === 0 || this.atBase) return null;
+    const mine = cheb(this.me.position, this.base);
+    if (mine > 10 && this.ok("handOver")) {
+      for (const o of this.v.surroundings.objects) {
+        if (o.kind !== "player" || o.out || cheb(o.pos, this.me.position) > 1) continue;
+        if (cheb(o.pos, this.base) < mine) return this.act("handOver", { kind: "player", id: Number(o.id) as PlayerId });
+      }
+    }
+    return null; // otherwise the role's own logic walks the sample home (fieldWork)
+  }
+
+  /** A teammate away from the base whose pack is nearly empty: someone brings supplies out. */
+  private rescue(sh: SharedView) {
+    if (!this.ok("bringSupplies")) return null;
+    for (const c of sh.crew) {
+      if (c.id === this.me.id || c.status !== "active" || !c.carrying) continue;
+      if (cheb(c.position, this.base) > 3 && c.carrying.rations <= 1 && c.linked) return this.act("bringSupplies", { kind: "player", id: c.id });
+    }
+    return null;
+  }
+
+  /** A teammate carrying a sample far from the base: go and meet them so it travels home by relay. */
+  private courier(sh: SharedView) {
+    for (const c of sh.crew) {
+      if (c.id === this.me.id || c.status !== "active" || !c.carrying || c.carrying.samples.length === 0) continue;
+      const d = cheb(c.position, this.base);
+      if (d > 14 && this.atBase) return this.act("travel", { kind: "tile", x: c.position.x, y: c.position.y });
+    }
+    return null;
   }
 
   private urgentNeed(sh: SharedView) {
@@ -130,6 +165,8 @@ class Turn {
       const body = c.health.find((g) => g.id === "body")?.value ?? 100, mor = c.health.find((g) => g.id === "morale")?.value ?? 100;
       if ((body < 50 || mor < 25) && cheb(c.position, this.base) <= 3 && this.atBase) return this.act("firstAid", { kind: "player", id: c.id });
     }
+    const rescue = this.rescue(sh);
+    if (rescue) return rescue;
     const unsampled = sh.sites.some((s) => !s.sampled);
     if (unsampled && this.atBase && this.ok("moveSupplies")) {
       for (const c of sh.crew) {
@@ -141,6 +178,8 @@ class Turn {
     const work = this.fieldWork();
     if (work && this.v.sol >= 2) return work;
     if (sh.sites.length < 3 && this.v.sol >= 6 && this.ok("travel")) return this.explore();
+    const meet = this.courier(sh);
+    if (meet) return meet;
     // idle: treat whoever has the lowest gauge, if they are at the base
     if (this.atBase && this.ok("firstAid")) {
       let worst: { id: PlayerId; good: number } | null = null;
@@ -165,6 +204,7 @@ class Turn {
     if ((array.status === "damaged" || array.wear >= 10) && this.ok("repair")) return this.act("repair", { kind: "module", id: "array" });
     if (array.dust >= 0.08 && this.ok("clearDust")) return this.act("clearDust");
     for (const c of sh.crew) if (c.status === "active" && c.commHealth !== null && c.commHealth < 55 && this.ok("repair") && (c.id === this.me.id || cheb(c.position, this.me.position) <= 3)) return this.act("repair", { kind: "player", id: c.id });
+    if (!sh.crew.some((c) => c.role === "commander" && c.status === "active" && c.linked)) { const r = this.rescue(sh); if (r) return r; }
     const work = this.fieldWork();
     if (work) return work;
     if (sh.sites.length < 3 && this.v.sol >= 6 && array.status !== "absent" && antenna.status === "working") return this.explore();
