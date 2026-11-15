@@ -18,7 +18,7 @@ export const RESOURCE_ICON: Record<ResourceView["kind"], string> = { power: "pow
 export const ACTIVITY_ICON: Partial<Record<ActivityId, string>> = {
   build: "build", repair: "repair", clearDust: "clear_dust", sample: "sample", analyse: "analyse", readMap: "read_map", restoreLink: "restore_link",
   schedulePass: "schedule_pass", sendData: "data", moveSupplies: "move_supplies", firstAid: "first_aid", rest: "rest", shelter: "shelter", plan: "plan",
-  travel: "read_map", diagnoseSatellite: "sat_fault", recoverSatellite: "sat_fault",
+  travel: "read_map", diagnoseSatellite: "sat_fault", recoverSatellite: "sat_fault", handOver: "move_supplies", bringSupplies: "move_supplies",
 };
 
 /** The player's portrait with the role's badge beside it. */

@@ -43,6 +43,7 @@ const NAMES: Record<ActivityId, string> = {
   readMap: "Read the satellite map", restoreLink: "Restore a link", schedulePass: "Schedule a pass", sendData: "Send data",
   moveSupplies: "Move supplies", firstAid: "First aid", rest: "Rest", shelter: "Shelter", plan: "Plan the sol",
   travel: "Travel", diagnoseSatellite: "Diagnose the satellite", recoverSatellite: "Recover the satellite",
+  handOver: "Hand over what you carry", bringSupplies: "Bring supplies to a teammate",
 };
 const TARGET_KIND: Partial<Record<ActivityId, ActivityOption["targetKind"]>> = {
   build: "module", repair: "module", clearDust: "module", sample: "site", analyse: "site", sendData: "site", firstAid: "player", travel: "tile",
@@ -144,7 +145,7 @@ export function createFixtureEngine(seed: number, design: DesignId, crew: CrewSe
       briefing: [`Sol ${sol}. ${skyOf(sol) === "dust" ? "The sky is thick with dust." : "The sky is clear."}`, linked ? "Your communicator works." : "Your communicator is down. You decide alone."],
       shared: linked ? {
         map: { width: W, height: H, rows: Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => (Math.hypot(x - BASE.x, y - BASE.y) <= knownR || PLAYER_IDS.some((q) => Math.hypot(x - pl[q]!.pos.x, y - pl[q]!.pos.y) <= 4) ? tileAt(x, y) : "?")).join("")), base: BASE, knownRadius: knownR },
-        labSamples: [], sites: SITES.map((s): SiteView => ({ id: s.id, name: s.name, pos: s.pos, sampled: sites[s.id].sampled, analysed: sites[s.id].sent > 0, sentMb: sites[s.id].sent, datasetMb: 120, deliveredMb: sites[s.id].sent })),
+        labSamples: [], hiddenSites: 0, sites: SITES.map((s): SiteView => ({ id: s.id, name: s.name, pos: s.pos, sampled: sites[s.id].sampled, analysed: sites[s.id].sent > 0, sentMb: sites[s.id].sent, datasetMb: 120, deliveredMb: sites[s.id].sent, state: sites[s.id].sent ? "sent" : sites[s.id].sampled ? "sampled" : "visited", visited: true })),
         modules: MODULES.map((m): ModuleView => ({ id: m.id, name: m.name, status: mod[m.id] >= m.needed ? "working" : mod[m.id] > 0 ? "building" : "absent", progress: mod[m.id], needed: m.needed, pos: m.pos, effect: m.id === "antenna" ? "Shortens link failures" : "Part of the base", dust: m.id === "array" && skyOf(sol) === "dust" ? 0.4 : 0, wear: 0 })),
         resources: resources(), forecast: warn, tasks: wantsTask(), satellite: { state: satellite, passToday: sol % 2 === 0, passMinutes: 14, passes: 3, capacityMb: 400, storedMb: 60, storageMb: 500, diagnosed: satFixed },
         crew: crewViews, news: history.at(-1)?.events.slice(0, 3) ?? [] } : null,
