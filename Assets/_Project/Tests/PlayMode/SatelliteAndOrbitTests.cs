@@ -155,16 +155,19 @@ namespace SpaceApps.Tests.PlayMode
             var sky = Object.FindFirstObjectByType<SpaceSky>();
             Assert.IsNotNull(sky, "the scene has the SpaceSky component");
             Assert.IsNotNull(sky.fallbackStars, "the star field is the fallback");
-            var package = Resources.Load<Material>(SpaceSky.ResourceName);
+            var package = SpaceSky.LoadPreferred(out bool earthInSky);
+            var earth = GameObject.Find("Space Outside/Earth").GetComponent<Renderer>();
             if (package == null)
             {
-                Assert.IsNull(RenderSettings.skybox, "without the package the scene keeps no skybox");
-                Assert.IsTrue(sky.fallbackStars.enabled, "without the package the stars are drawn");
+                Assert.IsNull(RenderSettings.skybox, "without a package the scene keeps no skybox");
+                Assert.IsTrue(sky.fallbackStars.enabled, "without a package the stars are drawn");
+                Assert.IsTrue(earth.enabled, "without a package the scene's own Earth is drawn");
             }
             else
             {
-                Assert.AreEqual(package, RenderSettings.skybox, "with the package the skybox is the Asset Store sky");
-                Assert.IsFalse(sky.fallbackStars.enabled, "with the package the stars are not drawn on top of it");
+                Assert.AreEqual(package, RenderSettings.skybox, "with a package the skybox is the preferred Asset Store sky");
+                Assert.IsFalse(sky.fallbackStars.enabled, "with a package the stars are not drawn on top of it");
+                Assert.AreEqual(!earthInSky, earth.enabled, "the scene's Earth is hidden only when the sky has its own");
             }
         }
     }
