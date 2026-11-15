@@ -10,7 +10,7 @@ const QUALITY: Record<string, Record<string, number>> = {
   power: { fixed: 0, deploy: 2 },
   attitude: { magnetorquers: 0, reaction: 2 },
   storage: { small: 0, large: 2 },
-  instrument: { rgb: 0, multi: 2 },
+  instrument: { none: 0, rgb: 1, multi: 2 },
   radio: { uhf: 0, sband: 2 },
   groundStation: { own: 1, network: 2 },
   backupStation: { none: 0, network: 2 },
@@ -59,7 +59,7 @@ export function deriveCapabilities(design: Act1Design, extras: Act1Extras = {}):
 
   // Mass and budget left become supplies and spare parts.
   const supplyDays = Math.round(-3 + 40 * reserve);
-  const materialsKg = Math.round(260 + 800 * reserve + 4 * margin);
+  const materialsKg = Math.round(270 + 800 * reserve + 4 * margin);
   const spares = Math.round(1 + 14 * reserve + margin);
 
   return {
@@ -91,16 +91,16 @@ export const GOOD_DESIGN: DesignFixture = {
 export const MIDDLING_DESIGN: DesignFixture = {
   name: "middling",
   design: {
-    format: "6u", power: "deploy", attitude: "magnetorquers", storage: "small", instrument: "rgb", radio: "sband",
+    format: "6u", power: "deploy", attitude: "magnetorquers", storage: "large", instrument: "rgb", radio: "sband",
     groundStation: "own", backupStation: "none", orbit: "leo-iss", tests: ["vibration", "thermal"],
   },
-  extras: { reserve: 0.12, massMarginKg: 0 },
+  extras: { reserve: 0.15, massMarginKg: 0 },
 };
 
 export const POOR_DESIGN: DesignFixture = {
   name: "poor",
   design: {
-    format: "3u", power: "fixed", attitude: "magnetorquers", storage: "small", instrument: "rgb", radio: "uhf",
+    format: "3u", power: "fixed", attitude: "magnetorquers", storage: "small", instrument: "none", radio: "uhf",
     groundStation: "own", backupStation: "none", orbit: "leo-iss", tests: [],
   },
   extras: { reserve: 0.02, massMarginKg: 0 },

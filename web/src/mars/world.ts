@@ -48,7 +48,7 @@ export interface ChoiceResult { ok: boolean; reason?: string }
 
 const SITE_IDS: SiteId[] = ["site-1", "site-2", "site-3"];
 const LEVEL_EFFORT = [0.5, 1, 1.25, 1.4];
-const LEVEL_FAIL = [0.3, 0.12, 0.05, 0.03];
+const LEVEL_FAIL = [0.35, 0.18, 0.1, 0.06];
 const DEAD: string[] = ["air", "water", "food", "body"];
 
 export class MarsWorld {
@@ -136,6 +136,11 @@ export class MarsWorld {
   labSite(): SiteId | null { return SITE_IDS.find((id) => this.sites[id].inLab && !this.sites[id].analysed) ?? null; }
   rationsInStock(): number { return Math.min(this.stock.oxygen / NASA.oxygenPerDay.value, this.stock.water / NASA.waterPerDay.value, this.stock.food / NASA.foodPerDay.value); }
   takeRations(n: number) { this.stock.oxygen -= n * NASA.oxygenPerDay.value; this.stock.water -= n * NASA.waterPerDay.value; this.stock.food -= n * NASA.foodPerDay.value; }
+  /** Air, water or food is gone from the stores and nobody has any left in their pack. */
+  vitalsGone(): boolean {
+    const dry = this.stock.oxygen <= 1e-6 || this.stock.water <= 1e-6 || this.stock.food <= 1e-6;
+    return dry && this.players.every((p) => !p.active || p.carry.rations <= 0);
+  }
   spendPower(wh: number) { this.battery -= wh; }
   respond(p: Player) { p.hazardResponses++; }
 
@@ -330,7 +335,7 @@ export class MarsWorld {
     let ended = false;
     if (TASKS.every((t) => t.isDone(this))) { this.status = "won"; ended = true; }
     else if (this.players.every((p) => !p.active)) { this.status = "lost"; this.loseReason = "crew-lost"; ended = true; }
-    else if (this.stock.oxygen <= 1e-6 || this.stock.water <= 1e-6 || this.stock.food <= 1e-6) { this.status = "lost"; this.loseReason = "resource-exhausted"; ended = true; }
+    else if (this.vitalsGone()) { this.status = "lost"; this.loseReason = "resource-exhausted"; ended = true; }
     else if (sol >= RUN_SOLS) { this.status = "lost"; this.loseReason = "window-closed"; ended = true; }
 
     const report: SolReport = {
@@ -487,7 +492,6 @@ export class MarsWorld {
       this.emit("supplies", [p.id], `${p.name} left ${p.carry.samples.length} sample${p.carry.samples.length > 1 ? "s" : ""} in the lab.`, {});
       p.carry.samples = [];
     }
-    for (const id of SITE_IDS) if (this.sites[id].analysed && !this.analysedOrder.includes(id)) this.analysedOrder.push(id);
   }
 
   private eveningLines(power: SolReport["power"]): string[] {
