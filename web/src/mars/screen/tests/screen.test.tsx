@@ -220,3 +220,14 @@ describe("the second round of the choice", () => {
     expect(chosen.filter((c) => c.player === 3).map((c) => c.activity)).toEqual(["rest"]); // cut off: one choice, alone
   });
 });
+
+describe("a refused demo choice", () => {
+  it("does not stop the sol: the player rests and the run goes on", async () => {
+    vi.useFakeTimers(); reduce(true);
+    let resolved = 0;
+    const factory = cutOffFactory(3, (kit) => ({ ...kit, engine: { ...kit.engine, choose: () => ({ ok: false, reason: "No." }), resolveSol: () => { resolved++; return kit.engine.resolveSol(); } } }));
+    render(<MarsPage factory={factory} seed={7} />);
+    await tick(4000);
+    expect(resolved).toBeGreaterThanOrEqual(1);
+  });
+});

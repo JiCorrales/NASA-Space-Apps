@@ -67,6 +67,8 @@ export function useMarsRun(factory: RunFactory, opts: { seed?: number; design?: 
   const [reveals, setReveals] = useState<Reveal[]>([]);
   const [revised, setRevised] = useState<PlayerId[]>([]);
   const reviewed = useRef(new Set<PlayerId>());
+  /** Players the demo already tried this sol: a refused choice must not be asked again forever (they rest). */
+  const tried = useRef(new Set<PlayerId>());
   const [running, setRunning] = useState(opts.autoplay ?? true);
   const [stepping, setStepping] = useState(false);
   const [fast, setFast] = useState(false);
@@ -86,14 +88,14 @@ export function useMarsRun(factory: RunFactory, opts: { seed?: number; design?: 
     soloLog.current = {};
     setViews(readViews()); setAfter(null); setReport(null); setEvening(null); setResult(null); setReveals([]);
     setReady([false, false, false, false]); setStepping(false); setPhase("briefing"); setVersion((v) => v + 1);
-    setRevised([]); reviewed.current = new Set();
+    setRevised([]); reviewed.current = new Set(); tried.current = new Set();
   }, [factory, handoff, readViews]);
 
   useEffect(() => { begin(seed, design); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const k = fast ? 4 : 1;
   const active = (v: PlayerView) => v.self.status === "active";
-  const needsChoice = (p: PlayerId) => views[p] && active(views[p]!) && !controlled[p] && !views[p]!.myChoice;
+  const needsChoice = (p: PlayerId) => views[p] && active(views[p]!) && !controlled[p] && !views[p]!.myChoice && !tried.current.has(p);
   // second round: players whose link works have seen the others' plans and may change theirs; a cut-off player never does
   const canRevise = (p: PlayerId) => !!views[p] && active(views[p]!) && views[p]!.self.linked && !controlled[p] && !reviewed.current.has(p);
   const waitingFor = PLAYER_IDS.filter((p) => views[p] && active(views[p]!) && controlled[p] && !ready[p]);
@@ -127,7 +129,12 @@ export function useMarsRun(factory: RunFactory, opts: { seed?: number; design?: 
     if (phase === "briefing") later(BRIEFING_S, () => setPhase("choosing"));
     else if (phase === "choosing") {
       const who = PLAYER_IDS.find((p) => needsChoice(p));
-      if (who !== undefined) later(CHOOSE_GAP_S, () => { const c = kit.current!.demo(who).choose(e.viewFor(who)); if (c) e.choose(c); setViews(readViews()); });
+      if (who !== undefined) later(CHOOSE_GAP_S, () => {
+        tried.current.add(who);
+        const c = kit.current!.demo(who).choose(e.viewFor(who));
+        if (c) e.choose(c); // a refused choice leaves the player resting: the world fills in a missing choice
+        setViews(readViews());
+      });
       else {
         const rev = PLAYER_IDS.find(canRevise);
         if (rev !== undefined) later(REVISE_GAP_S, () => {
@@ -199,7 +206,7 @@ export function useMarsRun(factory: RunFactory, opts: { seed?: number; design?: 
   const prevSol = useRef(0);
   useEffect(() => {
     const s = views[0]?.sol ?? 0;
-    if (s !== prevSol.current) { prevSol.current = s; setReady([false, false, false, false]); setRevised([]); reviewed.current = new Set(); }
+    if (s !== prevSol.current) { prevSol.current = s; setReady([false, false, false, false]); setRevised([]); reviewed.current = new Set(); tried.current = new Set(); }
   }, [views]);
   return api;
 }
