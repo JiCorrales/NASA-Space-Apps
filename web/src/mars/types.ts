@@ -46,7 +46,7 @@ export interface Skill { id: SkillId; name: string; level: number }
 export type ActivityId =
   | "build" | "repair" | "clearDust" | "sample" | "analyse" | "readMap" | "restoreLink" | "schedulePass"
   | "sendData" | "moveSupplies" | "firstAid" | "rest" | "shelter" | "plan" | "travel"
-  | "diagnoseSatellite" | "recoverSatellite";
+  | "diagnoseSatellite" | "recoverSatellite" | "handOver" | "bringSupplies";
 
 export type ModuleId = "habitat" | "array" | "antenna" | "storage";
 export type SiteId = "site-1" | "site-2" | "site-3";

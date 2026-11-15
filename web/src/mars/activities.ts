@@ -67,7 +67,7 @@ export const ACTIVITIES: Record<ActivityId, Activity> = {
   repair: make({
     id: "repair", name: "Repair", summary: "Fix the array, or a teammate's communicator. Uses a spare part.", skill: "repair", targetKind: "module",
     heavy: true, outdoors: true,
-    blocked(w, _p, t) {
+    blocked(w, p, t) {
       if (t.kind === "module") {
         if (t.id !== "array" || !w.modules.array.built) return block("Nothing there to repair.", false);
         if (w.modules.array.wear <= 0) return block("The array is sound.");
@@ -76,7 +76,7 @@ export const ACTIVITIES: Record<ActivityId, Activity> = {
         if (!q || !q.active) return block("They cannot be reached.", false);
         if (q.commIntegrity >= 95) return block("Their communicator is sound.");
       } else return block("Pick the array or a teammate.", false);
-      if (w.stock.spares <= 0) return block("No spare parts left.");
+      if (w.stock.spares <= 0 && p.carry.spares <= 0) return block("No spare parts left.");
       return null;
     },
     where: (w, p, t) => (t.kind === "player" && t.id !== p.id ? w.players[t.id]!.position : w.map.base),
@@ -87,7 +87,7 @@ export const ACTIVITIES: Record<ActivityId, Activity> = {
       return out;
     },
     perform(w, p, t, c) {
-      w.stock.spares -= 1;
+      if (p.carry.spares > 0) p.carry.spares--; else w.stock.spares -= 1;
       const amount = (40 * c.effort) / SKILLED_EFFORT;
       if (t.kind === "module") {
         const hurt = w.modules.array.wear > 0;
@@ -249,7 +249,55 @@ export const ACTIVITIES: Record<ActivityId, Activity> = {
       const q = playerOf(w, t)!;
       const n = Math.max(1, Math.min(TEAM.packMax.value - q.carry.rations, Math.max(3, Math.round((TEAM.packMax.value * c.effort) / SKILLED_EFFORT)), Math.floor(w.rationsInStock())));
       w.takeRations(n); q.carry.rations += n;
+      if (q.carry.spares === 0 && w.stock.spares > 1) { w.stock.spares--; q.carry.spares = 1; }
       return { text: `${p.name} loaded ${n} sols of supplies for ${q.id === p.id ? "themselves" : q.name}.`, ok: true };
+    },
+  }),
+
+  handOver: make({
+    id: "handOver", name: "Hand over", summary: "Give a teammate beside you what you carry: samples, supplies, a spare part.", skill: "logistics", targetKind: "player",
+    reach: 1, fallible: false,
+    blocked(w, p, t) {
+      const q = playerOf(w, t);
+      if (!q || !q.active || q.id === p.id) return block("Pick a teammate.", false);
+      if (p.carry.samples.length === 0 && p.carry.rations === 0 && p.carry.spares === 0) return block("You carry nothing to hand over.", false);
+      return null;
+    },
+    where: (w, p, t) => (t.kind === "player" && t.id !== p.id ? w.players[t.id]!.position : null),
+    targets: (w, p, informed) => playerTargets(visiblePlayers(w, p, informed, (q) => q.id !== p.id)),
+    perform(w, p, t) {
+      const q = playerOf(w, t)!;
+      const bits: string[] = [];
+      if (p.carry.samples.length) { bits.push(`${p.carry.samples.length} sample${p.carry.samples.length > 1 ? "s" : ""}`); q.carry.samples.push(...p.carry.samples); p.carry.samples = []; }
+      const give = Math.min(TEAM.packMax.value - q.carry.rations, Math.ceil(p.carry.rations / 2));
+      if (give > 0) { p.carry.rations -= give; q.carry.rations += give; bits.push(`${give} sols of supplies`); }
+      if (p.carry.spares > 0) { q.carry.spares += p.carry.spares; p.carry.spares = 0; bits.push("a spare part"); }
+      return { text: bits.length ? `${p.name} handed ${bits.join(", ")} to ${q.name}.` : `${p.name} had nothing ${q.name} could take.`, ok: bits.length > 0 };
+    },
+  }),
+
+  bringSupplies: make({
+    id: "bringSupplies", name: "Bring supplies out", summary: "Load at the base, walk to a teammate who is away, and restore their air, water and food on arrival.", skill: "logistics", targetKind: "player",
+    reach: 1, heavy: true, outdoors: true, fallible: false,
+    blocked(w, p, t) {
+      const q = playerOf(w, t);
+      if (!q || !q.active || q.id === p.id) return block("Pick a teammate.", false);
+      if (p.carry.rations <= 0 && !(w.atBase(p) && w.rationsInStock() >= 1)) return block("You have no supplies to bring.", false);
+      return null;
+    },
+    prepare(w, p) {
+      if (!w.atBase(p)) return;
+      const n = Math.min(p.skillLevel("logistics") >= 2 ? TEAM.packMax.value : 6, TEAM.packMax.value - p.carry.rations, Math.floor(w.rationsInStock()));
+      if (n > 0) { w.takeRations(n); p.carry.rations += n; w.emit("supplies", [p.id], `${p.name} loaded ${n} sols of supplies to bring out.`, { amount: n }); }
+    },
+    where: (w, _p, t) => (t.kind === "player" ? w.players[t.id]!.position : null),
+    targets: (w, p, informed) => playerTargets(visiblePlayers(w, p, informed, (q) => q.id !== p.id && cheb(q.position, w.map.base) > 3)),
+    perform(w, p, t) {
+      const q = playerOf(w, t)!;
+      const give = Math.max(0, Math.min(TEAM.packMax.value - q.carry.rations, Math.max(p.carry.rations - 2, 1), p.carry.rations));
+      p.carry.rations -= give; q.carry.rations += give;
+      for (const g of ["air", "water", "food"] as const) q[g] = Math.min(100, q[g] + TEAM.suppliesRecover.value);
+      return { text: `${p.name} brought ${give} sols of supplies to ${q.name}, who ate and drank.`, ok: true };
     },
   }),
 

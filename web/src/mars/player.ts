@@ -10,7 +10,7 @@ import type {
 const act = (...ids: ActivityId[]): Activity[] => ids.map((id) => ACTIVITIES[id]);
 const sk = (id: SkillId, name: string, level: number): Skill => ({ id, name, level });
 /** Everyone can do these without a skill. */
-const COMMON: ActivityId[] = ["rest", "shelter", "travel"];
+const COMMON: ActivityId[] = ["rest", "shelter", "travel", "handOver"];
 
 export interface Carry { rations: number; samples: SiteId[]; spares: number }
 
@@ -101,7 +101,7 @@ export abstract class Player {
 export class Commander extends Player {
   readonly role = "commander" as const;
   readonly skills = [sk("planning", "Planning", 2), sk("logistics", "Logistics", 2), sk("firstAid", "First aid", 2)];
-  readonly activities = act("plan", "moveSupplies", "firstAid", ...COMMON);
+  readonly activities = act("plan", "moveSupplies", "bringSupplies", "firstAid", ...COMMON);
 }
 
 export class Engineer extends Player {

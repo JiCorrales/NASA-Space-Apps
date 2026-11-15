@@ -38,6 +38,8 @@ export interface Activity {
   where(w: MarsWorld, p: Player, t: Target): Pos | null;
   /** Targets worth offering to this player now. */
   targets(w: MarsWorld, p: Player, informed: boolean): Target[];
+  /** Runs before the player walks (loading at the base, for example). */
+  prepare?(w: MarsWorld, p: Player, t: Target): void;
   /** Runs when the player is in place and the attempt goes well. Failure is handled by the world. */
   perform(w: MarsWorld, p: Player, t: Target, c: ActivityContext): PerformResult;
 }
