@@ -5,6 +5,7 @@ import { vi } from "vitest";
 import { standinEmit, subscribe } from "../bridge/bridge";
 import { recordFlight } from "../bridge/fixtures/flight";
 import type { SimFrame, UnityToPage } from "../bridge/types";
+import { fixtureState } from "../screens/tests/fixture";
 import { Cockpit } from "./Cockpit";
 import { CockpitView } from "./CockpitView";
 import { resetFlightView } from "./frameStore";
@@ -251,4 +252,11 @@ describe("flight sounds", () => {
     expect(flightSounds(f({}), f({ report: { ...report, successRate: 30 } }))).toEqual(["failure"]);
     expect(flightSounds(f({ week: 52 }), f({ week: 1 }))).toEqual(["launch"]);
   });
+});
+
+test("the budget reserve row shows the fraction Unity sends", () => {
+  const state = { ...fixtureState(), reserve: 0.25 };
+  render(<CockpitView frame={scene("normalWeek")} state={state} onFly={noop} onCommand={noop} onClose={noop} />);
+  const row = screen.getByText("Budget reserve").parentElement!;
+  expect(row).toHaveTextContent("25%");
 });

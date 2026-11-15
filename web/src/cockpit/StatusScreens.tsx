@@ -59,7 +59,8 @@ export function StatusScreens({ frame, state, battery, link }: {
   frame: SimFrame | null; state: MissionState | null; battery: number[]; link: LinkSample[];
 }) {
   const f = frame;
-  const reserve = state?.requirements.find((r) => r.id === "reserve");
+  // Unity sends the reserve as a fraction of the budget, 0 to 1.
+  const reserve = state?.reserve;
   if (!f) {
     return (
       <div className="ck-screens">
@@ -118,7 +119,7 @@ export function StatusScreens({ frame, state, battery, link }: {
         sub={f.report ? "final success" : "projected success"}>
         <div className="ck-kv">
           <div><span>Mass</span><b>{resource(state, "mass")}</b></div>
-          <div><span>Budget reserve</span><b>{reserve ? `${reserve.value}${reserve.unit}` : "—"}</b></div>
+          <div><span>Budget reserve</span><b>{reserve === undefined ? "—" : `${Math.round(reserve * 100)}%`}</b></div>
         </div>
       </Panel>
     </div>

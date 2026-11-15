@@ -256,6 +256,7 @@ namespace SpaceApps.Mission
                     seed = a.seed, design = a.design, requirements = a.requirements, issueCodes = a.issueCodes,
                 }).ToList(),
             };
+            state.reserve = Requirement("reservePercent") / 100f;
             state.steps = Steps.Select(s => new StepState { step = s, status = StatusOf(s) }).ToList();
             state.requirements = ew.requirements.Select(r => new RequirementInfo
             {
