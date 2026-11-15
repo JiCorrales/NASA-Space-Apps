@@ -15,6 +15,7 @@ Datos reales de NASA listos para convertir en los archivos de datos del juego (`
 | `../06-constraints/data/nasa-mission-cost-caps.csv` | MOCET 2024 de NASA y convocatorias (AO) | Topes de coste por clase de misión (Pioneers 20 M$ … New Frontiers 900 M$) | [`../06-constraints/costes-nasa.md`](../06-constraints/costes-nasa.md) |
 | `../04-instruments/data/wmo-oscar-nasa-instruments.csv` | WMO OSCAR/Space | 323 instrumentos aportados por NASA: tipo, masa, potencia, tasa de datos y satélites | [`../04-instruments/instrumentos-wmo-oscar.md`](../04-instruments/instrumentos-wmo-oscar.md) |
 | `../04-instruments/data/wmo-oscar-instrument-type-summary.csv` | WMO OSCAR/Space (calculado) | Mediana, mínimo y máximo de masa, potencia y tasa de datos por tipo de instrumento | [`../04-instruments/instrumentos-wmo-oscar.md`](../04-instruments/instrumentos-wmo-oscar.md) |
+| `../10-mars-surface/data/mars-surface-numbers.csv` | NASA, JPL and NSSDCA pages on Mars | 201 cifras sobre la superficie de Marte (temperatura, polvo, radiación, comunicaciones, energía, salud de la tripulación), cada una con fuente, URL y `kind` (measured, derived, plan, not-found) | [`../10-mars-surface/README.md`](../10-mars-surface/README.md) |
 
 ## Cómo se obtuvieron
 - **LSP**: formulario web consultado con el navegador; resultados copiados de la tabla de cada consulta.
@@ -26,6 +27,7 @@ Datos reales de NASA listos para convertir en los archivos de datos del juego (`
 - **Lanzamientos de NASA**: cifra copiada literalmente de cada nota de prensa (URL en la última columna).
 - **Coste por kg**: tabla A1 del PDF de NTRS, transcrita.
 - **Topes por clase**: tabla de la presentación MOCET 2024 y convocatorias (URL por fila).
+- **Marte (superficie)**: páginas de NASA, JPL y NSSDCA y PDF de NTRS leídos uno a uno; cada fila cita la frase y la URL (ver `10-mars-surface/`).
 - **WMO OSCAR**: lista de instrumentos desde su API (`/api/v1/instruments`); masa, potencia y tasa de datos leídas de la ficha web de cada instrumento.
 
 Las URL exactas de cada consulta están en la ficha correspondiente, para poder repetirlas.

@@ -42,6 +42,23 @@ Estado de cada fuente al 14 de noviembre de 2026. "Leída" significa que se abri
 | Distance from Earth (peligro) | https://www.nasa.gov/hrp/hazard-distance-from-earth/ | Leída |
 | Otras páginas individuales de peligros y riesgos | Ver `../09-future-work/nasa-hrp-hazards-risks-research.md` | No leídas |
 
+## Superficie de Marte (NASA y JPL)
+
+Las URL de cada fuente, con el título exacto y la fecha de consulta (2026-11-15), están en las columnas `source_title` y `source_url` de [`../10-mars-surface/data/mars-surface-numbers.csv`](../10-mars-surface/data/mars-surface-numbers.csv). Todas fueron leídas. Fuentes principales:
+
+| Documento | URL | Estado |
+|---|---|---|
+| Mars Fact Sheet (NSSDCA) | https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html | Leída |
+| Mars Relay Network Handbook, Release 4 (JPL D-71874, 2026) | https://assets.science.nasa.gov/content/dam/science/psd/mars/files/mars-relay-network/MRN%20Handbook_v4_final_URS_cleared.pdf | Leído |
+| Mars Relay Network (NASA Science) | https://science.nasa.gov/mars/mars-relay-network/ | Leída |
+| Mars Communications Disruption and Delay (NASA, 2023) | https://www.nasa.gov/wp-content/uploads/2024/01/mars-communications-disruption-and-delay.pdf | Leído |
+| NASA-STD-3001 Technical Brief, radiation (OCHMO-TB-020) | https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-020-radiation-protection.pdf | Leído |
+| Human Exploration of Mars Design Reference Architecture 5.0 | https://ntrs.nasa.gov/api/citations/20090040343/downloads/20090040343.pdf | Leído |
+| Mars Surface Power Technology Decision (NASA, 2024) | https://www.nasa.gov/wp-content/uploads/2024/12/acr24-mars-surface-power-decision.pdf | Leído |
+| Martian Dust Exposure Limits (NASA/SP-20260005907) | https://www.nasa.gov/wp-content/uploads/2026/07/martian-dust-exposure-limits-sp-20260005907.pdf | Leído |
+| Medical System Concept of Operations for Mars (HRP-48021) | https://ntrs.nasa.gov/api/citations/20200001715/downloads/20200001715.pdf | Leído |
+| 5 Hazards of Human Spaceflight | https://www.nasa.gov/hrp/hazards/ | Leída |
+
 ## Datos externos
 
 | Fuente | URL | Estado |
