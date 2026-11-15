@@ -19,6 +19,14 @@
     <div id="root"></div>
     <div id="loading">Loading 0%</div>
     <script>
+      // Tells the page it runs over Unity: it then never uses its stand-in or shows the developer bar, and draws the
+      // loading and failure screens from window.__unityStatus (see web/src/bridge/engine.ts).
+      window.__unityBuild = true;
+      window.__unityStatus = { phase: "loading", progress: 0 };
+      function setStatus(phase, progress) {
+        window.__unityStatus = { phase: phase, progress: progress };
+        window.dispatchEvent(new Event("unitystatus"));
+      }
       var buildUrl = "Build";
       var config = {
         arguments: [],
@@ -39,16 +47,24 @@
       loader.src = buildUrl + "/{{{ LOADER_FILENAME }}}";
       loader.onload = function () {
         createUnityInstance(document.querySelector("#unity-canvas"), config, function (progress) {
-          document.querySelector("#loading").textContent = "Loading " + Math.round(progress * 100) + "%";
+          var loading = document.querySelector("#loading");
+          // The progress reaches 1 when the downloads end; Unity may still need a long time to start.
+          if (loading) loading.textContent = progress >= 1 ? "Starting the game engine..." : "Loading " + Math.round(progress * 100) + "%";
+          setStatus(progress >= 1 ? "starting" : "loading", progress);
         }).then(function (instance) {
-          document.querySelector("#loading").remove();
+          var loading = document.querySelector("#loading");
+          if (loading) loading.remove();
           window.unityInstance = instance;
-          // The page may have loaded first and asked a stand-in for its state: tell it Unity is here.
+          window.__unityStatus = { phase: "ready", progress: 1 };
           window.dispatchEvent(new Event("unityready"));
         }).catch(function (message) {
-          document.querySelector("#loading").textContent = "Could not start the game: " + message;
+          var loading = document.querySelector("#loading");
+          if (loading) loading.textContent = "Could not start the game: " + message;
+          setStatus("failed", 0);
         });
       };
+      // The script file itself may not load (blocked, offline): that is a failure too.
+      loader.onerror = function () { setStatus("failed", 0); };
       document.body.appendChild(loader);
     </script>
     <script type="module" src="page/assets/page.js"></script>

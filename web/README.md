@@ -70,5 +70,11 @@ the first `ready` already goes to Unity. Unity-to-page calls use the `.jslib` pl
 side `ShipBridgeLink` joins the ship to the bridge (cover click opens the screen, `close` releases the view). In a
 WebGL player the page owns Escape (the ship's own Escape handling is off there).
 
+Inside the build the template sets `window.__unityBuild = true` first. With that flag the page never falls back to the
+stand-in or shows the developer bar: `EngineGate` (`src/EngineGate.tsx`, `src/bridge/engine.ts`) covers the canvas with
+"Loading", then "Starting the game engine...", and with a plain message and a "Try again" button if Unity rejects or has
+not started 90 seconds after the downloads ended. The template reports through `window.__unityStatus` and the
+`unitystatus` event. The stand-in remains for `pnpm dev`, where there is no flag.
+
 The WebGL canvas must keep its own id `unity-canvas`; Unity project files are owned by another agent and are not
 touched by this folder.
