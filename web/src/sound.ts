@@ -2,7 +2,7 @@
 // Browsers only allow sound after a click or key press, so the first sound may be the first button click.
 import type { SimFrame } from "./bridge/types";
 
-export type Sound = "click" | "launch" | "image" | "lost" | "alert" | "success" | "failure";
+export type Sound = "click" | "launch" | "image" | "lost" | "alert" | "success" | "failure" | "linkLost" | "linkBack" | "taskDone" | "storm" | "solEnd";
 
 // Each sound is a list of [frequency in Hz, duration in seconds]; 0 Hz is a rest.
 const TUNES: Record<Sound, [number, number][]> = {
@@ -13,6 +13,12 @@ const TUNES: Record<Sound, [number, number][]> = {
   alert: [[740, 0.1], [0, 0.05], [740, 0.1], [0, 0.05], [740, 0.1]],
   success: [[523, 0.1], [659, 0.1], [784, 0.1], [1047, 0.25]],
   failure: [[392, 0.15], [330, 0.15], [262, 0.3]],
+  // Act 2 (Mars)
+  linkLost: [[523, 0.07], [392, 0.07], [262, 0.07], [165, 0.2]],
+  linkBack: [[262, 0.06], [392, 0.06], [523, 0.06], [784, 0.14]],
+  taskDone: [[659, 0.07], [880, 0.07], [1320, 0.16]],
+  storm: [[110, 0.2], [98, 0.2], [123, 0.25]],
+  solEnd: [[392, 0.08], [294, 0.14]],
 };
 
 const KEY = "earthwatch.muted";
