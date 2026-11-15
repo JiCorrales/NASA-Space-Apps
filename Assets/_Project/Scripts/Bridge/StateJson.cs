@@ -69,7 +69,30 @@ namespace SpaceApps.Bridging
 
             w.Field("reserve", s.reserve);
 
+            w.Key("worlds").BeginArray();
+            foreach (var x in s.worlds)
+            {
+                w.BeginObject().Field("id", x.id).Field("name", x.name).Field("open", x.open);
+                Measure(w.Key("sunlight"), x.sunlight); Measure(w.Key("signal"), x.signal); Measure(w.Key("travel"), x.travel);
+                w.EndObject();
+            }
+            w.EndArray();
+
+            w.Key("missions").BeginArray();
+            foreach (var m in s.missions)
+                w.BeginObject().Field("id", m.id).Field("world", m.world).Field("name", m.name).Field("summary", m.summary)
+                 .Field("open", m.open).Field("who", m.who).Field("why", m.why).EndObject();
+            w.EndArray();
+
             return w.EndObject().ToString();
+        }
+
+        // { value, unit, source } or null when the team has not collected the value.
+        static void Measure(JsonWriter w, MeasureInfo m)
+        {
+            if (m == null) { w.Null(); return; }
+            w.BeginObject().Field("value", m.value).Field("unit", m.unit)
+             .Key("source").BeginObject().Field("status", m.source.status).Field("text", m.source.text).EndObject().EndObject();
         }
 
         // Each group is its id, or null when not chosen yet; the multi-select group is an array of ids.

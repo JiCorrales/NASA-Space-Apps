@@ -429,6 +429,64 @@ namespace SpaceApps.Mission.Tests
             Convert.ToDouble(((Dictionary<string, object>)MiniJson.Parse(StateJson.Serialize(s.BuildState())))["reserve"]);
 
         [Test]
+        public void TheStateHasTheWorldsAndMissionsOfStepOne()
+        {
+            var root = (Dictionary<string, object>)MiniJson.Parse(StateJson.Serialize(new EarthWatchSession(catalog).BuildState()));
+            var worlds = ((List<object>)root["worlds"]).Cast<Dictionary<string, object>>().ToDictionary(w => (string)w["id"]);
+            CollectionAssert.AreEqual(new[] { "earth", "moon", "mars", "venus", "jupiter" }, worlds.Keys);
+            Assert.AreEqual(true, worlds["earth"]["open"]);
+            foreach (var id in new[] { "moon", "mars", "venus", "jupiter" }) Assert.AreEqual(false, worlds[id]["open"], id);
+            string Val(string world, string key) => ((Dictionary<string, object>)worlds[world][key])["value"].ToString();
+            Assert.AreEqual("586", Val("mars", "sunlight"));
+            Assert.AreEqual("2601", Val("venus", "sunlight"));
+            Assert.AreEqual("50", Val("jupiter", "sunlight"));
+            Assert.AreEqual("-58", Val("moon", "signal"));
+            Assert.AreEqual("176 to 288", Val("mars", "travel"));
+            // Not in the research data: sent as null, never guessed.
+            Assert.IsNull(worlds["moon"]["travel"]);
+            Assert.IsNull(worlds["mars"]["signal"]);
+            Assert.IsNull(worlds["earth"]["travel"]);
+            foreach (var w in worlds.Values)
+                foreach (var key in new[] { "sunlight", "signal", "travel" })
+                    if (w[key] != null)
+                    {
+                        var src = (Dictionary<string, object>)((Dictionary<string, object>)w[key])["source"];
+                        CollectionAssert.Contains(new[] { "nasa", "derived", "team" }, src["status"]);
+                        Assert.IsNotEmpty((string)src["text"]);
+                    }
+
+            var missions = ((List<object>)root["missions"]).Cast<Dictionary<string, object>>().ToList();
+            var ew = missions.Single(m => (bool)m["open"]);
+            Assert.AreEqual("EW-1", ew["id"]);
+            Assert.AreEqual("earth", ew["world"]);
+            Assert.IsNotEmpty((string)ew["who"]);
+            Assert.IsNotEmpty((string)ew["why"]);
+        }
+
+        [Test]
+        public void TheWorldNumbersMatchTheResearchFiles()
+        {
+            string Read(string file) => System.IO.File.ReadAllText(System.IO.Path.Combine(Application.dataPath, "..", "Resources/09-future-work/data", file));
+            var horizons = Read("horizons-elements-2026-11-14.csv").Split('\n').Skip(1).Where(l => l.Length > 0).Select(l => l.Split(',')).ToDictionary(c => c[0]);
+            float Au(string body) => float.Parse(horizons[body][9], System.Globalization.CultureInfo.InvariantCulture);
+            Assert.AreEqual(Au("Earth"), WorldsData.EarthAu, 1e-6f);
+            Assert.AreEqual(Au("Venus"), WorldsData.VenusAu, 1e-6f);
+            Assert.AreEqual(Au("Mars"), WorldsData.MarsAu, 1e-6f);
+            Assert.AreEqual(Au("Jupiter"), WorldsData.JupiterAu, 1e-6f);
+            Assert.AreEqual(float.Parse(horizons["Moon"][10], System.Globalization.CultureInfo.InvariantCulture), WorldsData.MoonKm, 0.1f);
+
+            var trips = Read("trajectory-browser-transfers-2026-2036.csv").Split('\n').Skip(1).Where(l => l.Length > 0).Select(l => l.Split(',')).ToList();
+            int[] Range(string planet)
+            {
+                var d = trips.Where(c => c[0] == planet && c[1] == "oneway" && c[10].Trim() == "Earth > " + planet).Select(c => int.Parse(c[6])).ToList();
+                return new[] { d.Min(), d.Max() };
+            }
+            CollectionAssert.AreEqual(Range("Venus"), WorldsData.VenusDays);
+            CollectionAssert.AreEqual(Range("Mars"), WorldsData.MarsDays);
+            CollectionAssert.AreEqual(Range("Jupiter"), WorldsData.JupiterDays);
+        }
+
+        [Test]
         public void TheFrameJsonHasEveryFieldOfTheContract()
         {
             var sim = new EarthWatchSim(catalog, Sensible(), 1, At(10, ProblemKind.SolarStorm));
