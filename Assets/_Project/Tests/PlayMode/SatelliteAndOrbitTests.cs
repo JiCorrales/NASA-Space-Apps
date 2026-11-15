@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using SpaceApps.Game;
 using SpaceApps.Mission;
+using SpaceApps.Ship;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
@@ -145,6 +146,26 @@ namespace SpaceApps.Tests.PlayMode
             var stars = GameObject.Find("Space Outside/Stars").GetComponent<MeshFilter>().sharedMesh;
             Assert.Greater(stars.vertexCount, 1000);
             Assert.Less(stars.bounds.extents.x, Camera.main.farClipPlane - 50f, "stars are drawn, not clipped away");
+        }
+        // The Asset Store skybox is not in the repository: the scene must carry no reference to it, and must load
+        // and show a sky with or without the package.
+        [Test]
+        public void SkyNeedsNoReferenceToTheAssetStorePackage()
+        {
+            var sky = Object.FindFirstObjectByType<SpaceSky>();
+            Assert.IsNotNull(sky, "the scene has the SpaceSky component");
+            Assert.IsNotNull(sky.fallbackStars, "the star field is the fallback");
+            var package = Resources.Load<Material>(SpaceSky.ResourceName);
+            if (package == null)
+            {
+                Assert.IsNull(RenderSettings.skybox, "without the package the scene keeps no skybox");
+                Assert.IsTrue(sky.fallbackStars.enabled, "without the package the stars are drawn");
+            }
+            else
+            {
+                Assert.AreEqual(package, RenderSettings.skybox, "with the package the skybox is the Asset Store sky");
+                Assert.IsFalse(sky.fallbackStars.enabled, "with the package the stars are not drawn on top of it");
+            }
         }
     }
 }

@@ -589,6 +589,13 @@ namespace SpaceApps.Ship.Editor
             var renderer = stars.AddComponent<MeshRenderer>();
             renderer.sharedMaterial = starMat;
             renderer.shadowCastingMode = ShadowCastingMode.Off;
+
+            // The committed scene never references the Asset Store skybox (it is not in the repository); SpaceSky
+            // applies it at runtime when the package is installed.
+            root.AddComponent<SpaceSky>().fallbackStars = renderer;
+            Debug.Log(Resources.Load<Material>(SpaceSky.ResourceName) != null
+                ? $"[ShipBuilder] Sky: SpaceSkies Free found, SpaceSky applies it at runtime over the fallback star field."
+                : $"[ShipBuilder] Sky: SpaceSkies Free not installed, the star field is the sky.");
             return root;
         }
 

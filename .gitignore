@@ -116,3 +116,7 @@ Thumbs.db
 
 # Git worktrees that Claude Code agents create (see CLAUDE.md)
 .claude/worktrees/
+
+# Unity Asset Store packages: Standard Asset Store EULA, never committed (see CONTRIBUTING.md)
+/Assets/ThirdParty/AssetStore/
+/Assets/ThirdParty/AssetStore.meta
