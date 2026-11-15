@@ -186,7 +186,10 @@ namespace SpaceApps.Tests.PlayMode
             Assert.IsFalse(screens.ViewLocked);
             Assert.IsFalse(rig.InputLocked);
             Assert.IsFalse(screens.Activate(requirements), "not even when activated from code");
-            Assert.AreEqual(position, rig.transform.position);
+            // Compared on the floor plane: when this test runs before the rig has settled on the deck, its height
+            // still changes by a couple of centimetres during the click, which is gravity, not the player walking.
+            var after = rig.transform.position;
+            Assert.AreEqual(new Vector2(position.x, position.z), new Vector2(after.x, after.z), "the player did not move");
         }
 
         [UnityTest]
