@@ -16,16 +16,22 @@ export const spriteSize = (s: Sprite): { w: number; h: number } => ({
   h: s.rows.length,
 });
 
-/** Draws the sprite with its top-left corner at (x, y), each pixel as a `scale` x `scale` square. */
+/**
+ * Draws the sprite with its top-left corner at (x, y), each pixel as a `scale` x `scale` square: one rectangle per
+ * run of a colour. `.`, a space, or any character missing from the palette is transparent.
+ */
 export function paint(ctx: CanvasRenderingContext2D, sprite: Sprite, x: number, y: number, scale = 1): void {
   sprite.rows.forEach((row, j) => {
-    for (let i = 0; i < row.length; i++) {
+    for (let i = 0; i < row.length; ) {
       const ch = row[i]!;
-      if (ch === "." || ch === " ") continue;
-      const colour = sprite.palette[ch];
-      if (!colour) continue;
-      ctx.fillStyle = colour;
-      ctx.fillRect(x + i * scale, y + j * scale, scale, scale);
+      let n = 1;
+      while (i + n < row.length && row[i + n] === ch) n++;
+      const colour = ch === "." || ch === " " ? undefined : sprite.palette[ch];
+      if (colour) {
+        ctx.fillStyle = colour;
+        ctx.fillRect(x + i * scale, y + j * scale, n * scale, scale);
+      }
+      i += n;
     }
   });
 }
