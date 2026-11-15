@@ -53,6 +53,10 @@ that costs hours during a 48-hour hackathon.
 
 - Before committing any asset you did not make, add it to [CREDITS.md](CREDITS.md): name, author, source
   link and licence. This includes free and CC0 assets. The submission form requires the full list.
+- Unity Asset Store packages (Standard Asset Store EULA) must not be committed to this public repository. They
+  live in `Assets/ThirdParty/AssetStore/`, which git ignores, and may only ship inside builds.
+- Code must work without that folder: load such assets by name from a `Resources` folder and treat null as
+  "not installed" (see `SpaceSky`). The tests must pass with and without it.
 - Only use assets whose licence allows it. If you cannot find the licence, do not use the asset.
 - Nothing may show NASA logos, flags or mission identifiers. Real NASA spacecraft models often carry the
   insignia on their textures: check before importing.
