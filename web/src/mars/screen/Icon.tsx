@@ -14,7 +14,8 @@ export const Icon = ({ name, large = false }: { name: string; large?: boolean })
 
 export const GAUGE_ICON: Record<GaugeId, string> = { radiation: "radiation", energy: "energy", rest: "rest", air: "air", water: "water", food: "food", body: "body", morale: "morale" };
 export const RESOURCE_ICON: Record<ResourceView["kind"], string> = { power: "power", mass: "mass", budget: "budget", data: "data", communications: "communications", time: "time" };
-export const ACTIVITY_ICON: Record<ActivityId, string> = {
+/** Activities the rules add later fall back to the plan icon. */
+export const ACTIVITY_ICON: Partial<Record<ActivityId, string>> = {
   build: "build", repair: "repair", clearDust: "clear_dust", sample: "sample", analyse: "analyse", readMap: "read_map", restoreLink: "restore_link",
   schedulePass: "schedule_pass", sendData: "data", moveSupplies: "move_supplies", firstAid: "first_aid", rest: "rest", shelter: "shelter", plan: "plan",
   travel: "read_map", diagnoseSatellite: "sat_fault", recoverSatellite: "sat_fault",

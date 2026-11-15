@@ -8,7 +8,7 @@ import { appendHistory, readHandoff, readHistory, type DesignId, type Handoff, t
 export type Phase = "briefing" | "choosing" | "playing" | "evening" | "ended";
 export interface Reveal { player: PlayerId; name: string; lines: string[]; paths: Pos[][] }
 
-const BRIEFING_S = 1.4, CHOOSE_GAP_S = 0.45, EVENING_S = 3.2;
+const BRIEFING_S = 1.4, CHOOSE_GAP_S = 0.45, REVISE_GAP_S = 0.3, EVENING_S = 3.2;
 const reducedMotion = () => (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) ?? false;
 
 export interface MarsRun {
@@ -22,6 +22,8 @@ export interface MarsRun {
   attempts: Attempt[];
   playId: number;
   reveals: Reveal[];
+  /** Linked players who changed their plan after seeing the others' (the second round of the choice). */
+  revised: PlayerId[];
   /** Sol shown in the counter. */
   sol: number;
   totalSols: number;
@@ -63,6 +65,8 @@ export function useMarsRun(factory: RunFactory, opts: { seed?: number; design?: 
   const [attempts, setAttempts] = useState<Attempt[]>(() => readHistory());
   const [playId, setPlayId] = useState(0);
   const [reveals, setReveals] = useState<Reveal[]>([]);
+  const [revised, setRevised] = useState<PlayerId[]>([]);
+  const reviewed = useRef(new Set<PlayerId>());
   const [running, setRunning] = useState(opts.autoplay ?? true);
   const [stepping, setStepping] = useState(false);
   const [fast, setFast] = useState(false);
@@ -82,6 +86,7 @@ export function useMarsRun(factory: RunFactory, opts: { seed?: number; design?: 
     soloLog.current = {};
     setViews(readViews()); setAfter(null); setReport(null); setEvening(null); setResult(null); setReveals([]);
     setReady([false, false, false, false]); setStepping(false); setPhase("briefing"); setVersion((v) => v + 1);
+    setRevised([]); reviewed.current = new Set();
   }, [factory, handoff, readViews]);
 
   useEffect(() => { begin(seed, design); }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -89,6 +94,8 @@ export function useMarsRun(factory: RunFactory, opts: { seed?: number; design?: 
   const k = fast ? 4 : 1;
   const active = (v: PlayerView) => v.self.status === "active";
   const needsChoice = (p: PlayerId) => views[p] && active(views[p]!) && !controlled[p] && !views[p]!.myChoice;
+  // second round: players whose link works have seen the others' plans and may change theirs; a cut-off player never does
+  const canRevise = (p: PlayerId) => !!views[p] && active(views[p]!) && views[p]!.self.linked && !controlled[p] && !reviewed.current.has(p);
   const waitingFor = PLAYER_IDS.filter((p) => views[p] && active(views[p]!) && controlled[p] && !ready[p]);
 
   const resolve = useCallback(() => {
@@ -121,7 +128,19 @@ export function useMarsRun(factory: RunFactory, opts: { seed?: number; design?: 
     else if (phase === "choosing") {
       const who = PLAYER_IDS.find((p) => needsChoice(p));
       if (who !== undefined) later(CHOOSE_GAP_S, () => { const c = kit.current!.demo(who).choose(e.viewFor(who)); if (c) e.choose(c); setViews(readViews()); });
-      else if (waitingFor.length === 0) later(0.6, resolve);
+      else {
+        const rev = PLAYER_IDS.find(canRevise);
+        if (rev !== undefined) later(REVISE_GAP_S, () => {
+          reviewed.current.add(rev);
+          const v = e.viewFor(rev), c = kit.current!.demo(rev).choose(v), was = v.myChoice;
+          if (c && was && (c.activity !== was.activity || JSON.stringify(c.target) !== JSON.stringify(was.target))) {
+            const r = e.choose(c);
+            if (!r || r.ok) setRevised((x) => (x.includes(rev) ? x : [...x, rev]));
+          }
+          setViews(readViews());
+        });
+        else if (waitingFor.length === 0) later(0.6, resolve);
+      }
     } else if (phase === "evening") {
       later(EVENING_S, () => {
         if (report?.ended) {
@@ -150,7 +169,7 @@ export function useMarsRun(factory: RunFactory, opts: { seed?: number; design?: 
   }, [playId]);
 
   const api: MarsRun = {
-    phase, views, after, report, evening, result, attempts, playId, reveals, running, fast, seed, design, handoff, controlled, waitingFor, reduced,
+    phase, views, after, report, evening, result, attempts, playId, reveals, revised, running, fast, seed, design, handoff, controlled, waitingFor, reduced,
     crew: kit.current?.crew ?? [], totalSols: views[0]?.totalSols ?? 30,
     sol: report && (phase === "playing" || phase === "evening" || phase === "ended") ? report.sol : views[0]?.sol ?? 1,
     speed: go ? k : 0, onSound,
@@ -180,7 +199,7 @@ export function useMarsRun(factory: RunFactory, opts: { seed?: number; design?: 
   const prevSol = useRef(0);
   useEffect(() => {
     const s = views[0]?.sol ?? 0;
-    if (s !== prevSol.current) { prevSol.current = s; setReady([false, false, false, false]); }
+    if (s !== prevSol.current) { prevSol.current = s; setReady([false, false, false, false]); setRevised([]); reviewed.current = new Set(); }
   }, [views]);
   return api;
 }
