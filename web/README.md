@@ -32,7 +32,8 @@ pnpm build       # output in web/dist
   telemetry, the GO/NO-GO poll and the stage rail). The launch shows only what is happening, never odds; a test
   checks that no launch text has a percentage or the words risk, chance or probability.
 - `src/sound.ts` : 8-bit sound effects made with the Web Audio API (no audio files): a click on every button,
-  and the flight events of step fly, including the launch (countdown tick, ignition rumble, staging, separation). `SOUND ON/OFF` in the cockpit mutes them; the choice is kept in localStorage.
+  and the flight events of step fly, including the launch (countdown tick, ignition rumble, staging,
+  separation). `SOUND ON/OFF` in the cockpit mutes them; the choice is kept in localStorage.
 - `src/App.tsx` : the shell. Shows nothing until `openScreen`, hides on `closeScreen`, Escape sends `close`.
 
 To plug in a screen, render it from `App.tsx` for its step; it receives the `MissionState` and calls

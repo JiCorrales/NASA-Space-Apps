@@ -175,7 +175,7 @@ export class LaunchScene {
       const a = Math.atan2(pose.dy, pose.dx);
       if (l.stage === "liftoff") this.shake = 1.2;
       if (l.stage === "staging") {
-        this.debris.push({ rows: STAGE1, x: pose.x - Math.cos(a) * 12 * S, y: pose.y - Math.sin(a) * 12 * S, vx: -Math.cos(a) * 4 * S, vy: 2 * S, rot: a + Math.PI / 2, vr: 0.9, life: 1 });
+        this.debris.push({ rows: STAGE1, x: pose.x - Math.cos(a) * 12 * S, y: pose.y - Math.sin(a) * 12 * S, vx: -Math.cos(a) * 4 * S - 7 * S, vy: 2 * S, rot: a + Math.PI / 2, vr: 0.9, life: 1 });
       }
       if (l.stage === "fairing") {
         [-1, 1].forEach((side, i) => this.debris.push({ rows: FAIRING_HALVES[i]!, x: pose.x + Math.cos(a) * 18 * S, y: pose.y + Math.sin(a) * 18 * S,
@@ -227,7 +227,7 @@ export class LaunchScene {
       q.x += q.vx * dt; q.y += q.vy * dt; q.vx *= 0.97; q.vy = q.vy * 0.97 - 1.5 * dt;
     }
     // Debris fades, and is gone once it reaches the ground.
-    this.debris = this.debris.filter((b) => (b.life -= dt * 0.35) > 0 && b.y < surfaceY(clamp(b.x, 0, W - 1)) - 2);
+    this.debris = this.debris.filter((b) => (b.life -= dt * 0.35) > 0 && b.y < surfaceY(clamp(b.x, 0, W - 1)) - 8 * S);
     for (const b of this.debris) {
       b.x += b.vx * dt; b.y += b.vy * dt; b.vy += 9 * dt; b.rot += b.vr * dt;
     }
