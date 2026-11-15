@@ -86,6 +86,22 @@ namespace SpaceApps.Mission.Tests
         }
 
         [Test]
+        public void TheProjectedSuccessNeverLeavesZeroToOneHundredAtAnyStep()
+        {
+            for (int seed = 0; seed < 20; seed++)
+            {
+                var sim = new EarthWatchSim(catalog, Sensible(), seed);
+                while (!sim.Finished)
+                {
+                    var f = sim.Step();
+                    Assert.That(f.projectedSuccess, Is.InRange(0f, 100f), $"seed {seed} week {f.week}");
+                    if (sim.AwaitingDecision) sim.Command("safeMode");
+                }
+                Assert.That(sim.Report.successRate, Is.InRange(0f, 100f));
+            }
+        }
+
+        [Test]
         public void ASloppyDesignFailsOften()
         {
             var d = Sensible();
