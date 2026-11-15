@@ -120,3 +120,7 @@ Thumbs.db
 # Unity Asset Store packages: Standard Asset Store EULA, never committed (see CONTRIBUTING.md)
 /Assets/ThirdParty/AssetStore/
 /Assets/ThirdParty/AssetStore.meta
+
+# Web page (React over the Unity canvas)
+web/node_modules
+web/dist
