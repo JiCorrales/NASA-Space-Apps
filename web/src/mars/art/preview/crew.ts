@@ -1,6 +1,7 @@
 /** Entry of the crew half's preview page (`mars-art-crew.html`): characters, gear and icons. */
 import * as characters from "../characters";
 import * as gear from "../gear";
+import * as extras from "../extras";
 import * as icons from "../icons";
 import type { Version } from "../raster";
 import { renderSheet, type Entry, type Family } from "./sheet";
@@ -44,6 +45,12 @@ function gearFamily(): Family {
         ms: 700,
       });
     }
+    for (const pose of ["work", "carry", "rest", "cutoff", "hurt"] as const)
+      entries.push({
+        name: `${role} on broad, ${pose}`,
+        frames: by((v) => characters[v].broad.poses[pose].map((s, i) => [s, gear[v][role].overlays.broad[pose][i]!])),
+        ms: 450,
+      });
     entries.push({
       name: `${role} on round, walking`,
       frames: by((v) =>
@@ -68,9 +75,18 @@ function iconFamilies(): Family[] {
   }));
 }
 
+function extrasFamily(): Family {
+  const keys = Object.keys(extras.A) as (keyof extras.Extras)[];
+  return {
+    id: "extras",
+    title: "Extras: communicator bubbles, emotes, boot prints",
+    entries: keys.map((k) => ({ name: k.replace(/_/g, " "), frames: by((v) => extras[v][k].map((s) => [s])), ms: 120 })),
+  };
+}
+
 renderSheet(
   document.getElementById("root")!,
   "Mars version: crew and interface art (half 1)",
   "Every asset in versions A (8-bit), B (16-bit) and C (flat), at 4x on the UI background and on Mars ground, then at 1x and 2x.",
-  [characterFamily(), gearFamily(), ...iconFamilies()],
+  [characterFamily(), gearFamily(), ...iconFamilies(), extrasFamily()],
 );

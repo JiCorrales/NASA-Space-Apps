@@ -302,6 +302,8 @@ export function poseGrids(id: LookId): Record<PoseKey, { frames: string[][]; anc
   const hurt = figure(L, "down", "bent", "slump", 3);
   bowHead(hurt.g, L, 3);
   const down = figure(L, "down", "stand", "down");
+  const rest = figure(L, "down", "sit", "knees", 5);
+  rest.g.stamp(["mmmm", "..m.", ".m..", "mmmm"], 11, 1); // a "Z": asleep, told apart from the cross and the drops by shape
   return {
     stand_down: pack(down),
     stand_up: pack(figure(L, "up", "stand", "down")),
@@ -313,7 +315,7 @@ export function poseGrids(id: LookId): Record<PoseKey, { frames: string[][]; anc
     walk_right: pack(mirrorF(side(L, 1)), mirrorF(side(L, 2))),
     work: pack(figure(L, "down", "kneel", "out", 3), figure(L, "down", "kneel", "reach", 3)),
     carry: pack(figure(L, "down", "stand", "hold")),
-    rest: pack(figure(L, "down", "sit", "knees", 5)),
+    rest: pack(rest),
     cutoff: pack(cut),
     hurt: pack(hurt),
     out: { frames: [lying(L).rows()], anchors: [down.f] },

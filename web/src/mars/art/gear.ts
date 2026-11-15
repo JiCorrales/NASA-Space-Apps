@@ -18,9 +18,10 @@ export const ROLE_LABEL: Record<RoleId, string> = {
   scientist: "Scientist: sample case and pick",
   comms: "Communications officer: backpack antenna and handset",
 };
-/** Poses the overlays exist for (frames match the character's frames). */
+/** Poses the overlays exist for (frames match the character's frames). Not "out": a collapsed body drops its gear. */
 export const GEAR_POSES = [
   "stand_down", "stand_up", "stand_left", "stand_right", "walk_down", "walk_up", "walk_left", "walk_right",
+  "work", "carry", "rest", "cutoff", "hurt",
 ] as const satisfies readonly PoseKey[];
 export type GearPose = (typeof GEAR_POSES)[number];
 
