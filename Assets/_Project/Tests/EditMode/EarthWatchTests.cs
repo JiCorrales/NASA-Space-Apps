@@ -591,6 +591,31 @@ namespace SpaceApps.Mission.Tests
             Assert.IsTrue(s.Attempts.All(a => a.outcome.Length > 0 && a.successRate > 0f));
         }
 
+        [Test]
+        public void ChangingTheDesignAfterAFlightReopensTheLastStep()
+        {
+            var s = new EarthWatchSession(catalog) { SeedBase = 5 };
+            foreach (var kv in Dictionary(Sensible())) s.Choose(kv.Key, kv.Value);
+            foreach (var t in Sensible().tests) s.Toggle("tests", t);
+            foreach (var step in EarthWatchSession.Steps.Take(5)) s.CompleteStep(step);
+            s.Fly("launch"); s.Fly("fast");
+            while (s.Flying) s.StepOnce();
+            var flown = s.StatusOf("fly");
+            Assert.That(flown, Is.EqualTo("done").Or.EqualTo("problem"), "a flight just finished");
+
+            s.Choose("storage", "large");
+            Assert.AreEqual("open", s.StatusOf("fly"), "a different design has not been flown");
+            s.Choose("storage", "medium");
+            Assert.AreEqual(flown, s.StatusOf("fly"), "back to what was flown");
+            s.Toggle("tests", "etu");
+            Assert.AreEqual("open", s.StatusOf("fly"), "tests count as the design");
+            s.Toggle("tests", "etu");
+            s.SetRequirement("minImages", 30f);
+            Assert.AreEqual("open", s.StatusOf("fly"), "so do the requirements");
+            s.SetRequirement("minImages", 40f);
+            Assert.AreEqual(flown, s.StatusOf("fly"));
+        }
+
         static Dictionary<string, string> Dictionary(EarthWatchDesign d) => EarthWatchDesign.SingleGroups.ToDictionary(g => g, g => d.Get(g));
 
         [Test]

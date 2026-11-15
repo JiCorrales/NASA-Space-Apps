@@ -131,11 +131,22 @@ namespace SpaceApps.Mission
             if (i < 0) return null;
             if (done.Contains(step))
             {
-                if (step == "fly") return Attempts.Count > 0 && Attempts.Last().outcome == "Success" ? "done" : "problem";
+                if (step == "fly")
+                {
+                    // A design changed since the last flight has not been flown: the step is open again.
+                    if (Attempts.Count > 0 && ChangedSince(Attempts.Last())) return "open";
+                    return Attempts.Count > 0 && Attempts.Last().outcome == "Success" ? "done" : "problem";
+                }
                 return Issues().Any(x => x.step == step && x.severity == "blocking") ? "problem" : "done";
             }
             return Steps.Take(i).All(done.Contains) ? "open" : "locked";
         }
+
+        // True when the design or a requirement is not what the attempt flew.
+        bool ChangedSince(AttemptInfo a) =>
+            EarthWatchDesign.SingleGroups.Any(g => Design.Get(g) != a.design.Get(g))
+            || !Design.tests.OrderBy(t => t).SequenceEqual(a.design.tests.OrderBy(t => t))
+            || Catalog.earthWatch.requirements.Any(r => a.requirements.Any(q => q.id == r.id && q.value != r.value.value));
 
         /// <summary>Marks a step finished. A locked step cannot be completed; returns false then.</summary>
         public bool CompleteStep(string step)
