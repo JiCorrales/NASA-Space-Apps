@@ -260,3 +260,40 @@ test("the budget reserve row shows the fraction Unity sends", () => {
   const row = screen.getByText("Budget reserve").parentElement!;
   expect(row).toHaveTextContent("25%");
 });
+
+describe("the report card", () => {
+  const attempts = [
+    { number: 1, successRate: 54.4, imagesDelivered: 31, outcome: "Too few images" },
+    { number: 2, successRate: 88, imagesDelivered: 47, outcome: "Success" },
+  ];
+  const withReport = (outcome: string | undefined, rate: number) => {
+    const frame = scene("report");
+    return { ...frame, report: { ...frame.report!, outcome, successRate: rate } };
+  };
+  const renderCard = (frame: SimFrame, list = attempts) =>
+    render(<CockpitView frame={frame} state={{ ...fixtureState(), attempts: list }} onFly={noop} onCommand={noop} onClose={noop} />);
+
+  test("a failed run says why in words, beside the success rate", () => {
+    renderCard(withReport("Too few images", 54.4));
+    const report = screen.getByTestId("report");
+    expect(within(report).getByTestId("outcome")).toHaveTextContent("FAILED: TOO FEW IMAGES");
+    expect(report).toHaveTextContent("54%");
+  });
+
+  test("a success says success", () => {
+    renderCard(withReport("Success", 91));
+    expect(screen.getByTestId("outcome")).toHaveTextContent(/^SUCCESS$/);
+  });
+
+  test("the previous attempts are listed with number, outcome, images and rate, newest first", () => {
+    renderCard(withReport("Success", 88));
+    const rows = within(screen.getByTestId("attempts")).getAllByRole("row").slice(1);
+    expect(rows.map((r) => r.textContent)).toEqual(["2Success4788%", "1Too few images3154%"]);
+  });
+
+  test("with no outcome (stand-in) or no attempts nothing extra is drawn", () => {
+    renderCard(withReport(undefined, 70), []);
+    expect(screen.queryByTestId("outcome")).toBeNull();
+    expect(screen.queryByTestId("attempts")).toBeNull();
+  });
+});

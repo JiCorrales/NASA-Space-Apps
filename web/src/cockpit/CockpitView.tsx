@@ -103,7 +103,7 @@ export function CockpitView({ frame, state, battery = [], link = [], onFly, onCo
           )}
 
           {frame?.report && (
-            <ReportCard report={frame.report} week={frame.week} onRetry={() => onFly("retry")} onChangeDesign={onClose} />
+            <ReportCard report={frame.report} week={frame.week} attempts={state?.attempts} onRetry={() => onFly("retry")} onChangeDesign={onClose} />
           )}
 
           <div className="ck-console">
