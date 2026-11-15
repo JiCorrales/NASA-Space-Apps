@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mars art, half 2: the world (terrain, base, satellite, hazards, vehicles)</title>
+    <style>
+      :root { --bg: #05070f; --panel: #08111d; --edge: #2b3852; --text: #e4ecf5; --accent: #86dcf2; --warn: #f3c04f; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+      header { position: sticky; top: 0; z-index: 5; background: var(--panel); border-bottom: 1px solid var(--edge); padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; }
+      header h1 { font-size: 14px; margin: 0 12px 0 0; color: var(--accent); }
+      header a, header button { color: var(--text); background: none; border: 1px solid var(--edge); padding: 2px 8px; font: inherit; text-decoration: none; cursor: pointer; }
+      header button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+      main { padding: 8px 16px 64px; }
+      h2 { font-size: 18px; margin: 36px 0 4px; border-bottom: 1px solid var(--edge); padding-bottom: 4px; }
+      h3 { font-size: 14px; margin: 18px 0 8px; color: var(--warn); }
+      .grid { display: flex; flex-wrap: wrap; gap: 10px; }
+      .card { background: var(--panel); border: 1px solid var(--edge); padding: 6px; }
+      .card .name { color: var(--accent); }
+      .card .meta { color: #8896ab; font-size: 11px; }
+      .pair { display: flex; gap: 4px; margin: 4px 0; align-items: flex-start; }
+      canvas { image-rendering: pixelated; display: block; }
+      .scene { margin: 8px 0; }
+      .note { color: #8896ab; max-width: 90ch; }
+    </style>
+  </head>
+  <body>
+    <header id="bar"><h1>Mars art, half 2: the world</h1></header>
+    <main id="root"></main>
+    <script type="module" src="./src/mars/art/previewWorld.ts"></script>
+  </body>
+</html>
