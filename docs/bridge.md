@@ -12,6 +12,11 @@ in code, and the C# side mirrors it.
 - Every message is `{ "type": string, "payload": object }`, as one JSON string.
 - The page must also run without Unity: when `window.unityInstance` is absent it uses a stand-in that answers
   from fixture data, so the screens can be built and tested in a plain browser.
+- Inside a Unity build the WebGL template sets `window.__unityBuild = true` before the page script. Then the page never
+  uses the stand-in or the developer bar. The template keeps `window.__unityStatus` (`{ phase, progress }`, phase
+  `loading`, `starting`, `failed` or `ready`) and fires a `unitystatus` event on each change; the page shows "Loading",
+  "Starting the game engine..." or, when Unity rejects or has not started 90 seconds after the downloads ended, a message
+  that the game could not start with a "Try again" button.
 
 ## Unity to page
 

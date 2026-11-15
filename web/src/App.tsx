@@ -3,6 +3,7 @@ import { isStandin, send, standinEmit, subscribe } from "./bridge/bridge";
 import type { MissionState, Step } from "./bridge/types";
 import { StepScreen } from "./screens";
 import { Cockpit } from "./cockpit/Cockpit";
+import { EngineGate } from "./EngineGate";
 
 const STEPS: Step[] = ["goals", "concept", "requirements", "design", "build", "fly"];
 
@@ -43,6 +44,7 @@ export function App() {
           {step === "fly" ? <Cockpit state={state} /> : <StepScreen step={step} state={state} />}
         </div>
       )}
+      <EngineGate />
       {isStandin() && (
         <div className="devbar" aria-label="Developer bar">
           {STEPS.map((s) => (

@@ -2,3 +2,12 @@
 .shell { position: fixed; inset: 0; pointer-events: auto; background: rgba(5, 7, 15, 0.8); overflow: auto; }
 .devbar { position: fixed; left: 8px; bottom: 8px; z-index: 10; pointer-events: auto; display: flex; gap: 4px; }
 #unity-canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; background: var(--bg); }
+
+/* Loading and failure of the Unity engine: covers the canvas, in the game's pixel style. */
+.engine { position: fixed; inset: 0; z-index: 20; pointer-events: auto; display: flex; align-items: center; justify-content: center;
+  background: var(--bg); padding: 16px; }
+.engine__box { max-width: 520px; display: grid; gap: 16px; justify-items: start; padding: 24px; background: var(--panel);
+  border: 2px solid var(--accent); box-shadow: 6px 6px 0 #000; }
+.engine[data-phase="failed"] .engine__box { border-color: var(--critical); }
+.engine__title { font-size: 14px; }
+.engine p { margin: 0; line-height: 1.5; color: var(--text); }

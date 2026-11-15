@@ -1,5 +1,6 @@
 import type { PageToUnity, PageType, PayloadOf, UnityToPage } from "./types";
 import { createStandin } from "./standin";
+import { inUnityBuild } from "./engine";
 
 declare global {
   interface Window {
@@ -20,13 +21,15 @@ window.MissionUI = { receive: (json) => dispatch(JSON.parse(json) as UnityToPage
 
 const standin = createStandin(dispatch);
 
-/** True while there is no Unity: the stand-in answers from fixture data. */
-export const isStandin = () => !window.unityInstance;
+/** True while there is no Unity and none is coming: the stand-in answers from fixture data. Inside a Unity build it
+ * is never true, even when Unity has not started: fake data over a dead canvas is worse than a message. */
+export const isStandin = () => !window.unityInstance && !inUnityBuild();
 
 export function send<T extends PageType>(type: T, payload: PayloadOf<T>): void {
   const msg = { type, payload } as PageToUnity;
   if (window.unityInstance) window.unityInstance.SendMessage("Bridge", "Receive", JSON.stringify(msg));
-  else standin.handle(msg);
+  else if (!inUnityBuild()) standin.handle(msg);
+  // In a Unity build that has not started, the message is dropped: the page sends `ready` again when Unity is up.
 }
 
 export function subscribe(handler: Handler): () => void {
