@@ -5,7 +5,7 @@ import {
 } from "./earth";
 import { EARTH_BANDS } from "./earthData";
 import { SAT, SAT_BODY, SAT_SIZE, cubeSatBitmap, cubeSatFrames, getPx } from "./sprites";
-import { CockpitScene, IDLE_SCENE, SAT_X, clearOfStruts } from "./drawScene";
+import { CockpitScene, IDLE_SCENE, SAT_X, clearOfStruts, stationLabelX } from "./drawScene";
 import { sceneInputFromFrame } from "../status";
 
 const water = (c: number | null) => c === DEEP || c === SHALLOW;
@@ -98,6 +98,20 @@ describe("scene", () => {
     expect(Math.abs(scene.u - target.col)).toBeLessThan(1);
     for (let i = 0; i < 200; i++) scene.step(0.05, { ...IDLE_SCENE, region: "amazon", speed: "detail", contact: true });
     expect(Math.abs(scene.u - station.col)).toBeLessThan(1);
+  });
+
+  it("never lets the station label touch the target caption, in any region or state", () => {
+    const caption = 17 * 8; // "IMAGE 19 CAPTURED", the widest text under the marker
+    for (const region of ["costaRica", "amazon", "arctic"] as const) {
+      const { target, station } = regionPlaces(region);
+      let dx = station.col - target.col;
+      dx -= EARTH_PERIOD * Math.round(dx / EARTH_PERIOD);
+      for (const down of [false, true]) {
+        const left = stationLabelX(dx, 0, "STATION", down); // target at 0, dish at dx
+        const a = [left, left + 7 * 8], b = [-caption / 2, caption / 2];
+        expect(a[0]! >= b[1]! || a[1]! <= b[0]!, `${region} down=${down}`).toBe(true);
+      }
+    }
   });
 
   it("moves a label that a window strut would cover", () => {

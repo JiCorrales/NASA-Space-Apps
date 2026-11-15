@@ -131,12 +131,12 @@ const COL = {
   star: "#aab8d0",
   starHot: "#ffffff",
   ice: "#86dcf2",
-  iceDim: "#3f8198",
+  iceDim: "#5aa9c4",
   ok: "#62d394",
-  okDim: "#2f7a55",
+  okDim: "#46a874",
   warn: "#f3c04f",
   crit: "#ff6464",
-  critDim: "#7a2a30",
+  critDim: "#b04650",
   text: "#e4ecf5",
   dim: "#8394ab",
   shadow: "#05070f",
@@ -252,6 +252,22 @@ function brackets(c: Ctx, x: number, y: number, w: number, h: number, n: number)
   }
 }
 
+/** `brackets` with a dark one-pixel outline, so the marker still shows on white sea ice and on bright land. */
+function outlined(c: Ctx, x: number, y: number, w: number, h: number, n: number, colour: string) {
+  const prev = c.fillStyle;
+  c.fillStyle = COL.shadow;
+  brackets(c, x - 1, y - 1, w + 2, h + 2, n + 1);
+  brackets(c, x + 1, y + 1, w - 2, h - 2, n - 1);
+  c.fillStyle = colour;
+  brackets(c, x, y, w, h, n);
+  c.fillStyle = prev;
+}
+
+/** Left edge of the ground station's label: beside the dish, on the side away from the target, clear of the broken-link cross. */
+export function stationLabelX(dishX: number, targetX: number, text: string, down: boolean): number {
+  return dishX < targetX ? dishX - 10 - text.length * 8 : dishX + (down ? 22 : 18);
+}
+
 /** Text in the pixel font at its native 8 pixels, with a dark drop shadow, kept clear of the window struts. */
 function label(c: Ctx, text: string, x: number, y: number, colour: string, align: "left" | "center" = "left") {
   const w = text.length * 8;
@@ -259,8 +275,9 @@ function label(c: Ctx, text: string, x: number, y: number, colour: string, align
   c.font = FONT;
   c.textAlign = "left";
   c.textBaseline = "alphabetic";
+  // A dark outline: the text stays readable over white ice, bright land and dark sea alike.
   c.fillStyle = COL.shadow;
-  c.fillText(text, left + 1, y + 1);
+  for (const [dx, dy] of [[1, 1], [-1, 0], [1, 0], [0, -1], [0, 1]] as const) c.fillText(text, left + dx, y + dy);
   c.fillStyle = colour;
   c.fillText(text, left, y);
 }
@@ -418,8 +435,12 @@ export class CockpitScene {
     const cone = s.capturing && !s.cameraPaused && !s.safeMode && onTarget;
     const TW = 48, TH = 26;
     if (Math.abs(tp.x - SAT_X) < 300) {
-      c.fillStyle = cone ? COL.ice : COL.iceDim;
-      brackets(c, tp.x - TW / 2, tp.y - TH / 2, TW, TH, 6);
+      const mark = cone ? COL.ice : COL.iceDim;
+      outlined(c, tp.x - TW / 2, tp.y - TH / 2, TW, TH, 6, mark);
+      c.fillStyle = COL.shadow;
+      px(c, tp.x - 3, tp.y - 1, 7, 3);
+      px(c, tp.x - 1, tp.y - 3, 3, 7);
+      c.fillStyle = mark;
       px(c, tp.x - 2, tp.y, 5, 1);
       px(c, tp.x, tp.y - 2, 1, 5);
     }
@@ -460,6 +481,9 @@ export class CockpitScene {
           c.fillStyle = COL.iceDim;
           for (let x = xl + 1 + (((j >> 1) & 1) * 2); x < xr; x += 4) px(c, x, y);
         }
+        c.fillStyle = COL.shadow;
+        px(c, xl - 1, y);
+        px(c, xr + 1, y);
         c.fillStyle = COL.ice;
         px(c, xl, y);
         px(c, xr, y);
@@ -525,12 +549,11 @@ export class CockpitScene {
       else label(c, REGION_LABEL[region], tp.x, tp.y + TH / 2 + 12, cone ? COL.ice : COL.iceDim, "center");
     }
     if (stationSeen && (s.contact || s.stationDown || Math.abs(gp.x - SAT_X) < 150)) {
-      // Left of the dish when the target is on its right, so the two labels never share a place.
-      const leftSide = gp.x < tp.x;
+      // Beside the dish on the side away from the target, so the two labels never share a place.
       const col = s.stationDown ? (blink ? COL.crit : COL.critDim) : s.contact ? COL.ok : COL.okDim;
-      const lx = (text: string) => (leftSide ? gp.x - 10 - text.length * 8 : gp.x + 18);
-      label(c, "STATION", lx("STATION"), gp.y - 12, col);
-      if (s.stationDown) label(c, "OFFLINE", lx("OFFLINE"), gp.y - 2, col);
+      const lx = stationLabelX(gp.x, tp.x, "STATION", s.stationDown);
+      label(c, "STATION", lx, gp.y - 14, col);
+      if (s.stationDown) label(c, "OFFLINE", lx, gp.y - 3, col);
     }
 
     /* CubeSat */
