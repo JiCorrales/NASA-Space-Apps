@@ -106,7 +106,7 @@ export function Panel({ run, index, roster, shown = true }: PanelProps) {
   const did = showEvening ? run.report?.choices.find((c) => c.player === self.id) ?? null : null;
   const myPlan = did ?? view.myChoice ?? null;
   const changed = run.revised.includes(self.id) && lead;
-  const reveal = linked ? run.reveals.filter((r) => r.player !== self.id) : [];
+  const reveal = linked && run.phase !== "playing" ? run.reveals.filter((r) => r.player !== self.id) : [];
   const plans = view.plans ?? [];
   const planChanged = plans.filter((p) => run.revised.includes(p.player)).length;
   const worst = [...self.gauges].sort((a, b) => a.good - b.good).slice(0, 3).map((g) => g.id);
