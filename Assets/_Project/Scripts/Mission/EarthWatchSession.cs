@@ -185,7 +185,7 @@ namespace SpaceApps.Mission
         {
             var ew = Catalog.earthWatch;
             var sim = ew.sim;
-            var missing = new[] { "region", "revisit", "attitude", "storage", "backupStation" }.Where(g => Design.Get(g) == null).ToList();
+            var missing = new[] { "region", "revisit", "attitude", "storage", "backupStation" }.Where(g => Design.Get(g) == null).Select(GroupName).ToList();
             if (missing.Count > 0)
                 yield return Issue("incomplete-earth-watch", "blocking", ResourceKind.Time, Inv($"Still to choose: {string.Join(", ", missing)}."));
 
@@ -212,7 +212,7 @@ namespace SpaceApps.Mission
                 int weeks = Math.Max(1, (int)(station.outageWeeks.value - (backup?.weeksSaved.value ?? 0f)));
                 if (storage.capacityImages.value < weeks)
                     yield return Issue("storage-small", "warning", ResourceKind.Data,
-                        Inv($"If the {station.name.ToLowerInvariant()} goes offline for {weeks} weeks, the storage ({storage.capacityImages.value:0} images) fills up and images are thrown away."));
+                        Inv($"If the {station.name} goes offline for {weeks} weeks, the storage ({storage.capacityImages.value:0} images) fills up and images are thrown away."));
             }
 
             var radio = MissionCatalog.Find(Catalog.radios, Design.radio);
@@ -402,7 +402,7 @@ namespace SpaceApps.Mission
                 format.options.Add(Opt(f.id, f.name, "Three 10 cm cubes stacked: 10 x 10 x 34 cm.", St("Size", f.units, "U"), St("Mass limit", f.maxMassKg, "kg"), St("Cost", f.costUsd, "USD")));
             var power = G("power");
             foreach (var p in c.power)
-                power.options.Add(Opt(p.id, p.name, Inv($"{p.panelW.value:0.#} W of panels and a {p.batteryWh.value:0.#} Wh battery."),
+                power.options.Add(Opt(p.id, p.name, Inv($"{p.panelW.value:0.#} W of panels and {p.batteryWh.value:0.#} Wh of battery."),
                     St("Panels", p.panelW, "W"), St("Battery", p.batteryWh, "Wh"), St("Mass", p.massKg, "kg"), St("Cost", p.costUsd, "USD")));
             // No odds on the cards (fault, outage and reliability chances stay hidden): the player learns them by flying.
             var attitude = G("attitude");
@@ -418,11 +418,11 @@ namespace SpaceApps.Mission
                     St("Image size", i.imageMb, "MB"), St("Power", i.powerW, "W"), St("Mass", i.massKg, "kg"), St("Cost", i.costUsd, "USD")));
             var radio = G("radio");
             foreach (var r in c.radios)
-                radio.options.Add(Opt(r.id, r.name, Inv($"Sends {r.rateKbps.value:0.#} kbps on the {r.band} band."),
+                radio.options.Add(Opt(r.id, r.name, Inv($"Sends {r.rateKbps.value:0.#} kbps on the {BandName(r.band)}."),
                     St("Rate", r.rateKbps, "kbps"), St("Power", r.txPowerW, "W"), St("Cost", r.costUsd, "USD")));
             var station = G("groundStation");
             foreach (var s in c.groundStations)
-                station.options.Add(Opt(s.id, s.name, Inv($"{s.stationCount.value:0} antenna(s), listens on {string.Join(" and ", s.bands)}."),
+                station.options.Add(Opt(s.id, s.name, Inv($"{s.stationCount.value:0} {(s.stationCount.value == 1 ? "antenna" : "antennas")}, listens on {string.Join(" and ", s.bands.Select(b => "the " + BandName(b)))}."),
                     St("Antennas", s.stationCount, ""), St("Cost", s.costUsd, "USD"), St("Setup", s.months, "months")));
             var backup = G("backupStation");
             foreach (var b in ew.backupStations)
@@ -440,8 +440,30 @@ namespace SpaceApps.Mission
 
         static SourceInfo Team(string text) => new SourceInfo { status = "team", text = text };
 
-        static StatInfo St(string label, Num n, string unit, float scale = 1f) =>
-            new StatInfo { label = label, value = n.value * scale, unit = unit, origin = n };
+        // The group names as the page shows them, for the messages that list them.
+        static string GroupName(string group)
+        {
+            switch (group)
+            {
+                case "region": return "region to watch";
+                case "revisit": return "how often to see the region";
+                case "attitude": return "attitude control";
+                case "storage": return "image storage";
+                case "backupStation": return "backup station";
+                default: return group;
+            }
+        }
+
+        static string BandName(string band) =>
+            band.StartsWith("uhf-", StringComparison.Ordinal) ? $"UHF {band.Substring(4)} MHz band" : band == "s-band" ? "S-band" : band;
+
+        // "1 months" reads wrong: the unit loses its s when the value is exactly one.
+        static StatInfo St(string label, Num n, string unit, float scale = 1f)
+        {
+            float v = n.value * scale;
+            if (v == 1f && (unit == "months" || unit == "weeks" || unit == "images")) unit = unit.Substring(0, unit.Length - 1);
+            return new StatInfo { label = label, value = v, unit = unit, origin = n };
+        }
 
         static OptionInfo Opt(string id, string name, string summary, params StatInfo[] stats)
         {
