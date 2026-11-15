@@ -20,17 +20,18 @@ export function capabilitiesFromDesign(design: Act1Design, extras: Act1Extras, b
   const tests = e.tests;
 
   // Instrument and orbit: how much of the map is known before anyone walks.
-  const mapRadiusStart = Number.isFinite(e.pixelM) ? R.mapRadius.find((m) => e.pixelM <= m.pixelM)!.tiles : 1;
-  const growth = Number.isFinite(e.pixelM) ? R.mapGrowth + (plan === "watch" ? 2 : plan === "balanced" ? 1 : 0) : 0;
+  const mapRadiusStart = typeof design.instrument === "string" ? R.mapRadius.find((m) => e.pixelM <= m.pixelM)!.tiles : R.mapRadiusNone;
+  const growth = typeof design.instrument === "string" ? R.mapGrowth + (plan === "watch" ? 2 : plan === "balanced" ? 1 : 0) : 0;
   const mapRadiusMax = mapRadiusStart + growth;
 
   // Radio and Deep Space Network time: data per sol both ways of the satellite, and the warning lead.
-  const relayMbPerSol = e.relayMbPerSol;
-  const dsnMbPerSol = e.dsnMbPerSol;
+  const hasNetwork = e.dsnMbPerSol > 0;
+  const dsnMbPerSol = Math.round(hasNetwork ? clamp(R.dsnMinMb + e.dsnMbPerSol * R.dsnSlope, R.dsnMinMb, R.dsnMaxMb) : R.dsnNoneMb);
+  const relayMbPerSol = Math.round(clamp(Math.min(e.relayMbPerSol * R.relayGain, R.dsnReach * e.dsnMbPerSol + (hasNetwork ? R.relayFloorMb : R.relayFloorNoDsnMb)), R.relayMinMb, R.relayMaxMb));
 
   // Power and battery: how far the panels' output stays above the load, plus what the battery carries.
   const margin = e.powerW > 0 && e.panelW > 0 ? (e.panelW - e.powerW) / e.powerW : -1;
-  const satPowerMargin = r2(clamp(margin * 0.8 + e.batteryWh / 200));
+  const satPowerMargin = r2(clamp(R.powerBase + Math.max(-0.2, margin) * R.powerPerMargin + e.batteryWh * R.powerPerBatteryWh, 0, R.powerMax));
 
   // Attitude control and tests: how often the satellite has a fault the crew must deal with.
   const testCount = ["vibration", "thermal", "deploy", "ditl"].filter((t) => tests.includes(t)).length;
@@ -39,9 +40,10 @@ export function capabilitiesFromDesign(design: Act1Design, extras: Act1Extras, b
   // Mass and budget left: supplies, materials and spares the crew lands with.
   const budgetLeft = Math.max(0, e.budgetUsd - e.costUsd);
   const massMargin = Math.max(0, extras.massMarginKg ?? Math.max(0, e.massLimitKg - e.massKg));
-  const supplyDays = Math.floor(budgetLeft / R.usdPerSupplyDay);
-  const materialsKg = Math.round(R.materialsBaseKg + R.materialsPerMarginKg * massMargin);
-  const spares = 1 + Math.floor(budgetLeft / R.usdPerSpare);
+  const share = e.budgetUsd > 0 ? budgetLeft / e.budgetUsd : 0;
+  const supplyDays = Math.min(R.supplyDaysMax, Math.floor(share * R.supplyDaysPerBudgetShare));
+  const materialsKg = Math.round(R.materialsBaseKg + Math.min(R.materialsMaxExtraKg, R.materialsPerMarginKg * massMargin));
+  const spares = 1 + Math.min(R.sparesMax, Math.floor(share * R.sparesPerBudgetShare));
 
   return {
     mapRadiusStart, mapRadiusMax,
@@ -50,7 +52,7 @@ export function capabilitiesFromDesign(design: Act1Design, extras: Act1Extras, b
     relayMbPerSol, dsnMbPerSol,
     warningLeadSols: e.warningSols,
     satPowerMargin, faultPerSol,
-    relayStorageMb: e.storageMb,
+    relayStorageMb: Math.round(clamp(R.holdFloorMb + e.storageMb * R.holdPerStorageMb, R.holdFloorMb, R.holdMaxMb)),
     supplyDays, materialsKg, spares,
   };
 }
