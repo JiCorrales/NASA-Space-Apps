@@ -48,31 +48,27 @@ Two ways to run it:
   `window.unityInstance` exists, so nothing else changes. The developer bar disappears on the next render after
   that.
 
-### Combining the build with Unity's WebGL output (for the build task, not done here)
+### Combined build
 
-`pnpm build` writes `web/dist/` with fixed names (`assets/page.js`, `assets/page.css`), so no hashes to track.
-The right way is a Unity WebGL template, `Assets/WebGLTemplates/EarthWatch/index.html`, selected in Player
-Settings. Unity fills the `{{{ ... }}}` macros when it builds. Sketch:
+The Unity WebGL build does it all with one command (from the repo root, see CONTRIBUTING "Builds"):
 
-```html
-<link rel="stylesheet" href="page/assets/page.css" />
-<canvas id="unity-canvas"></canvas>
-<div id="root"></div>
-<script src="Build/{{{ LOADER_FILENAME }}}"></script>
-<script>
-  createUnityInstance(document.querySelector("#unity-canvas"), {
-    dataUrl: "Build/{{{ DATA_FILENAME }}}", frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
-    codeUrl: "Build/{{{ CODE_FILENAME }}}",
-  }).then((instance) => { window.unityInstance = instance; });
-</script>
-<script type="module" src="page/assets/page.js"></script>
+```
+<Unity> -batchmode -quit -projectPath . -buildTarget WebGL -executeMethod SpaceApps.Editor.Build.WebGLBuild.Build -logFile build.log
 ```
 
-Then copy `web/dist/` into the build output as `page/` (script step after the Unity build), and serve the folder
-over HTTP. The page sends `ready` on load; if Unity finishes loading later, Unity should call
-`window.MissionUI.receive` with the first `state` itself, or the page should resend `ready` once
-`window.unityInstance` is set (small follow-up for the build task). Unity-to-page calls need a `.jslib` plugin
-that calls `window.MissionUI.receive(json)`.
+It runs `pnpm install --frozen-lockfile && pnpm build` here, builds Unity with the template
+`Assets/WebGLTemplates/EarthWatch/index.html`, and copies `dist/` into `Builds/WebGL/page/`. `pnpm build` writes
+fixed names (`assets/page.js`, `assets/page.css`), so the template needs no hashes. The template has the canvas
+`#unity-canvas`, the React root `#root` over it, loads `page/assets/page.css` and `page/assets/page.js`, and sets
+`window.unityInstance` when Unity has loaded. Serve `Builds/WebGL/` over HTTP.
+
+Load order: the page usually loads first and sends `ready` to the stand-in. When Unity finishes loading, the template
+sets `window.unityInstance` and fires a `unityready` event on `window`; the page then sends `ready` again (now to
+Unity, which answers with the real `state`) and redraws, so the developer bar goes away. If Unity were ever first,
+the first `ready` already goes to Unity. Unity-to-page calls use the `.jslib` plugin
+(`Assets/_Project/Plugins/WebGL/MissionBridge.jslib`), which calls `window.MissionUI.receive(json)`. On the Unity
+side `ShipBridgeLink` joins the ship to the bridge (cover click opens the screen, `close` releases the view). In a
+WebGL player the page owns Escape (the ship's own Escape handling is off there).
 
 The WebGL canvas must keep its own id `unity-canvas`; Unity project files are owned by another agent and are not
 touched by this folder.

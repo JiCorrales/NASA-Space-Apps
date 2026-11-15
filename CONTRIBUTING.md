@@ -73,8 +73,12 @@ that costs hours during a 48-hour hackathon.
 - WebGL, from the repo root:
   `<Unity> -batchmode -quit -projectPath . -buildTarget WebGL -executeMethod SpaceApps.Editor.Build.WebGLBuild.Build -logFile build.log`.
   It builds the scenes enabled in Build Settings and exits non-zero on failure.
-- The output goes to `Builds/WebGL/`, which is ignored by git. Serve the folder over HTTP to test it; opening
-  `index.html` from disk does not work.
+- The same command builds the React page: it runs `pnpm install --frozen-lockfile && pnpm build` in `web/` (pnpm and
+  Node must be on the PATH; the build fails if the page does not build), uses the WebGL template
+  `Assets/WebGLTemplates/EarthWatch` (set by the build method for this build only, `ProjectSettings` is not changed)
+  and copies `web/dist` into the output as `page/`. The template draws the page over the Unity canvas.
+- The output goes to `Builds/WebGL/`, which is ignored by git. Serve the folder over HTTP to test it (for example
+  `python3 -m http.server --directory Builds/WebGL`); opening `index.html` from disk does not work.
 - Compression is disabled for this build only, because GitHub Pages cannot send `Content-Encoding` headers.
 - Windows VR (Meta Quest over Link, and keyboard and mouse), from the repo root:
   `<Unity> -batchmode -quit -projectPath . -buildTarget Win64 -executeMethod SpaceApps.Editor.Build.WindowsBuild.Build -logFile build.log`,
