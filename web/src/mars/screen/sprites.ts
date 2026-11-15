@@ -10,8 +10,6 @@ import * as icons from "../art/icons";
 import * as extras from "../art/extras";
 import * as characters from "../art/characters";
 import * as gear from "../art/gear";
-import type { LookId } from "../art/characters";
-import type { Look, Role } from "../types";
 
 export const T = terrain.B as Record<string, Art>;
 export const BASE_ART = base.B as Record<string, Art>;
@@ -22,9 +20,6 @@ export const EXTRA = extras.B as unknown as Record<string, Sprite[]>;
 export const CHARS = characters.B;
 export const GEAR = gear.B;
 
-/** The rules' looks are colour names; the art's are body shapes with a trim colour. */
-export const LOOK_ART: Record<Look, LookId> = { amber: "broad", teal: "tall", violet: "compact", coral: "round" };
-export const ROLE_ART: Record<Role, "commander" | "engineer" | "scientist" | "comms"> = { commander: "commander", engineer: "engineer", scientist: "scientist", comms: "comms" };
 
 /** `t` is in milliseconds. */
 export const pickFrame = (a: Art, t: number, speed = 220): Sprite => (Array.isArray(a) ? a[Math.abs(Math.floor(t / speed) || 0) % a.length]! : a);
