@@ -207,7 +207,10 @@ const round = (n: number) => Math.round(n * 100) / 100;
 
 export function createStandin(emit: (m: UnityToPage) => void) {
   let state = recompute(initial());
-  const flight = createFlightStandin(emit);
+  const flight = createFlightStandin(emit, { vehicle: () => {
+    const id = state.design.launch;
+    return typeof id === "string" ? id : null;
+  } });
   const push = () => emit({ type: "state", payload: state });
   const setStatus = (step: Step, status: StepStatus) => {
     state = { ...state, steps: state.steps.map((s) => (s.step === step ? { ...s, status } : s)) };
