@@ -82,5 +82,8 @@ namespace SpaceApps.Mission
         public List<AttemptInfo> attempts = new List<AttemptInfo>();
         /// <summary>Budget kept in reserve as a fraction from 0 to 1, as last set with setReserve.</summary>
         public float reserve;
+        /// <summary>The mission select of step 1.</summary>
+        public List<WorldInfo> worlds = new List<WorldInfo>();
+        public List<MissionCardInfo> missions = new List<MissionCardInfo>();
     }
 }
