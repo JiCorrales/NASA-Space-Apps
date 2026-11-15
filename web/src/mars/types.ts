@@ -17,7 +17,7 @@ export const ROLES = ["commander", "engineer", "scientist", "comms"] as const;
 export type Role = (typeof ROLES)[number];
 
 /** A look is only how a character is drawn. Any look goes with any role. */
-export const LOOKS = ["amber", "teal", "violet", "coral"] as const;
+export const LOOKS = ["round", "broad", "tall", "compact"] as const;
 export type Look = (typeof LOOKS)[number];
 
 export type PlayerId = 0 | 1 | 2 | 3;

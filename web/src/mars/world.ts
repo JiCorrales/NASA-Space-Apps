@@ -35,10 +35,10 @@ export interface WorldOptions {
 }
 
 export const DEFAULT_CREW: CrewSetup[] = [
-  { name: "Mara", role: "commander", look: "amber" },
-  { name: "Dev", role: "engineer", look: "teal" },
-  { name: "Ines", role: "scientist", look: "violet" },
-  { name: "Kofi", role: "comms", look: "coral" },
+  { name: "Mara", role: "commander", look: "round" },
+  { name: "Dev", role: "engineer", look: "broad" },
+  { name: "Ines", role: "scientist", look: "tall" },
+  { name: "Kofi", role: "comms", look: "compact" },
 ];
 
 export interface SatFault { kind: "scheduled" | "brownout"; since: number; deadline: number; diagnosed: boolean; diagWork: number; fixWork: number }
