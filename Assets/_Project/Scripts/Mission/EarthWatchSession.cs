@@ -404,10 +404,11 @@ namespace SpaceApps.Mission
             foreach (var p in c.power)
                 power.options.Add(Opt(p.id, p.name, Inv($"{p.panelW.value:0.#} W of panels and a {p.batteryWh.value:0.#} Wh battery."),
                     St("Panels", p.panelW, "W"), St("Battery", p.batteryWh, "Wh"), St("Mass", p.massKg, "kg"), St("Cost", p.costUsd, "USD")));
+            // No odds on the cards (fault, outage and reliability chances stay hidden): the player learns them by flying.
             var attitude = G("attitude");
             foreach (var a in ew.attitudes)
                 attitude.options.Add(Opt(a.id, a.name, a.summary,
-                    St("Pointing", a.basePointingDeg, "deg"), St("Faults a year", a.faultChancePerYear, "%", 100f), St("Power", a.powerW, "W"), St("Cost", a.costUsd, "USD")));
+                    St("Pointing", a.basePointingDeg, "deg"), St("Power", a.powerW, "W"), St("Cost", a.costUsd, "USD")));
             var storage = G("storage");
             foreach (var s in ew.storages)
                 storage.options.Add(Opt(s.id, s.name, s.summary, St("Holds", s.capacityImages, "images"), St("Cost", s.costUsd, "USD")));
@@ -422,7 +423,7 @@ namespace SpaceApps.Mission
             var station = G("groundStation");
             foreach (var s in c.groundStations)
                 station.options.Add(Opt(s.id, s.name, Inv($"{s.stationCount.value:0} antenna(s), listens on {string.Join(" and ", s.bands)}."),
-                    St("Antennas", s.stationCount, ""), St("Outage chance a year", s.outageChancePerYear, "%", 100f), St("Cost", s.costUsd, "USD"), St("Setup", s.months, "months")));
+                    St("Antennas", s.stationCount, ""), St("Cost", s.costUsd, "USD"), St("Setup", s.months, "months")));
             var backup = G("backupStation");
             foreach (var b in ew.backupStations)
                 backup.options.Add(Opt(b.id, b.name, b.summary, St("Outage shortened by", b.weeksSaved, "weeks"), St("Cost", b.costUsd, "USD")));
@@ -433,7 +434,7 @@ namespace SpaceApps.Mission
             var tests = G("tests", true);
             foreach (var t in c.tests)
                 tests.options.Add(Opt(t.id, t.name, t.summary,
-                    St("Cost", t.costUsd, "USD"), St("Time", t.months, "months"), St("Reliability", t.reliabilityBonus, "%", 100f)));
+                    St("Cost", t.costUsd, "USD"), St("Time", t.months, "months")));
             return groups;
         }
 
