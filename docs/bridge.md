@@ -80,9 +80,43 @@ Optional fields, added for the screens of steps 1 and 5:
   commands: [ { name, label, enabled, active } ],
   log: [ { week, text, kind } ],                     // kind: info | alert | good
   report: null | { successRate, imagesDelivered, factors: [ { label, value } ], lostBecause,
-                   decisions: [ string ], suggestion, images: [ ... 52 states ] }
+                   decisions: [ string ], suggestion, images: [ ... 52 states ] },
+  launch?: null | LaunchFrame                        // optional, the launch act; see below
 }
 ```
+
+### The launch act (`SimFrame.launch`, optional)
+
+The first act of the flight screen, between `fly launch` and week 1: the countdown, the GO/NO-GO poll, the
+ascent, separation and deployment of the CubeSat. While `launch` is present the window shows the launch and
+the page shows only `launch` (and `report` on the last frame); the other fields are not shown, and Unity sends
+them as at the start of week 1 (`week: 1, day: 0`, 52 empty weeks, no alert, no commands). When `launch` is
+absent or null the flight screen behaves as before.
+
+```
+launch?: null | {
+  stage: "countdown" | "hold" | "liftoff" | "maxq" | "staging" | "fairing" | "orbit" | "separation" | "deploy" | "done",
+  met: number,            // mission elapsed time in seconds, negative before lift-off
+  vehicle: string,        // id of the launch option chosen in the design
+  altitudeKm: number, velocityKms: number,
+  progress: number,       // 0 to 1 along the ascent
+  poll: [ { station: string, go: boolean | null } ],   // null = not polled yet
+  line: string,           // what mission control says, English, ready to show
+  outcome: null | "ok" | "lost" | "scrubbed"
+}
+```
+
+- Unity decides everything, including the outcome. The page only draws it; the randomness the page uses is
+  cosmetic (stars, exhaust, debris).
+- `outcome: "lost"` (the vehicle failed, or the CubeSat did not deploy) and `"scrubbed"` (the launch did not go)
+  end the attempt: that last frame also carries `report`, shown by the usual report card with retry and change
+  design. A failed launch always ends the attempt.
+- `outcome: "ok"`: the next frames continue into week 1 with no `launch` field.
+- **Nothing is telegraphed.** While the launch goes on, `line` and the poll say only what is happening and its
+  symptoms (a station answering NO-GO, a hold on the clock, telemetry lost): no odds, percentages or warnings
+  about what may go wrong. The cause is named only afterwards, in `report.lostBecause`, `decisions` and
+  `suggestion`. A clean design can still fail at launch.
+- The page lights the LAUNCH segment from `launch`.
 
 ## Rules
 

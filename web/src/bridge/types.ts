@@ -73,6 +73,28 @@ export interface Report {
   successRate: number; imagesDelivered: number; factors: { label: string; value: string | number }[];
   lostBecause: string; decisions: string[]; suggestion: string; images: WeekState[];
 }
+/** Moments of the launch act, in flight order ("hold" stops the countdown). */
+export type LaunchStage =
+  | "countdown" | "hold" | "liftoff" | "maxq" | "staging" | "fairing" | "orbit" | "separation" | "deploy" | "done";
+/** One station of the launch-day GO/NO-GO poll. `go` is null until the station has been polled. */
+export interface PollStation { station: string; go: boolean | null }
+/** The launch act, between LAUNCH and week 1. Display only: Unity decides every value and the outcome. */
+export interface LaunchFrame {
+  stage: LaunchStage;
+  /** Mission elapsed time in seconds, negative before lift-off. */
+  met: number;
+  /** Id of the launch option chosen in the design. */
+  vehicle: string;
+  altitudeKm: number;
+  velocityKms: number;
+  /** 0 to 1 along the ascent. */
+  progress: number;
+  poll: PollStation[];
+  /** What mission control says, English, ready to show. */
+  line: string;
+  /** null while the launch goes on. "lost" and "scrubbed" come with `report` and end the attempt. */
+  outcome: null | "ok" | "lost" | "scrubbed";
+}
 export interface SimFrame {
   week: number; day: number; speed: "detail" | "fast" | "paused";
   battery: number; pointingError: number; cameraTemp: number; storageQueue: number; linkQuality: number;
@@ -83,6 +105,8 @@ export interface SimFrame {
   commands: SimCommand[];
   log: LogLine[];
   report: null | Report;
+  /** Optional. Present during the launch act only; absent or null means the flight screen as before. */
+  launch?: null | LaunchFrame;
 }
 
 // ---- Messages ----
