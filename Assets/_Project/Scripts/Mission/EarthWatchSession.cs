@@ -196,9 +196,15 @@ namespace SpaceApps.Mission
         {
             var ew = Catalog.earthWatch;
             var sim = ew.sim;
-            var missing = new[] { "region", "revisit", "attitude", "storage", "backupStation" }.Where(g => Design.Get(g) == null).Select(GroupName).ToList();
-            if (missing.Count > 0)
-                yield return Issue("incomplete-earth-watch", "blocking", ResourceKind.Time, Inv($"Still to choose: {string.Join(", ", missing)}."));
+            // One message per step, shown on the screen where the choice is made (and turning that step's cover red):
+            // a choice skipped in step 2 used to be reported on the design screen, where it cannot be made.
+            foreach (var missing in new[] { "region", "revisit", "attitude", "storage", "backupStation" }
+                         .Where(g => Design.Get(g) == null).GroupBy(g => StepOfGroup[g]))
+            {
+                var issue = Issue("incomplete-earth-watch", "blocking", ResourceKind.Time, Inv($"Still to choose: {string.Join(", ", missing.Select(GroupName))}."));
+                issue.step = missing.Key;
+                yield return issue;
+            }
 
             var revisit = MissionCatalog.Find(ew.revisits, Design.revisit);
             float minImages = sim.minImages.value;
