@@ -31,6 +31,9 @@ namespace SpaceApps.Mission
     {
         public string id, label, unit, check;
         public float value, min, max;
+        /// <summary>True when the chosen tests (and the design checks) verify it, false when they do not, null while there is
+        /// nothing to check yet. Not sent when null.</summary>
+        [NonSerialized] public bool? verified;
     }
 
     /// <summary>Kind is mass, power, budget, data, communications or time. Known is false until the choice that

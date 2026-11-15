@@ -123,6 +123,38 @@ namespace SpaceApps.Mission.Tests
             foreach (var s in oneMonth) Assert.AreEqual("month", s.unit);
         }
 
+        static bool? VerifiedOf(EarthWatchSession s, string id) => s.BuildState().requirements.First(r => r.id == id).verified;
+
+        [Test]
+        public void ARequirementIsVerifiedWhenItsTestsAreChosen()
+        {
+            var s = new EarthWatchSession(catalog);
+            Assert.AreEqual(false, VerifiedOf(s, "minImages"), "no test chosen yet");
+            Assert.IsNull(VerifiedOf(s, "massLimitKg"), "nothing to check before the design exists");
+
+            foreach (var g in EarthWatchDesign.SingleGroups) s.Choose(g, Sensible().Get(g));
+            s.Toggle("tests", "vibration");
+            Assert.AreEqual(true, VerifiedOf(s, "deadlineMonths"));
+            Assert.AreEqual(false, VerifiedOf(s, "minImages"), "one of its two tests is missing");
+            s.Toggle("tests", "ditl"); s.Toggle("tests", "bakeout");
+            Assert.AreEqual(true, VerifiedOf(s, "minImages"));
+            s.Toggle("tests", "ditl");
+            Assert.AreEqual(false, VerifiedOf(s, "minImages"), "unchosen again");
+            Assert.AreEqual(false, VerifiedOf(s, "pointingToleranceDeg"), "flatsat not chosen");
+            s.Toggle("tests", "flatsat");
+            Assert.AreEqual(true, VerifiedOf(s, "pointingToleranceDeg"));
+            Assert.AreEqual(true, VerifiedOf(s, "massLimitKg"));
+            Assert.AreEqual(true, VerifiedOf(s, "reservePercent"));
+
+            s.SetReserve(0.4f);
+            s.SetRequirement("budgetUsd", 300000f);
+            Assert.AreEqual(false, VerifiedOf(s, "reservePercent"), "the design leaves less than the reserve unspent");
+
+            var json = (Dictionary<string, object>)MiniJson.Parse(StateJson.Serialize(s.BuildState()));
+            var req = ((List<object>)json["requirements"]).Cast<Dictionary<string, object>>().First(r => (string)r["id"] == "minImages");
+            Assert.AreEqual(false, req["verified"]);
+        }
+
         [Test]
         public void ASloppyDesignFailsOften()
         {

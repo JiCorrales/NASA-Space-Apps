@@ -261,8 +261,40 @@ namespace SpaceApps.Mission
             state.requirements = ew.requirements.Select(r => new RequirementInfo
             {
                 id = r.id, label = r.label, unit = r.unit, check = r.check, value = r.value.value, min = r.min, max = r.max,
+                verified = Verified(r.id, state.issues),
             }).ToList();
             return state;
+        }
+
+        // ---- Verification (step 5) ----
+
+        // The tests that verify a requirement. The game had no such relation before; this is the smallest one: the images
+        // by the day in the life test and the thermal vacuum bakeout, the deadline by the vibration test, the pointing by
+        // the flatsat (all the electronics, attitude control included, run on a table). A requirement is verified when all
+        // its tests are chosen and the design check that guards it finds no problem.
+        static readonly Dictionary<string, (string[] tests, string[] problems)> TestVerified = new Dictionary<string, (string[], string[])>
+        {
+            { "minImages", (new[] { "ditl", "bakeout" }, new[] { "images-target" }) },
+            { "deadlineMonths", (new[] { "vibration" }, new[] { "schedule-overrun" }) },
+            { "pointingToleranceDeg", (new[] { "flatsat" }, new[] { "pointing-accuracy" }) },
+        };
+
+        // Requirements no test can verify are checked by the design itself, once the design is complete enough to check.
+        static readonly Dictionary<string, string[]> CheckVerified = new Dictionary<string, string[]>
+        {
+            { "massLimitKg", new[] { "mass-over-format", "mass-over-launcher" } },
+            { "budgetUsd", new[] { "over-budget" } },
+            { "reservePercent", new[] { "over-budget", "no-reserve" } },
+        };
+
+        bool? Verified(string requirement, List<IssueInfo> issues)
+        {
+            bool Has(string[] codes) => issues.Any(i => codes.Contains(i.code));
+            if (TestVerified.TryGetValue(requirement, out var rule))
+                return rule.tests.All(Design.tests.Contains) && !Has(rule.problems);
+            if (CheckVerified.TryGetValue(requirement, out var codes))
+                return Has(new[] { "incomplete-design", "incomplete-earth-watch" }) ? (bool?)null : !Has(codes);
+            return null;
         }
 
         // ---- Flight ----
