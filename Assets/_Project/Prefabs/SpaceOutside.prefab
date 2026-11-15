@@ -227,3 +227,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: SpaceApps.Ship::SpaceApps.Ship.SpaceSky
   fallbackStars: {fileID: 7115327808184974946}
+  rotation: 180

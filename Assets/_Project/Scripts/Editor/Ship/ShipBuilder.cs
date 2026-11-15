@@ -56,7 +56,8 @@ namespace SpaceApps.Ship.Editor
         const float WindowBottom = 0.8f, WindowTop = 2.6f;
 
         // Azimuth is measured from +z (the cover wall) towards +x; the player spawns at -z facing +z.
-        static readonly Vector3 Spawn = new Vector3(0f, 0f, -3f);
+        // Far enough back that all six covers fit on screen at 4:3 as well as 16:9 (the test checks it).
+        static readonly Vector3 Spawn = new Vector3(0f, 0f, -3.7f);
         const float CoverSpacing = 20f;
         const float CoverRadius = RoomRadius - 0.15f;
         const float CoverCentreHeight = 1.75f;
@@ -182,17 +183,18 @@ namespace SpaceApps.Ship.Editor
         {
             RenderSettings.skybox = null;
             RenderSettings.ambientMode = AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = new Color(0.5f, 0.56f, 0.68f);
-            RenderSettings.ambientEquatorColor = new Color(0.36f, 0.4f, 0.48f);
-            RenderSettings.ambientGroundColor = new Color(0.16f, 0.17f, 0.2f);
+            // Low ambient with a cool top and a near-black bottom, so the one key light and the glowing parts carry the contrast.
+            RenderSettings.ambientSkyColor = new Color(0.34f, 0.38f, 0.5f);
+            RenderSettings.ambientEquatorColor = new Color(0.2f, 0.22f, 0.3f);
+            RenderSettings.ambientGroundColor = new Color(0.07f, 0.07f, 0.1f);
             var key = new GameObject("Key Light").AddComponent<Light>();
             key.type = LightType.Directional;
-            key.intensity = 1.1f;
+            key.intensity = 1.7f;
             key.color = new Color(1f, 0.96f, 0.9f);
             // Steeply down and towards the windows: it lights the deck and the side of the Earth that faces the ship.
             key.transform.rotation = Quaternion.Euler(62f, 160f, 0f);
             key.shadows = LightShadows.Soft;
-            key.shadowStrength = 0.55f;
+            key.shadowStrength = 0.65f;
         }
 
         // ---------- room ----------
@@ -207,7 +209,7 @@ namespace SpaceApps.Ship.Editor
             deck.AddComponent<BoxCollider>();
             var teleport = deck.AddComponent<TeleportationArea>();
             teleport.interactionLayers = InteractionLayerMask.GetMask("Teleport");
-            var ceiling = Disc("Ceiling", root, outer, Height + 0.05f, 0.05f, hull);
+            var ceiling = Disc("Ceiling", root, outer, Height + 0.05f, 0.05f, ceilingMat);
             ceiling.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
 
             var wall = Group("Wall", root);
@@ -222,11 +224,11 @@ namespace SpaceApps.Ship.Editor
                 segment.transform.SetLocalPositionAndRotation(OnCircle(azimuth, mid), Quaternion.Euler(0f, azimuth, 0f));
                 if (!IsWindowSegment(azimuth))
                 {
-                    Panel3D("Solid", segment, Height / 2f, Height, width, plateMat);
+                    Panel3D("Solid", segment, Height / 2f, Height, width, hull);
                     continue;
                 }
-                Panel3D("Sill", segment, WindowBottom / 2f, WindowBottom, width, plateMat);
-                Panel3D("Lintel", segment, (WindowTop + Height) / 2f, Height - WindowTop, width, plateMat);
+                Panel3D("Sill", segment, WindowBottom / 2f, WindowBottom, width, hull);
+                Panel3D("Lintel", segment, (WindowTop + Height) / 2f, Height - WindowTop, width, hull);
             }
 
             RoomDressing(root, accent);
@@ -500,7 +502,7 @@ namespace SpaceApps.Ship.Editor
             head.transform.localPosition = new Vector3(0f, 1.6f, 0f);
             var cam = head.AddComponent<Camera>();
             cam.nearClipPlane = 0.05f;
-            cam.fieldOfView = 70f;
+            cam.fieldOfView = 75f;
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = Color.black;
             head.AddComponent<AudioListener>();
