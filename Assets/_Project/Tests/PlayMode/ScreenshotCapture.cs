@@ -57,6 +57,20 @@ namespace SpaceApps.Tests.PlayMode
             var control = Ui.Screen("Mission Control");
             yield return ShotOf(control, Path.Combine(dir, "mission-control-pass.png"));
 
+            // The ship itself, with the finished design on the satellite and orbit displays.
+            yield return ShotFrom(new Vector3(0f, 1.6f, 1.5f), new Vector3(0f, 1.4f, 12f), Path.Combine(dir, "corridor.png"));
+            var sill = GameObject.Find("Wall_Left").GetComponentsInChildren<Transform>().First(t => t.name.EndsWith(" Sill"));
+            var earth = GameObject.Find("Space Outside/Earth").transform.position;
+            var atWindow = new Vector3(sill.position.x + 1.3f, 1.65f, sill.position.z);
+            yield return ShotFrom(atWindow, atWindow + (earth - atWindow).normalized, Path.Combine(dir, "window-earth.png"));
+            var satellite = Object.FindFirstObjectByType<SatelliteModel>().transform.position;
+            yield return ShotFrom(satellite + new Vector3(0.6f, 0.35f, -0.9f), satellite, Path.Combine(dir, "satellite-display.png"));
+            var orbit = Object.FindFirstObjectByType<OrbitDisplay>().transform.position;
+            yield return ShotFrom(orbit + new Vector3(0.5f, 0.15f, -1.3f), orbit, Path.Combine(dir, "orbit-display.png"));
+            var console = Ui.Screen("Spacecraft").transform.Find("Console");
+            var screenAt = Ui.Screen("Spacecraft").transform;
+            yield return ShotFrom(screenAt.position - screenAt.forward * 2f + Vector3.down * 0.05f, console.position + Vector3.up * 0.5f, Path.Combine(dir, "station-console.png"));
+
             // Flights: pick seeds the simulator says end in success and in failure for this design.
             var flight = Object.FindFirstObjectByType<MissionGame>().Flight;
             int Seed(System.Func<MissionOutcome, bool> wanted) => Enumerable.Range(1, 2000)
@@ -79,6 +93,12 @@ namespace SpaceApps.Tests.PlayMode
         {
             var t = target.transform;
             Camera.main.transform.SetPositionAndRotation(t.position - t.forward * distance, Quaternion.LookRotation(t.forward));
+            yield return Shot(path);
+        }
+
+        static IEnumerator ShotFrom(Vector3 from, Vector3 lookAt, string path)
+        {
+            Camera.main.transform.SetPositionAndRotation(from, Quaternion.LookRotation(lookAt - from));
             yield return Shot(path);
         }
 
