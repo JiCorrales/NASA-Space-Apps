@@ -15,7 +15,10 @@ function inlineScript(): Plugin {
         text = text.replace(re, () => `<script type="module">\n${file.code.replace(/<\/script/gi, "<\\/script")}\n</script>`);
         delete bundle[name];
       }
+      text = text.replace(/^\s*<!doctype html>/i, "<!DOCTYPE html>");
       html.source = text;
+      // the same file as out/index.html, for hosts that serve the folder
+      this.emitFile({ type: "asset", fileName: "index.html", source: text });
     },
   };
 }

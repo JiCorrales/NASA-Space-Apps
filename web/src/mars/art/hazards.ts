@@ -7,8 +7,36 @@ import { Grid, bayer, build, frames, hash, tnoise, versions, type Style, type Ve
 
 const TAU = Math.PI * 2;
 
+/**
+ * B: wind from the left. Long horizontal streaks, each with a dense head on the right and a tail that thins out
+ * behind it; the three strengths differ in streak count, length and thickness. Rows move at one or two speeds, so
+ * three frames loop on the 32-pixel torus.
+ */
+function streakStorm(g: Grid, strength: 1 | 2 | 3, f: number): void {
+  const cfg = [null, { p: 0.22, lo: 8, hi: 13, n: 1 }, { p: 0.5, lo: 13, hi: 19, n: 2 }, { p: 0.85, lo: 18, hi: 27, n: 3 }][strength]!;
+  const haze = [0, 0, 0.08, 0.22][strength]!;
+  for (let y = 0; y < 32; y++) {
+    const m = hash(y, 2, 31) > 0.5 ? 2 : 1;
+    const shift = Math.round((f * 32 * m) / 3);
+    for (let k = 0; k < cfg.n; k++) {
+      if (hash(y, 10 + k, 31) > cfg.p * (k ? 0.85 : 1)) continue;
+      const L = cfg.lo + Math.floor(hash(y, 30 + k, 31) * (cfg.hi - cfg.lo));
+      const head = Math.floor(hash(y, 20 + k, 31) * 32) + shift;
+      const thick = strength > 1 && hash(y, 40 + k, 31) > 0.6;
+      for (let t = 0; t < L; t++) {
+        if (hash(t, y * 7 + k, 5) > 1.1 - t / L) continue;
+        const c = t < L * 0.35 ? "D" : "d";
+        g.set(head - t, y, c);
+        if (thick && t < L * 0.7) g.set(head - t, y + 1, "d");
+      }
+    }
+    if (haze) for (let x = 0; x < 32; x++) if (bayer(x, y) < haze && hash(x, y, 8) > 0.5) g.under(x, y, "d");
+  }
+}
+
 /** Streaky wind-blown dust on a 32 x 32 torus; `f` 0..2 shifts it by a third of its cycle. */
 function storm(g: Grid, S: Style, strength: 1 | 2 | 3, f: number): void {
+  if (S.v === "B") return streakStorm(g, strength, f);
   const cover = [0, 0.32, 0.55, 0.8][strength]!;
   const p = f / 3;
   for (let y = 0; y < 32; y++)
@@ -20,7 +48,25 @@ function storm(g: Grid, S: Style, strength: 1 | 2 | 3, f: number): void {
     }
 }
 
+/** B: a tall rolling wall, heavy on the left, with scalloped billows and a soft, dithered leading edge. */
+function rollingFront(g: Grid, f: number): void {
+  for (let y = 0; y < 32; y++) {
+    const bill = 2.5 * Math.abs(Math.sin((Math.PI * y) / 8 + (TAU * f) / 3));
+    const xe = 36 + 3 * Math.sin(TAU * (y / 32) + (TAU * f) / 3) + bill;
+    for (let x = 0; x < 64; x++) {
+      const dist = xe - x;
+      if (dist > 20) {
+        const streak = (x - 3 * f + y * 3) % 9 < 3;
+        g.set(x, y, x < 10 && bayer(x, y) < 0.35 ? "x" : streak ? "d" : "D");
+      } else if (dist > 0) {
+        if (hash(x, y, 2) * 0.55 + bayer(x, y) * 0.45 < dist / 20) g.set(x, y, dist > 10 ? "D" : "d");
+      } else if (hash(y, 5, 3) > 0.8 && -dist < 6 + hash(y, 6, 3) * 14 && hash(x, y, 7) > 0.35 - dist * 0.012) g.set(x, y, "d");
+    }
+  }
+}
+
 function front(g: Grid, S: Style, f: number): void {
+  if (S.v === "B") return rollingFront(g, f);
   const p = f / 3;
   for (let y = 0; y < 32; y++) {
     const xe = 28 + 9 * Math.sin(TAU * (2 * y / 32 + p)) + 5 * Math.sin(TAU * (3 * y / 32 + 2 * p));
@@ -33,7 +79,29 @@ function front(g: Grid, S: Style, f: number): void {
   }
 }
 
+/** B: a twisting column, narrow at the base and wide at the top, with slanted bands that turn and a dust skirt. */
+function twister(g: Grid, f: number): void {
+  g.ell(8, 22, 7, 2, "x");
+  for (let y = 0; y < 20; y++) {
+    const cx = 8 + 1.6 * Math.sin(TAU * (y / 21) * 1.2 + (TAU * f) / 3);
+    const hw = 1.2 + (19 - y) * 0.29;
+    for (let x = Math.ceil(cx - hw); x < cx + hw; x++) {
+      const rel = (x + 0.5 - cx) / hw;
+      let c = rel < -0.35 ? "5" : rel > 0.35 ? "1" : "3";
+      if ((Math.floor(y / 2) + f + (x + 0.5 > cx ? 1 : 0)) % 3 === 0) c = c === "5" ? "3" : c === "3" ? "1" : "2"; // bands offset left and right: a twist
+      g.set(x, y, c);
+    }
+  }
+  g.ell(8, 21.5, 7, 2.2, "3").ell(8, 21, 5, 1.4, "5");
+  for (let k = 0; k < 3; k++) {
+    const a = (TAU * (f / 3 + k / 3));
+    g.set(8 + Math.round(Math.cos(a) * 7), 21 + Math.round(Math.sin(a) * 2), "r");
+    g.set(8 + Math.round(Math.cos(a + 1) * 6), 5 + k * 5, "d");
+  }
+}
+
 function devil(g: Grid, S: Style, f: number): void {
+  if (S.v === "B") return twister(g, f);
   if (S.v !== "A") g.ell(8, 22, 5, 1.6, "x");
   for (let y = 0; y < 22; y++) {
     const cx = 8 + 2.2 * Math.sin(TAU * (y / 22 + f / 3)) * (1 - y / 30);
@@ -76,7 +144,26 @@ function dustOn(g: Grid, S: Style, level: 1 | 2 | 3): void {
   }
 }
 
+/** B: jagged bolts radiating from the Sun at the top, and the warning triangle. */
+function radiatingSky(g: Grid, S: Style, f: number): void {
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 64; x++) g.set(x, y, y < 7 ? "V" : y < 11 ? (S.dither && (x + y) % 2 ? "V" : "U") : "U");
+  g.ell(34, -1, 10, 6, "W").ell(34, -2, 6, 4, "Y");
+  [18, 40, 62, 90, 118, 140, 162].forEach((deg, k) => {
+    const a = (deg * Math.PI) / 180, cs = Math.cos(a), sn = Math.sin(a);
+    const L = 11 + Math.floor(hash(k, 1, 6) * 5);
+    for (let i = 3; i < L; i++) {
+      const j = (i + f + k) % 3 === 0 ? 1 : (i + f + k) % 3 === 1 ? -1 : 0; // zigzag off the ray
+      const x = 34 + cs * i - sn * j, y = 1 + sn * i + cs * j;
+      g.set(x, y, i < L * 0.65 ? "Y" : "y").set(x + 1, y, "y");
+    }
+  });
+  g.stamp(["...y...", "..y.y..", "..yyy..", ".y.y.y.", ".y...y.", "yyyyyyy"], 3, 3);
+  g.stamp(["...y...", "...y...", ".......", "...y..."], 3, 5);
+  g.rect(3, 3, 7, 1, ".").set(6, 3, "y");
+}
+
 function solarSky(g: Grid, S: Style, f: number): void {
+  if (S.v === "B") return radiatingSky(g, S, f);
   for (let y = 0; y < 16; y++) for (let x = 0; x < 64; x++) g.set(x, y, y < 7 ? "V" : y < 11 ? (S.dither && (x + y) % 2 ? "V" : "U") : "U");
   // jagged flares from the top, the Sun's burst
   for (const x0 of [22, 34, 47]) {

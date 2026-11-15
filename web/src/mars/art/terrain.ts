@@ -20,6 +20,21 @@ const NIGHT: Record<"light" | "mid" | "dark", Ramp> = {
 
 /** Mottled ground on a 16 x 16 torus. */
 function ground(g: Grid, S: Style, r: Ramp, seed: number): void {
+  if (S.v === "B") {
+    // Calm: large quiet areas, neighbouring ramp steps only, a few soft specks. The three shades
+    // are close, so tiles can be mixed freely without a visible patchwork.
+    for (let y = 0; y < 16; y++)
+      for (let x = 0; x < 16; x++) {
+        const n = tnoise(x, y, 16, 16, 4, seed) * 0.8 + tnoise(x, y, 16, 16, 2, seed + 9) * 0.2;
+        const t = (bayer(x, y) - 0.5) * 0.08;
+        let c = r.base;
+        if (n + t > 0.76) c = r.hi;
+        else if (n + t < 0.24) c = r.lo;
+        if (hash(x, y, seed + 31) > 0.99) c = r.lo;
+        g.set(x, y, c);
+      }
+    return;
+  }
   for (let y = 0; y < 16; y++)
     for (let x = 0; x < 16; x++) {
       // A: big hard patches, few single specks. B: fine two-scale mottling with dither and highlights.
@@ -32,8 +47,7 @@ function ground(g: Grid, S: Style, r: Ramp, seed: number): void {
       else if (n + t > (S.rich ? 0.6 : 0.58)) c = r.hi;
       else if (n + t < (S.rich ? 0.38 : 0.4)) c = r.lo;
       const sp = hash(x, y, seed + 31);
-      if (S.v === "A" ? sp > 0.975 : S.v === "B" ? sp > 0.972 : false) c = r.deep;
-      else if (S.rich && sp < 0.02) c = r.hi;
+      if (S.v === "A" && sp > 0.975) c = r.deep;
       g.set(x, y, c);
     }
   if (S.v === "C") for (let i = 0; i < 2; i++) g.rect(Math.floor(hash(i, 1, seed) * 14), Math.floor(hash(i, 2, seed) * 14), 2, 2, r.deep);
@@ -124,6 +138,37 @@ const crater = (part: string) => (v: Ver) =>
         if (t >= 2 && t < 5 && hash(x, y, 21) > 0.93) g.set(x, y, "r");
       }
   }, { wrap: false, flat: true });
+
+/**
+ * Round crater of n x n tiles (n = 3 or 5): a circle of radius n * 8 px split into n * n tiles, `i` across and
+ * `j` down. Light comes from the top left, so the wall of the top-left side is in shadow (it faces away from the
+ * Sun) and the far wall at the bottom right is lit; the rim is bright on the top-left and the floor has a cast shadow.
+ */
+const roundCrater = (n: number, i: number, j: number) => (v: Ver) =>
+  build(v, 16, 16, (g, S) => {
+    const R = n * 8, wallEnd = n === 3 ? 9.5 : 11.5;
+    for (let y = 0; y < 16; y++)
+      for (let x = 0; x < 16; x++) {
+        const dx = R - (i * 16 + x + 0.5), dy = R - (j * 16 + y + 0.5);
+        const d = Math.hypot(dx, dy) || 1, t = R - d;
+        if (t < 1.2) continue;
+        const lit = (dx / d) * -0.707 + (dy / d) * -0.707;
+        const dk = S.dither && bayer(x, y) < 0.4;
+        let c: string;
+        if (t < 2.8) c = lit < 0 ? "5" : "3";
+        else if (t < 5) c = lit < 0 ? "3" : dk ? "2" : "1";
+        else if (t < wallEnd) c = lit > 0.3 ? (t < 6.2 ? "5" : dk ? "1" : "3") : lit < -0.3 ? (dk ? "2" : "4") : "1";
+        else {
+          c = hash(x, y, 4) > 0.92 ? "4" : "2";
+          if (lit < -0.1 && t < wallEnd + 4 && (S.dither ? bayer(x, y) < 0.7 : true)) c = "4"; // cast shadow of the near rim
+        }
+        if (t < 5 && hash(x + i * 16, y + j * 16, 21) > 0.94) c = "r";
+        g.set(x, y, c);
+      }
+  }, { flat: true });
+
+const roundCraters: Record<string, (v: Ver) => ReturnType<typeof build>> = {};
+for (const n of [3, 5]) for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) roundCraters[`crater${n}_${j}${i}`] = roundCrater(n, i, j);
 
 const cliff = (v: Ver) =>
   build(v, 16, 16, (g, S) => {
@@ -244,6 +289,7 @@ const defs = {
   craterNW: crater("NW"), craterN: crater("N"), craterNE: crater("NE"),
   craterW: crater("W"), craterFloor: crater("floor"), craterE: crater("E"),
   craterSW: crater("SW"), craterS: crater("S"), craterSE: crater("SE"),
+  ...roundCraters,
   drift, siteUnknown: siteMarker("unknown"), siteFound: siteMarker("found"), siteSampled: siteMarker("sampled"),
   routeMarker, tracks,
   nightRegolith1: groundTile("light", 1, true), nightRegolith2: groundTile("mid", 2, true), nightRegolith3: groundTile("dark", 3, true),

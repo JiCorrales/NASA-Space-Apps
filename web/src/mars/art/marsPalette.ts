@@ -25,7 +25,7 @@ export const MARS_A = {
 } as const;
 
 export const MARS_B = {
-  OUTLINE: "#3a1d18", CREAM: "#d8c8b4", SAND: "#cc7a4c", RUST: "#b8613a", BROWN: "#9a4e30", DEEP: "#7c3c26",
+  OUTLINE: "#3a1d18", CREAM: "#d8c8b4", SAND: "#c26f48", RUST: "#bb6a43", BROWN: "#b46640", DEEP: "#8a4a30",
   PALE: "#dd9560", STONE: "#8a6458", STONE_DK: "#5e4440", STONE_LT: "#a8837a",
   STEEL: "#9098a8", STEEL_DK: "#586070", ORANGE: "#e8742c", ORANGE_DK: "#b04820",
   CELL: "#34508c", CELL_LT: "#6c90d0", GLASS: "#24243c", LAMP: "#ffd060", WHITE: "#fff4c8", FAULT: "#e84a3c",
