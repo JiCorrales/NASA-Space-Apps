@@ -78,7 +78,7 @@ export function renderSheet(root: HTMLElement, title: string, lead: string, fami
   }
   const animated: (() => void)[] = [];
   for (const fam of families) {
-    if (only && only !== fam.id) continue;
+    if (only && !fam.id.startsWith(only)) continue;
     const sec = document.createElement("section");
     sec.className = "family";
     sec.id = fam.id;
