@@ -63,6 +63,8 @@ namespace SpaceApps.Bridging
                 w.BeginObject().Field("number", a.number).Field("successRate", a.successRate).Field("imagesDelivered", a.imagesDelivered).Field("outcome", a.outcome).EndObject();
             w.EndArray();
 
+            w.Field("reserve", s.reserve);
+
             return w.EndObject().ToString();
         }
 

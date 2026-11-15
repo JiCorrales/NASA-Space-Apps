@@ -383,6 +383,20 @@ namespace SpaceApps.Mission.Tests
         }
 
         [Test]
+        public void TheStateCarriesTheReserveTheSliderSet()
+        {
+            var session = new EarthWatchSession(catalog);
+            Assert.AreEqual(0.10, ReserveInJson(session), 1e-4, "the catalog's starting reserve");
+            session.SetReserve(0.25f);
+            Assert.AreEqual(0.25, ReserveInJson(session), 1e-4);
+            session.SetReserve(0f);
+            Assert.AreEqual(0.0, ReserveInJson(session), 1e-4, "zero is sent as zero, not left out");
+        }
+
+        static double ReserveInJson(EarthWatchSession s) =>
+            Convert.ToDouble(((Dictionary<string, object>)MiniJson.Parse(StateJson.Serialize(s.BuildState())))["reserve"]);
+
+        [Test]
         public void TheFrameJsonHasEveryFieldOfTheContract()
         {
             var sim = new EarthWatchSim(catalog, Sensible(), 1, At(10, ProblemKind.SolarStorm));

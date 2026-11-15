@@ -77,5 +77,7 @@ namespace SpaceApps.Mission
         public List<ResourceInfo> resources = new List<ResourceInfo>();
         public List<IssueInfo> issues = new List<IssueInfo>();
         public List<AttemptInfo> attempts = new List<AttemptInfo>();
+        /// <summary>Budget kept in reserve as a fraction from 0 to 1, as last set with setReserve.</summary>
+        public float reserve;
     }
 }
