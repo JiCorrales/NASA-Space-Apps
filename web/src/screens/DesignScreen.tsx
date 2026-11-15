@@ -48,6 +48,7 @@ export function DesignScreen({ state, send = defaultSend }: { state: MissionStat
       <div className="bp">
         <div className="bp__col">{column(LEFT)}</div>
         <div className="bp__centre">
+          <IssueList issues={state.issues} step="design" />
           <div className="bp__sat">
             <PixelCubeSat {...satLook(state)} />
           </div>
@@ -55,7 +56,6 @@ export function DesignScreen({ state, send = defaultSend }: { state: MissionStat
             <h2 id="bp-resources" className="section-title">Resources</h2>
             <ResourceList resources={state.resources} />
           </section>
-          <IssueList issues={state.issues} step="design" />
         </div>
         <div className="bp__col">{column(RIGHT)}</div>
       </div>
