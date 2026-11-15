@@ -8,14 +8,17 @@ import type { Send } from "../send";
  * the ship shows the new status when the player is back). Back is not a finish: it only closes.
  * Finishing is never disabled: issues inform, they do not block.
  */
-export function StepFooter({ step, send, finishLabel = "Finish step", children }: {
-  step: Step; send: Send; finishLabel?: string; children?: ReactNode;
+export function StepFooter({ step, send, finishLabel = "Finish step", finish = true, children }: {
+  step: Step; send: Send; finishLabel?: string;
+  /** False while the step still has screens to show: the finish button waits for the last one. */
+  finish?: boolean;
+  children?: ReactNode;
 }) {
   return (
     <div className="step-foot">
       <PixelButton onClick={() => send("close", {})}>&lt; Back to the ship</PixelButton>
       <div className="step-foot__mid">{children}</div>
-      <PixelButton primary onClick={() => { send("completeStep", { step }); send("close", {}); }}>{finishLabel} &gt;</PixelButton>
+      {finish && <PixelButton primary onClick={() => { send("completeStep", { step }); send("close", {}); }}>{finishLabel} &gt;</PixelButton>}
     </div>
   );
 }
