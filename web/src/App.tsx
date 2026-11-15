@@ -9,6 +9,7 @@ const STEPS: Step[] = ["goals", "concept", "requirements", "design", "build", "f
 export function App() {
   const [step, setStep] = useState<Step | null>(null);
   const [state, setState] = useState<MissionState | null>(null);
+  const [, setUnityReady] = useState(false);
 
   useEffect(() => {
     const off = subscribe((m) => {
@@ -18,6 +19,14 @@ export function App() {
     });
     send("ready", {});
     return off;
+  }, []);
+
+  // The Unity template sets window.unityInstance after the page has loaded and sent its first `ready` to the
+  // stand-in. It then fires "unityready": ask Unity for the real state and redraw (the developer bar goes away).
+  useEffect(() => {
+    const onUnity = () => { setStep(null); setUnityReady(true); send("ready", {}); };
+    window.addEventListener("unityready", onUnity);
+    return () => window.removeEventListener("unityready", onUnity);
   }, []);
 
   useEffect(() => {

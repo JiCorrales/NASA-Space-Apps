@@ -69,3 +69,17 @@ describe("app shell", () => {
     expect(SendMessage).toHaveBeenCalledWith("Bridge", "Receive", '{"type":"close","payload":{}}');
   });
 });
+
+describe("Unity arriving after the page", () => {
+  afterEach(() => { delete window.unityInstance; });
+
+  it("on unityready it asks Unity for the state and drops the developer bar", () => {
+    render(<App />);
+    expect(screen.getByLabelText("Developer bar")).toBeInTheDocument();
+    const SendMessage = vi.fn();
+    window.unityInstance = { SendMessage };
+    act(() => { window.dispatchEvent(new Event("unityready")); });
+    expect(SendMessage).toHaveBeenCalledWith("Bridge", "Receive", JSON.stringify({ type: "ready", payload: {} }));
+    expect(screen.queryByLabelText("Developer bar")).toBeNull();
+  });
+});
