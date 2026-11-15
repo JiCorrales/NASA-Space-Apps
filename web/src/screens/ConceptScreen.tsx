@@ -19,9 +19,11 @@ export function ConceptScreen({ state, send = defaultSend }: { state: MissionSta
 
   return (
     <ScreenFrame step="concept" title="2 Concept" footer={
-      <StepFooter step="concept" send={send}>
+      // Finish appears on the last decision only: on the first one it used to sit where "next" is expected, and
+      // players finished the step without ever seeing the second decision. Moving on still never needs a choice.
+      <StepFooter step="concept" send={send} finish={last}>
         {index > 0 && <PixelButton onClick={() => setIndex(index - 1)}>&lt; Previous decision</PixelButton>}
-        {!last && <PixelButton onClick={() => setIndex(index + 1)}>Next decision &gt;</PixelButton>}
+        {!last && <PixelButton primary onClick={() => setIndex(index + 1)}>Next decision &gt;</PixelButton>}
       </StepFooter>
     }>
       <div className="concept">

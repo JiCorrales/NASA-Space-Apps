@@ -33,6 +33,9 @@ describe("concept screen", () => {
     const { send, fn } = mockSend();
     render(<ConceptScreen state={{ ...fixtureState(), issues: [issue("concept", "warning")] }} send={send} />);
     expect(screen.getByRole("status")).toHaveTextContent("Test issue on concept");
+    // Finish waits for the last decision, so the second one is always seen; nothing has to be chosen to get there.
+    expect(screen.queryByRole("button", { name: /Finish step/ })).toBeNull();
+    await userEvent.click(screen.getByRole("button", { name: /Next decision/ }));
     await userEvent.click(screen.getByRole("button", { name: /Finish step/ }));
     expect(fn).toHaveBeenCalledWith({ type: "completeStep", payload: { step: "concept" } });
   });
