@@ -1,8 +1,9 @@
 // Display labels for the frame values. These only choose a word and a colour for a value Unity sent;
 // the thresholds are the brief's illustrative display thresholds, not simulation rules.
 
-import type { SimFrame, WeekState } from "../bridge/types";
+import type { MissionState, SimFrame, WeekState } from "../bridge/types";
 import type { SceneInput } from "./scene/drawScene";
+import { regionKey } from "./scene/earth";
 import { isStationDown } from "./frameStore";
 
 export type Tone = "ok" | "warn" | "crit" | "idle";
@@ -89,7 +90,8 @@ export function segmentStatus(f: SimFrame | null): SegmentStatus[] {
   ];
 }
 
-export function sceneInputFromFrame(f: SimFrame | null): SceneInput {
+/** `state` only supplies the region the player chose (`state.design.region`): it picks which land the window shows. */
+export function sceneInputFromFrame(f: SimFrame | null, state?: MissionState | null): SceneInput {
   const p = problemOf(f);
   return {
     week: f?.week ?? 0,
@@ -105,5 +107,6 @@ export function sceneInputFromFrame(f: SimFrame | null): SceneInput {
     safeMode: f ? isActive(f, "safeMode") : false,
     imageNumber: f?.week ?? 0,
     ended: Boolean(f?.report),
+    region: regionKey(state?.design.region),
   };
 }
