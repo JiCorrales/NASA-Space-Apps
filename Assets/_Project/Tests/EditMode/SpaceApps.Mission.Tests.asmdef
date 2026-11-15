@@ -3,6 +3,7 @@
     "rootNamespace": "SpaceApps.Mission.Tests",
     "references": [
         "SpaceApps.Mission",
+        "SpaceApps.Bridge",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],
