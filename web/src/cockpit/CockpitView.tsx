@@ -43,7 +43,8 @@ function useFit() {
 /** The flight screen. Pure: shows what the props say and reports what the player pressed. */
 export function CockpitView({ frame, state, battery = [], link = [], onFly, onCommand, onClose }: CockpitViewProps) {
   const { ref, scale } = useFit();
-  const input = useMemo(() => sceneInputFromFrame(frame), [frame]);
+  const region = state?.design.region;
+  const input = useMemo(() => sceneInputFromFrame(frame, state), [frame, region]); // eslint-disable-line react-hooks/exhaustive-deps
   const segments = segmentStatus(frame);
   const speed = frame?.speed ?? "paused";
   const ended = Boolean(frame?.report);
