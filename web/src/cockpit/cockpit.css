@@ -158,6 +158,12 @@
 .ck-legend { display: flex; gap: 14px; margin-top: 5px; font: 400 10px/1 var(--mono); color: var(--dim); }
 .ck-legend i { display: inline-block; width: 8px; height: 8px; vertical-align: -1px; border-radius: 1px; }
 .ck-legend i.sent { background: linear-gradient(90deg, rgb(63, 155, 99), rgb(186, 148, 85)); }
+.ck-outcome { font: 600 13px/1 var(--display); letter-spacing: .12em; color: var(--ok); }
+.ck-outcome[data-s="crit"] { color: var(--crit); }
+.ck-attempts { width: 100%; border-collapse: collapse; font: 400 11px/1.4 var(--mono); color: var(--ink); }
+.ck-attempts th, .ck-attempts td { text-align: left; font-weight: 400; padding: 1px 6px 1px 0; }
+.ck-attempts tr[data-s="crit"] td:nth-child(2) { color: var(--crit); }
+.ck-attempts tr[data-s="ok"] td:nth-child(2) { color: var(--ok); }
 .ck-result-btns { display: flex; gap: 10px; }
 .ck-result-btns .ck-cmd { height: 36px; align-items: center; }
 

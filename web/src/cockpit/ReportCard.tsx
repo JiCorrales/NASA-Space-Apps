@@ -1,4 +1,4 @@
-import type { Report } from "../bridge/types";
+import type { Attempt, Report } from "../bridge/types";
 import { seasonColour } from "./scene/drawScene";
 import { WEEK_WORDS, rateTone } from "./status";
 
@@ -8,15 +8,25 @@ const num = (v: string | number) => {
   return Number.isFinite(n) ? Math.min(100, Math.max(0, n)) : 0;
 };
 
-/** The end-of-mission card: success rate, factors, what weighed most, a suggestion and the 52 images. */
-export function ReportCard({ report, week, onRetry, onChangeDesign }: {
-  report: Report; week: number; onRetry: () => void; onChangeDesign: () => void;
+/** The attempts shown on the card, newest first: the card has no room for a long history. */
+const SHOWN_ATTEMPTS = 4;
+
+/** The end-of-mission card: the outcome, success rate, factors, what weighed most, a suggestion, the 52 images and
+ * the previous attempts. */
+export function ReportCard({ report, week, attempts = [], onRetry, onChangeDesign }: {
+  report: Report; week: number; attempts?: Attempt[]; onRetry: () => void; onChangeDesign: () => void;
 }) {
+  const recent = attempts.slice(-SHOWN_ATTEMPTS).reverse();
   const images = Array.from({ length: 52 }, (_, i) => report.images[i] ?? "");
   const delivered = images.filter((s) => s === "sent").length;
   return (
     <section className="ck-result" role="dialog" aria-labelledby="ck-result-title" data-testid="report">
       <div className="ck-eyebrow" id="ck-result-title">MISSION REPORT · WEEK {week}</div>
+      {report.outcome && (
+        <div className="ck-outcome" data-s={report.outcome === "Success" ? "ok" : "crit"} data-testid="outcome">
+          {report.outcome === "Success" ? "SUCCESS" : `FAILED: ${report.outcome.toUpperCase()}`}
+        </div>
+      )}
       <div className="ck-result-cols">
         <div className="ck-result-l">
           <div className="ck-top">
@@ -37,6 +47,21 @@ export function ReportCard({ report, week, onRetry, onChangeDesign }: {
           <ul>{report.decisions.map((d) => <li key={d}>{d}</li>)}</ul>
           <h4>NEXT TIME</h4>
           <p>{report.suggestion}</p>
+          {recent.length > 0 && (
+            <>
+              <h4>ATTEMPTS</h4>
+              <table className="ck-attempts" data-testid="attempts">
+                <thead><tr><th scope="col">#</th><th scope="col">Outcome</th><th scope="col">Images</th><th scope="col">Success</th></tr></thead>
+                <tbody>
+                  {recent.map((a) => (
+                    <tr key={a.number} data-s={a.outcome === "Success" ? "ok" : "crit"}>
+                      <th scope="row">{a.number}</th><td>{a.outcome}</td><td>{a.imagesDelivered}</td><td>{Math.round(a.successRate)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
         </div>
       </div>
       <div className="ck-images">
