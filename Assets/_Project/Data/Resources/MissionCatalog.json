@@ -356,6 +356,11 @@
     "value": 2,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
+   },
+   "imageMb": {
+    "value": 2.0,
+    "source": "Game balance: size of one image of the target region after compression",
+    "status": "game-balance"
    }
   },
   {
@@ -403,6 +408,11 @@
    "devMonths": {
     "value": 4,
     "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "imageMb": {
+    "value": 25.0,
+    "source": "Game balance: size of one image of the target region after compression",
     "status": "game-balance"
    }
   },
@@ -452,6 +462,11 @@
     "value": 1,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
+   },
+   "imageMb": {
+    "value": 0,
+    "source": "Game balance: not an imager, so it makes no images",
+    "status": "game-balance"
    }
   },
   {
@@ -499,6 +514,11 @@
    "devMonths": {
     "value": 2,
     "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "imageMb": {
+    "value": 0,
+    "source": "Game balance: not an imager, so it makes no images",
     "status": "game-balance"
    }
   },
@@ -548,6 +568,11 @@
     "value": 3,
     "source": "Game balance value chosen by the team, not NASA data",
     "status": "game-balance"
+   },
+   "imageMb": {
+    "value": 0,
+    "source": "Game balance: not an imager, so it makes no images",
+    "status": "game-balance"
    }
   },
   {
@@ -595,6 +620,11 @@
    "devMonths": {
     "value": 6,
     "source": "Game balance value chosen by the team, not NASA data",
+    "status": "game-balance"
+   },
+   "imageMb": {
+    "value": 0,
+    "source": "Game balance: not an imager, so it makes no images",
     "status": "game-balance"
    }
   }
@@ -834,6 +864,16 @@
     "value": 3,
     "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9: ground station 2-12 months; value chosen in that range",
     "status": "game-balance"
+   },
+   "outageChancePerYear": {
+    "value": 0.6,
+    "source": "Game balance: chance per year that this station goes offline; a single volunteer or campus dish fails more often than a network",
+    "status": "game-balance"
+   },
+   "outageWeeks": {
+    "value": 4,
+    "source": "Game balance: weeks of lost contact when it fails; a network can reroute faster than a single dish",
+    "status": "game-balance"
    }
   },
   {
@@ -857,6 +897,16 @@
     "value": 6,
     "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9: ground station 2-12 months; value chosen in that range",
     "status": "game-balance"
+   },
+   "outageChancePerYear": {
+    "value": 0.35,
+    "source": "Game balance: chance per year that this station goes offline; a single volunteer or campus dish fails more often than a network",
+    "status": "game-balance"
+   },
+   "outageWeeks": {
+    "value": 3,
+    "source": "Game balance: weeks of lost contact when it fails; a network can reroute faster than a single dish",
+    "status": "game-balance"
    }
   },
   {
@@ -879,6 +929,16 @@
    "months": {
     "value": 2,
     "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9: ground station 2-12 months; value chosen in that range",
+    "status": "game-balance"
+   },
+   "outageChancePerYear": {
+    "value": 0.1,
+    "source": "Game balance: chance per year that this station goes offline; a single volunteer or campus dish fails more often than a network",
+    "status": "game-balance"
+   },
+   "outageWeeks": {
+    "value": 1,
+    "source": "Game balance: weeks of lost contact when it fails; a network can reroute faster than a single dish",
     "status": "game-balance"
    }
   }
@@ -1977,5 +2037,595 @@
     "status": "game-balance"
    }
   }
- ]
+ ],
+ "earthWatch": {
+  "mission": {
+   "id": "EW-1",
+   "name": "Earth Watch",
+   "summary": "A 3U CubeSat photographs one region of Earth once a week for 52 weeks. An image counts only when it has been sent to the scientists during a ground pass."
+  },
+  "objective": {
+   "id": "earth-watch",
+   "name": "Earth Watch",
+   "summary": "Photograph one region of Earth once a week for 52 weeks, so scientists can see how it changes.",
+   "requiredTags": [
+    "imaging"
+   ],
+   "allowedOrbits": [
+    "leo-iss",
+    "leo-500",
+    "sso-550"
+   ],
+   "preferredOrbits": [
+    "sso-550"
+   ],
+   "minScience": {
+    "value": 5,
+    "source": "Game balance: minimum science points; below this the camera and link cannot serve the mission",
+    "status": "game-balance"
+   },
+   "budgetUsd": {
+    "value": 600000,
+    "source": "Game balance: total budget proposed by the team for Earth Watch; NASA publishes no budget for a CubeSat of this kind",
+    "status": "game-balance"
+   },
+   "deadlineMonths": {
+    "value": 24,
+    "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9: 9 months at the fastest, 18 to 24 typical; the team fixed 24",
+    "status": "derived"
+   },
+   "missionMonths": {
+    "value": 12,
+    "source": "Game balance: 52 weeks of observation, as the team defined Earth Watch",
+    "status": "game-balance"
+   }
+  },
+  "regions": [
+   {
+    "id": "costa-rica-forests",
+    "name": "Costa Rica forests",
+    "summary": "Watch the forests of Costa Rica lose or regrow their canopy through a year."
+   },
+   {
+    "id": "amazon",
+    "name": "The Amazon",
+    "summary": "Watch a stretch of the Amazon basin change between the wet and the dry season."
+   },
+   {
+    "id": "arctic-sea-ice",
+    "name": "Arctic sea ice",
+    "summary": "Watch the Arctic sea ice shrink and grow again through the seasons."
+   }
+  ],
+  "revisits": [
+   {
+    "id": "weekly",
+    "name": "Every week",
+    "summary": "One image of the region every week: 52 images in the year.",
+    "captureEveryWeeks": {
+     "value": 1,
+     "source": "Game balance: the mission asks for one image per week",
+     "status": "game-balance"
+    }
+   },
+   {
+    "id": "fortnightly",
+    "name": "Every two weeks",
+    "summary": "One image every second week: half the work for the satellite, half the images.",
+    "captureEveryWeeks": {
+     "value": 2,
+     "source": "Game balance: a lighter schedule the player may try",
+     "status": "game-balance"
+    }
+   }
+  ],
+  "attitudes": [
+   {
+    "id": "magnetorquers",
+    "name": "Magnetorquers only",
+    "summary": "Cheap coils that push against Earth's magnetic field. Coarse pointing, and they drift more often.",
+    "massKg": {
+     "value": 0.05,
+     "source": "Game balance: small coils",
+     "status": "game-balance"
+    },
+    "units": {
+     "value": 0.05,
+     "source": "Game balance: small coils",
+     "status": "game-balance"
+    },
+    "powerW": {
+     "value": 0.3,
+     "source": "Game balance: coils draw little",
+     "status": "game-balance"
+    },
+    "costUsd": {
+     "value": 8000,
+     "source": "Game balance: cheapest pointing option",
+     "status": "game-balance"
+    },
+    "basePointingDeg": {
+     "value": 0.7,
+     "source": "Game balance: coarse pointing, just inside a 1 degree tolerance",
+     "status": "game-balance"
+    },
+    "driftDegPerWeek": {
+     "value": 0.7,
+     "source": "Game balance: drift after a fault",
+     "status": "game-balance"
+    },
+    "faultChancePerYear": {
+     "value": 0.75,
+     "source": "Game balance: chance per year of a pointing fault for this hardware",
+     "status": "game-balance"
+    },
+    "recalibrateWeeks": {
+     "value": 2,
+     "source": "Game balance: weeks without images while it recalibrates",
+     "status": "game-balance"
+    }
+   },
+   {
+    "id": "reaction-wheels",
+    "name": "Reaction wheels",
+    "summary": "Small spinning wheels that turn the satellite. Good pointing at a fair price.",
+    "massKg": {
+     "value": 0.3,
+     "source": "Game balance: three small wheels",
+     "status": "game-balance"
+    },
+    "units": {
+     "value": 0.3,
+     "source": "Game balance: three small wheels",
+     "status": "game-balance"
+    },
+    "powerW": {
+     "value": 1.0,
+     "source": "Game balance: wheels draw more power",
+     "status": "game-balance"
+    },
+    "costUsd": {
+     "value": 40000,
+     "source": "Game balance: mid-priced pointing option",
+     "status": "game-balance"
+    },
+    "basePointingDeg": {
+     "value": 0.2,
+     "source": "Game balance: fine pointing",
+     "status": "game-balance"
+    },
+    "driftDegPerWeek": {
+     "value": 0.5,
+     "source": "Game balance: drift after a fault",
+     "status": "game-balance"
+    },
+    "faultChancePerYear": {
+     "value": 0.4,
+     "source": "Game balance: chance per year of a pointing fault for this hardware",
+     "status": "game-balance"
+    },
+    "recalibrateWeeks": {
+     "value": 1,
+     "source": "Game balance: one week without images while it recalibrates",
+     "status": "game-balance"
+    }
+   },
+   {
+    "id": "star-tracker",
+    "name": "Star tracker and wheels",
+    "summary": "Wheels guided by a camera that reads the stars. The best pointing, and the most expensive.",
+    "massKg": {
+     "value": 0.45,
+     "source": "Game balance: wheels plus tracker",
+     "status": "game-balance"
+    },
+    "units": {
+     "value": 0.4,
+     "source": "Game balance: wheels plus tracker",
+     "status": "game-balance"
+    },
+    "powerW": {
+     "value": 1.4,
+     "source": "Game balance: tracker and wheels",
+     "status": "game-balance"
+    },
+    "costUsd": {
+     "value": 90000,
+     "source": "Game balance: most expensive pointing option",
+     "status": "game-balance"
+    },
+    "basePointingDeg": {
+     "value": 0.05,
+     "source": "Game balance: very fine pointing",
+     "status": "game-balance"
+    },
+    "driftDegPerWeek": {
+     "value": 0.3,
+     "source": "Game balance: drift after a fault",
+     "status": "game-balance"
+    },
+    "faultChancePerYear": {
+     "value": 0.15,
+     "source": "Game balance: chance per year of a pointing fault for this hardware",
+     "status": "game-balance"
+    },
+    "recalibrateWeeks": {
+     "value": 1,
+     "source": "Game balance: one week without images while it recalibrates",
+     "status": "game-balance"
+    }
+   }
+  ],
+  "storages": [
+   {
+    "id": "small",
+    "name": "Small storage",
+    "summary": "Holds 2 images while waiting for a ground pass.",
+    "capacityImages": {
+     "value": 2,
+     "source": "Game balance: images the memory can hold",
+     "status": "game-balance"
+    },
+    "massKg": {
+     "value": 0.02,
+     "source": "Game balance: small memory card",
+     "status": "game-balance"
+    },
+    "costUsd": {
+     "value": 5000,
+     "source": "Game balance: cheapest memory",
+     "status": "game-balance"
+    }
+   },
+   {
+    "id": "medium",
+    "name": "Medium storage",
+    "summary": "Holds 6 images while waiting for a ground pass.",
+    "capacityImages": {
+     "value": 6,
+     "source": "Game balance: images the memory can hold",
+     "status": "game-balance"
+    },
+    "massKg": {
+     "value": 0.04,
+     "source": "Game balance: memory board",
+     "status": "game-balance"
+    },
+    "costUsd": {
+     "value": 15000,
+     "source": "Game balance: mid-priced memory",
+     "status": "game-balance"
+    }
+   },
+   {
+    "id": "large",
+    "name": "Large storage",
+    "summary": "Holds 20 images while waiting for a ground pass.",
+    "capacityImages": {
+     "value": 20,
+     "source": "Game balance: images the memory can hold",
+     "status": "game-balance"
+    },
+    "massKg": {
+     "value": 0.08,
+     "source": "Game balance: large memory board",
+     "status": "game-balance"
+    },
+    "costUsd": {
+     "value": 30000,
+     "source": "Game balance: most expensive memory",
+     "status": "game-balance"
+    }
+   }
+  ],
+  "backupStations": [
+   {
+    "id": "none",
+    "name": "No backup station",
+    "summary": "If the main ground station goes offline, images wait on board.",
+    "costUsd": {
+     "value": 0,
+     "source": "Game balance: nothing bought",
+     "status": "game-balance"
+    },
+    "weeksSaved": {
+     "value": 0,
+     "source": "Game balance: no backup",
+     "status": "game-balance"
+    },
+    "chanceFactor": {
+     "value": 1,
+     "source": "Game balance: no backup",
+     "status": "game-balance"
+    },
+    "passFactor": {
+     "value": 1,
+     "source": "Game balance: no backup",
+     "status": "game-balance"
+    }
+   },
+   {
+    "id": "partner-station",
+    "name": "Partner station",
+    "summary": "A second dish at a partner university. It shortens an outage, but its passes carry less.",
+    "costUsd": {
+     "value": 40000,
+     "source": "Game balance: fee for a second station",
+     "status": "game-balance"
+    },
+    "weeksSaved": {
+     "value": 1,
+     "source": "Game balance: weeks of outage a second station can cover",
+     "status": "game-balance"
+    },
+    "chanceFactor": {
+     "value": 0.5,
+     "source": "Game balance: both stations rarely fail together",
+     "status": "game-balance"
+    },
+    "passFactor": {
+     "value": 0.5,
+     "source": "Game balance: the partner dish carries half of a normal pass",
+     "status": "game-balance"
+    }
+   }
+  ],
+  "sim": {
+   "weeks": {
+    "value": 52,
+    "source": "Game balance: Earth Watch lasts one year, as the team defined it",
+    "status": "game-balance"
+   },
+   "minImages": {
+    "value": 40,
+    "source": "Game balance: team value: images needed out of 52 for the science to be useful",
+    "status": "game-balance"
+   },
+   "pointingToleranceDeg": {
+    "value": 1.0,
+    "source": "Game balance: starting threshold from the team brief (illustrative)",
+    "status": "game-balance"
+   },
+   "minCaptureBatteryPct": {
+    "value": 30,
+    "source": "Game balance: starting threshold from the team brief (illustrative)",
+    "status": "game-balance"
+   },
+   "maxCameraTempC": {
+    "value": 30,
+    "source": "Game balance: starting threshold from the team brief (illustrative)",
+    "status": "game-balance"
+   },
+   "minLinkPct": {
+    "value": 50,
+    "source": "Game balance: link quality below this cannot carry an image",
+    "status": "game-balance"
+   },
+   "captureHours": {
+    "value": 0.5,
+    "source": "Game balance: hours the camera works to take one image",
+    "status": "game-balance"
+   },
+   "chargeHours": {
+    "value": 2,
+    "source": "Game balance: hours per week of net surplus that reach the battery after heaters and losses",
+    "status": "game-balance"
+   },
+   "cameraBaseTempC": {
+    "value": 15,
+    "source": "Game balance: camera bay temperature with the camera off",
+    "status": "game-balance"
+   },
+   "tempPerCameraW": {
+    "value": 1.5,
+    "source": "Game balance: degrees the camera bay warms per watt the camera draws",
+    "status": "game-balance"
+   },
+   "tempRelax": {
+    "value": 0.5,
+    "source": "Game balance: share of a temperature excess that cools each week",
+    "status": "game-balance"
+   },
+   "panelLossFactor": {
+    "value": 0.7,
+    "source": "Game balance: panels give 30 percent less while the satellite points badly",
+    "status": "game-balance"
+   },
+   "stormYearlyChance": {
+    "value": 0.39,
+    "source": "NASA DONKI 2024-2025: 1 storm at Kp 9 in 2 years (solar maximum), so 1 - e^-0.5 = 39% in a 12-month mission",
+    "status": "derived"
+   },
+   "stormTightBatteryWh": {
+    "value": 15,
+    "source": "Game balance: a battery under this many Wh is tight for a storm",
+    "status": "game-balance"
+   },
+   "stormTightBonus": {
+    "value": 0.1,
+    "source": "Game balance: extra storm chance when the battery is tight",
+    "status": "game-balance"
+   },
+   "stormEnergyWh": {
+    "value": 14,
+    "source": "Game balance: energy the storm takes from the battery",
+    "status": "game-balance"
+   },
+   "stormPointingDeg": {
+    "value": 1.8,
+    "source": "Game balance: pointing error the storm adds",
+    "status": "game-balance"
+   },
+   "stormHeatC": {
+    "value": 13,
+    "source": "Game balance: degrees the storm adds to the camera bay",
+    "status": "game-balance"
+   },
+   "stormWeeks": {
+    "value": 3,
+    "source": "Game balance: weeks the storm lasts when nobody answers",
+    "status": "game-balance"
+   },
+   "stormDrainWh": {
+    "value": 2,
+    "source": "Game balance: energy lost each week while the storm lasts",
+    "status": "game-balance"
+   },
+   "pauseRecoverWh": {
+    "value": 6,
+    "source": "Game balance: energy the battery regains when the camera is paused",
+    "status": "game-balance"
+   },
+   "pauseCoolC": {
+    "value": 8,
+    "source": "Game balance: degrees the camera bay cools when the camera is paused",
+    "status": "game-balance"
+   },
+   "safeModeWeeks": {
+    "value": 2,
+    "source": "Game balance: weeks of no images in safe mode",
+    "status": "game-balance"
+   },
+   "safeModeBatteryPct": {
+    "value": 80,
+    "source": "Game balance: battery level safe mode brings the satellite back to",
+    "status": "game-balance"
+   },
+   "attitudeFaultMaxWeeks": {
+    "value": 5,
+    "source": "Game balance: weeks a pointing fault lasts when nobody answers",
+    "status": "game-balance"
+   },
+   "recalibrateWh": {
+    "value": 0.5,
+    "source": "Game balance: energy a recalibration uses",
+    "status": "game-balance"
+   },
+   "prioritizeWh": {
+    "value": 3,
+    "source": "Game balance: extra energy a full-queue downlink burst uses",
+    "status": "game-balance"
+   },
+   "backupWeeks": {
+    "value": 2,
+    "source": "Game balance: weeks the backup station carries the passes",
+    "status": "game-balance"
+   },
+   "silenceWeeksLost": {
+    "value": 8,
+    "source": "Game balance: weeks without contact before the satellite is declared lost",
+    "status": "game-balance"
+   },
+   "eventSpacingWeeks": {
+    "value": 6,
+    "source": "Game balance: minimum weeks between two problems",
+    "status": "game-balance"
+   },
+   "weightScience": {
+    "value": 0.5,
+    "source": "Game balance: team brief 5.4 proposal",
+    "status": "game-balance"
+   },
+   "weightLink": {
+    "value": 0.2,
+    "source": "Game balance: team brief 5.4 proposal",
+    "status": "game-balance"
+   },
+   "weightPower": {
+    "value": 0.15,
+    "source": "Game balance: team brief 5.4 proposal",
+    "status": "game-balance"
+   },
+   "weightPointing": {
+    "value": 0.15,
+    "source": "Game balance: team brief 5.4 proposal",
+    "status": "game-balance"
+   },
+   "weeksPerMonth": {
+    "value": 4.345,
+    "source": "52 weeks divided by 12 months",
+    "status": "derived"
+   }
+  },
+  "requirements": [
+   {
+    "id": "deadlineMonths",
+    "label": "Reach orbit within",
+    "unit": "months",
+    "value": {
+     "value": 24,
+     "source": "CubeSat 101 (NASA CSLI, 2017) chapter 2 p.9: 9 months at the fastest, 18 to 24 typical; the team fixed 24",
+     "status": "derived"
+    },
+    "min": 12,
+    "max": 36,
+    "check": "Checked in Design and Build: development, licences, the ground station and the launch wait must fit."
+   },
+   {
+    "id": "reservePercent",
+    "label": "Budget kept in reserve",
+    "unit": "%",
+    "value": {
+     "value": 10,
+     "source": "CubeSat 101 (NASA CSLI, 2017), section 2.2 p.13: reserves of at least 10% of the budget",
+     "status": "nasa-verified"
+    },
+    "min": 0,
+    "max": 40,
+    "check": "Checked in Design: the mission cost must leave this share of the budget unspent."
+   },
+   {
+    "id": "budgetUsd",
+    "label": "Total budget",
+    "unit": "USD",
+    "value": {
+     "value": 600000,
+     "source": "Game balance: total budget proposed by the team for Earth Watch; NASA publishes no budget for a CubeSat of this kind",
+     "status": "game-balance"
+    },
+    "min": 300000,
+    "max": 1500000,
+    "check": "Checked in Design: parts, tests, licences and the launch share NASA does not pay."
+   },
+   {
+    "id": "massLimitKg",
+    "label": "Maximum mass",
+    "unit": "kg",
+    "value": {
+     "value": 6,
+     "source": "CubeSat Design Specification rev 14.1 (Cal Poly, on nasa.gov), Table 1: 3U at most 6.00 kg",
+     "status": "nasa-verified"
+    },
+    "min": 3,
+    "max": 6,
+    "check": "Checked in Design: the sum of all parts, and the launcher's own limit."
+   },
+   {
+    "id": "minImages",
+    "label": "Images needed for success",
+    "unit": "images",
+    "value": {
+     "value": 40,
+     "source": "Game balance: team value: images needed out of 52 for the science to be useful",
+     "status": "game-balance"
+    },
+    "min": 20,
+    "max": 52,
+    "check": "Checked in Concept and in flight: the schedule must allow it and the mission must deliver it."
+   },
+   {
+    "id": "pointingToleranceDeg",
+    "label": "Pointing tolerance",
+    "unit": "deg",
+    "value": {
+     "value": 1.0,
+     "source": "Game balance: starting threshold from the team brief (illustrative)",
+     "status": "game-balance"
+    },
+    "min": 0.5,
+    "max": 2.0,
+    "check": "Checked in Design (the attitude system's accuracy) and in flight (weeks within tolerance)."
+   }
+  ]
+ }
 }
