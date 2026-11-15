@@ -53,3 +53,25 @@ Principio clave: **"Empezar con el final en mente"**: se parte del segmento de u
 - El **esqueleto del flujo de juego**: Objetivo → Concepto → Requisitos → Diseño → Construir/verificar → Operar.
 - Los **4 segmentos** como "tableros" o áreas del juego (lanzamiento, nave, tierra, usuario).
 - Mecánica "empieza por el final": el jugador fija qué datos necesita y de ahí salen requisitos numéricos verificables.
+
+## How the game follows this process (status on 2026-11-14)
+
+Checked against slide 10 of the PDF, "Big Picture Process to Design & Develop a Space Mission", and the eight
+stations of the ship on `develop`. Written in English because the repository rules ask for it; the rest of this
+note is still to be translated.
+
+| NASA step (slide 10) | Station in the game | Status |
+|---|---|---|
+| Identify Need & Goals | 1 Objective | Followed |
+| Define Concept | none | Missing: the player never describes how the mission will operate (no concept of operations) |
+| Define Requirements | 2 Requirements | Partly: the requirements of the chosen objective are shown; the player does not set them |
+| Design | 3 Spacecraft, 4 Instruments, 5 Communications, 6 Launch and Orbit | Followed |
+| Build & Verify | 7 Build and Test | Followed: the player chooses the verification tests |
+| Implement | 8 Mission Control | Followed: launch, then the mission month by month |
+
+The order is the same as NASA's. Five of the six steps have a station; "Define Concept" has none.
+
+The four mission segments of the same webinar: launch is station 6, space is stations 3 and 4, ground is the
+ground station chosen at station 5, and the user segment (who uses the data and for what) is not a decision in
+the game. "Start with the end in mind" holds only in part: the objective comes first, but the player does not
+state the data product they need before designing.
