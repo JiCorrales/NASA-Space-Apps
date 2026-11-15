@@ -106,3 +106,49 @@
   .a1-seats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .a1-board__grid, .a1-summary { grid-template-columns: 1fr; }
 }
+
+/* ---- phones, portrait (390 x 844, 430 x 932) ---- */
+@media (max-width: 640px) {
+  .a1 { padding: 14px 12px 24px; gap: 14px; }
+  .a1-head { flex-direction: column; align-items: stretch; gap: 10px; }
+  .a1-head h1 { font-size: 16px; overflow-wrap: anywhere; }
+  .a1-lede { max-width: none; font-size: 14px; }
+  .a1-dim, .a1-note { font-size: 14px; }
+  .a1 .pxbtn { min-height: 44px; font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
+  .a1-actions { flex-direction: column; align-items: stretch; }
+  .a1-actions .pxbtn, .a1-head .pxbtn { width: 100%; box-sizing: border-box; text-align: center; }
+  .a1-foot { flex-wrap: wrap; justify-content: stretch; }
+  .a1-foot__note { flex: 1 1 100%; font-size: 14px; }
+  .a1-foot .pxbtn { flex: 1 1 150px; }
+
+  .a1-seats { grid-template-columns: 1fr; }
+  .a1-seat__art { width: 96px; height: 160px; }
+  .a1-field { font-size: 12px; }
+  .a1-field input { min-height: 44px; font-size: 16px; }
+  .a1-look { min-height: 76px; font-size: 11px; }
+  .a1-role { min-height: 56px; padding: 6px 8px; }
+  .a1-role__name { font-size: 14px; }
+  .a1-role__note { font-size: 12px; }
+
+  .a1-board__grid { grid-template-columns: 1fr; }
+  .a1-steps { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .a1-step { min-height: 64px; padding: 12px; grid-template-columns: 28px minmax(0, 1fr); }
+  .a1-step__name, .a1-step__state { overflow-wrap: anywhere; }
+  .a1-step__name { font-size: 12px; }
+  .a1-step__blurb { font-size: 14px; }
+  .a1-crew-list { grid-template-columns: 1fr; font-size: 14px; }
+  .a1-res { grid-template-columns: 1fr; }
+  .a1-res .res__row { font-size: 14px; }
+  .a1-attempts ul { font-size: 14px; }
+  .a1-box { padding: 12px; }
+
+  .a1-stage { width: 100%; }
+  .a1-readout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .a1-readout dd { font-size: 16px; }
+  .a1-readout dt { font-size: 10px; }
+  .a1-brief__list { grid-template-columns: 1fr; }
+  .a1-brief__list li { font-size: 14px; }
+  .a1-report ul, .a1-summary__list { font-size: 14px; }
+  .a1-caption { font-size: 14px; }
+  .a1-summary { grid-template-columns: 1fr; }
+}

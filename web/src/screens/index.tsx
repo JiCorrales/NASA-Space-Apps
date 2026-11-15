@@ -1,6 +1,7 @@
 // Screens for steps 1 to 5. They show the MissionState they get and send what the player did; nothing more.
 import type { MissionState, Step } from "../bridge/types";
 import "./screens.css";
+import "./phone.css";
 import { BuildScreen } from "./BuildScreen";
 import { ConceptScreen } from "./ConceptScreen";
 import { DesignScreen } from "./DesignScreen";
