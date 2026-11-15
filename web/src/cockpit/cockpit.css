@@ -1,12 +1,12 @@
-/* Step "fly": the cockpit. Keeps the reference animation's own dark palette and fonts (Chakra Petch for labels,
-   IBM Plex Mono for numbers), scoped under .ck so the retro theme of the other screens is untouched.
+/* Step "fly": the cockpit, in the same Retro 4 style as the other screens: the pixel font for labels, mono for
+   numbers, square corners and hard edges (see the "8-bit" block at the end). Scoped under .ck.
    Layout: a fixed 1280 x 720 stage scaled to fit. Window on top, console of six screens below, a bottom bar. */
 .ck {
   --void: #05070f; --hull: #151c2a; --hull-hi: #2b3852; --glass: #08111d;
   --ink: #e4ecf5; --dim: #8394ab; --ice: #86dcf2;
   --ok: #62d394; --warn: #f3c04f; --crit: #ff6464;
-  --display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --display: var(--font-pixel);
+  --mono: var(--font-mono);
   color-scheme: dark;
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   background: var(--void); color: var(--ink); font-family: var(--display); overflow: hidden;
@@ -160,3 +160,22 @@
 .ck-legend i.sent { background: linear-gradient(90deg, rgb(63, 155, 99), rgb(186, 148, 85)); }
 .ck-result-btns { display: flex; gap: 10px; }
 .ck-result-btns .ck-cmd { height: 36px; align-items: center; }
+
+/* 8-bit: the pixel font is twice as wide as the reference's, so its labels are smaller and unspaced; no round
+   corners, no soft shadows, no tilt; the space window is scaled up without smoothing. */
+.ck-space { image-rendering: pixelated; }
+.ck *, .ck-stage { border-radius: 0 !important; }
+.ck-hud-l b, .ck-alert, .ck-eyebrow, .ck-scr h3, .ck-deck h4, .ck-result h4, .ck-cmd, .ck-sbtn, .ck-segs b {
+  font-size: 8px; letter-spacing: 0; font-weight: 400; }
+.ck-hud-l b, .ck-alert { font-size: 10px; }
+.ck-screens { transform: none; }
+.ck-scr { border: 2px solid #223149; box-shadow: 4px 4px 0 #0a0f19; }
+.ck-scr[data-s="crit"] { border-color: var(--crit); }
+.ck-scr::before { height: 4px; }
+.ck-cmd, .ck-sbtn { border-width: 2px; background: var(--hull); box-shadow: 3px 3px 0 #06090f; }
+.ck-cmd.on, .ck-cmd:disabled { box-shadow: none; }
+.ck-primary, .ck-sbtn[aria-pressed="true"] { background: var(--ice); }
+.ck-segs li { border-width: 2px; transition: none; }
+.ck-segs li[data-lit="true"] { box-shadow: 3px 3px 0 var(--state); }
+.ck-launch, .ck-result { border: 2px solid var(--ice); box-shadow: 6px 6px 0 #000; }
+.ck-spark-line { stroke-linejoin: miter; shape-rendering: crispEdges; }
