@@ -358,3 +358,14 @@ export const LAUNCH_RULES = {
   undeployedUntested: 0.5, undeployedTested: 0.03,
   stations: ["RANGE", "WEATHER", "VEHICLE", "PAYLOAD", "DSN", "FLIGHT"] as const,
 };
+
+// ---------------------------------------------------------------- the crossing, for the cruise scene
+
+export const CRUISE = {
+  /** Real seconds the cruise scene takes; a key skips it. */
+  sceneSeconds: 16,
+  /** One-way radio delay at arrival, minutes, drawn as growing in a straight line from launch. The real figure
+   * depends on the date and lies between LIGHT_MIN.min and LIGHT_MIN.max; the value at arrival is the team's. */
+  delayAtArrivalMin: 10,
+  source: team("The crossing takes 272 days (NASA Trajectory Browser, trajectory 20630). The scene draws the radio delay growing in a straight line to 10 minutes at arrival; the real delay is 3 to 22 minutes depending on the date (CSV rows C03, C04)"),
+};
