@@ -66,9 +66,8 @@ function Picker({ view, onPick }: { view: PlayerView; onPick: (a: ActivityId, t:
           <li key={o.id}>
             <button type="button" className="opt" disabled={!!o.blocked} title={o.summary}
               onClick={() => (o.targetKind === "none" ? onPick(o.id, { kind: "none" }) : setOpt(o))}>
-              <Icon name={iconOf(o.id)} />
-              <span className="opt__name">{o.name}</span>
-              <span className="opt__tag">{o.blocked ? `BLOCKED: ${o.blocked}` : o.skilled ? "SKILLED" : "SLOWER"}</span>
+              <span className="opt__top"><Icon name={iconOf(o.id)} /><span className="opt__name">{o.name}</span>{!o.blocked && <span className="opt__tag">{o.skilled ? "SKILLED" : "SLOWER"}</span>}</span>
+              {o.blocked && <span className="opt__why" title={o.blocked}>BLOCKED: {o.blocked}</span>}
             </button>
           </li>
         ))}
