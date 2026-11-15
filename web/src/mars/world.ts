@@ -17,7 +17,7 @@ import { TASKS } from "./tasks";
 import { buildView } from "./view";
 import {
   NO_TARGET, PLAYER_IDS, RUN_SOLS, type Act1Design, type Act1Extras, type Attempt, type Choice, type CrewSetup,
-  type EveningView, type HazardId, type LinkCause, type LoseReason, type ModuleId, type PlayerId, type PlayerView, type Pos,
+  type EveningView, type GaugeId, type HazardId, type LinkCause, type LoseReason, type ModuleId, type PlayerId, type PlayerView, type Pos,
   type RelayCapabilities, type RunResult, type SiteId, type SolEvent, type SolEventKind, type SolRecord, type SolReport,
   type TaskId, type Target,
 } from "./types";
@@ -49,6 +49,7 @@ export interface ChoiceResult { ok: boolean; reason?: string }
 const SITE_IDS: SiteId[] = ["site-1", "site-2", "site-3"];
 const LEVEL_EFFORT = [0.5, 1, 1.25, 1.4];
 const LEVEL_FAIL = [0.35, 0.18, 0.1, 0.06];
+const GAUGE_IDS: GaugeId[] = ["radiation", "energy", "rest", "air", "water", "food", "body", "morale"];
 const DEAD: string[] = ["air", "water", "food", "body"];
 
 export class MarsWorld {
@@ -101,6 +102,7 @@ export class MarsWorld {
   };
 
   private order = 0;
+  private gaugeSnap: number[][] = [];
 
   constructor(o: WorldOptions) {
     this.seed = o.seed;
@@ -302,6 +304,7 @@ export class MarsWorld {
   resolveSol(): SolReport {
     if (this.status !== "running") return this.lastReport!;
     const sol = this.sol;
+    this.snapGauges();
     const linkedAtStart = this.players.map((p) => p.linked);
     const cutOff = this.players.filter((p) => p.active && !p.linked).map((p) => p.id);
     const finals: Choice[] = [];
@@ -311,13 +314,15 @@ export class MarsWorld {
       finals.push(c);
     }
     const phase = (c: Choice) => (c.activity === "plan" ? 0 : c.activity === "moveSupplies" ? 1 : 2);
-    for (const c of [...finals].sort((a, b) => phase(a) - phase(b) || a.player - b.player)) this.resolvePlayer(this.players[c.player]!, c);
+    for (const c of [...finals].sort((a, b) => phase(a) - phase(b) || a.player - b.player)) { this.resolvePlayer(this.players[c.player]!, c); this.flushGauges(); }
 
     // hazards
-    for (const h of HAZARDS) this.applyHazard(h);
+    for (const h of HAZARDS) { this.applyHazard(h); this.flushGauges(); }
     const power = this.powerStep();
+    this.flushGauges();
     this.satelliteStep();
     this.bodyStep();
+    this.flushGauges();
     this.labStep();
 
     // what the team knows
@@ -347,7 +352,7 @@ export class MarsWorld {
     this.records.push({
       sol, choices: finals,
       cutOff: cutOff.map((id) => ({ player: id, cause: this.players[id]!.linkCause, did: { activity: finals.find((f) => f.player === id)!.activity, target: finals.find((f) => f.player === id)!.target } })),
-      events: this.events.map((e) => e.text),
+      events: this.events.filter((e) => !e.gauge).map((e) => e.text),
     });
     if (ended) this.result_ = buildAttemptResult(this);
     else { this.sol++; this.beginSol(); }
@@ -449,6 +454,22 @@ export class MarsWorld {
     if (best) p.position = best;
   }
 
+  private snapGauges() { this.gaugeSnap = this.players.map((p) => GAUGE_IDS.map((g) => p.gaugeValue(g))); }
+
+  /** Says, as it happens, every gauge that moved since the last look: who, which gauge, its new value. */
+  private flushGauges() {
+    const labels = Object.fromEntries(this.players[0]!.gauges().map((g) => [g.id, g.label.toLowerCase()]));
+    for (const p of this.players) {
+      const prev = this.gaugeSnap[p.id]!;
+      GAUGE_IDS.forEach((g, i) => {
+        const v = Math.round(p.gaugeValue(g) * 10) / 10;
+        if (Math.abs(v - prev[i]!) < 0.5) return;
+        prev[i] = v;
+        this.emit("gauge", [p.id], `${p.name}'s ${labels[g]} is now ${v}.`, { gauge: g, value: v, at: { ...p.position } });
+      });
+    }
+  }
+
   private stepCost(step: Pos): number { return tileCost(this.map.tiles[step.y]![step.x]!); }
 
   // ------------------------------------------------------------ the end of a sol
@@ -524,7 +545,7 @@ export class MarsWorld {
   }
 
   private eveningLines(power: SolReport["power"]): string[] {
-    const lines = this.events.filter((e) => e.scope === "team").map((e) => e.text);
+    const lines = this.events.filter((e) => e.scope === "team" && !e.gauge).map((e) => e.text);
     lines.push(`Power: the array made ${power.generatedWh} Wh and the base used ${power.usedWh} Wh; the battery holds ${power.storedWh} Wh.`);
     if (this.bufferMb > 0) lines.push(`${Math.round(this.bufferMb)} Mb of data wait at the base.`);
     return lines;

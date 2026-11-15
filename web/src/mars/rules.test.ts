@@ -618,3 +618,54 @@ describe("supplies: who the base feeds and when a pack is used", () => {
     expect(w.players[1]!.air).toBe(100);
   });
 });
+
+describe("what the screen needs the view to say", () => {
+  const shared = (w: MarsWorld) => w.views().find((v) => v.shared)!.shared!;
+
+  it("tells a located site from a visited, sampled, analysed and sent one, and counts the ones under fog", () => {
+    const w = fresh(3, MIDDLING_DESIGN, []);
+    w.modules.antenna.built = true; // so the player who walks out keeps contact and the team sees what they see
+    const sh = shared(w);
+    expect(sh.sites.length + sh.hiddenSites).toBe(3);
+    const located = sh.sites.find((s) => s.state === "located");
+    expect(located).toBeDefined();
+    expect(located!.visited).toBe(false);
+    const id = located!.id;
+    w.players[2]!.position = { ...w.siteOf(id).pos };
+    step(w, pick(2, "rest"));
+    expect(shared(w).sites.find((s) => s.id === id)!.state).toBe("visited");
+    w.sites[id].sampled = true;
+    expect(shared(w).sites.find((s) => s.id === id)!.state).toBe("sampled");
+    w.sites[id].analysed = true;
+    expect(shared(w).sites.find((s) => s.id === id)!.state).toBe("analysed");
+    w.sites[id].sentMb = 100;
+    expect(shared(w).sites.find((s) => s.id === id)!.state).toBe("sent");
+    w.sites[id].earthMb = 800;
+    expect(shared(w).sites.find((s) => s.id === id)!.state).toBe("delivered");
+  });
+
+  it("shows a teammate who is out as collapsed to anyone who can see them", () => {
+    const w = fresh(1, GOOD_DESIGN, []);
+    w.players[1]!.out = "body";
+    const seen = w.viewFor(0).surroundings.objects.find((o) => o.kind === "player" && o.id === "1")!;
+    expect(seen).toMatchObject({ out: true, look: "broad" });
+    const other = w.viewFor(0).surroundings.objects.find((o) => o.kind === "player" && o.id === "2")!;
+    expect(other.out).toBe(false);
+  });
+
+  it("reports gauge changes in the events as they happen, with the player, the gauge and the new value", () => {
+    const w = fresh(1, GOOD_DESIGN, []);
+    w.modules.array.built = true;
+    const r = step(w, pick(1, "build", { kind: "module", id: "antenna" }), pick(2, "travel", { kind: "tile", x: w.map.base.x + 6, y: w.map.base.y }));
+    const g = r.events.filter((e) => e.kind === "gauge" && e.gauge);
+    expect(g.some((e) => e.players[0] === 1 && e.gauge === "energy" && typeof e.value === "number")).toBe(true);
+    const e1 = g.find((e) => e.players[0] === 1 && e.gauge === "energy")!;
+    expect(e1.value).toBeLessThan(100);
+    // order: the sol's work comes first, so gauge events are interleaved with it, not only at the end
+    const firstGauge = r.events.findIndex((e) => e.gauge), lastWork = r.events.map((e) => e.kind).lastIndexOf("work");
+    expect(firstGauge).toBeLessThan(r.events.length - 1);
+    expect(lastWork).toBeGreaterThan(-1);
+    // evening lines stay readable: no gauge spam
+    expect(r.lines.join(" ")).not.toMatch(/is now/);
+  });
+});
