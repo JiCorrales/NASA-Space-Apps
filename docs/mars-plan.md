@@ -1,6 +1,6 @@
 # Mars version: plan
 
-> Draft 0.2, 2026-11-15, 02:15. Written from the decisions Jose took in the early hours of 2026-11-15.
+> Draft 0.3, 2026-11-15, 02:25. Written from the decisions Jose took in the early hours of 2026-11-15.
 > **Nothing in this plan gets coded until Jose says go.** What is still open is in [section 12](#12-still-open).
 > The game as it was before this plan (Earth Watch, with the Unity ship) is kept on the branch `backup/earth-watch`
 > and is described in [game-plan.md](game-plan.md).
@@ -32,6 +32,7 @@ they can see and how often they can talk. When they lose, the attempt is kept, s
 | Players | Four, each with their own screen |
 | Demo for the submission | One page shows the four screens side by side. The characters play by themselves; a person can take over any one. No network |
 | Characters | Four looks; each player picks a look and, separately, a role |
+| Art direction | "16-bit" pixel art (version B of the asset sheets): up to twelve colours per sprite, shading and small highlights, a selective outline. Sprites are code, with no image files |
 | Roles | Commander, engineer, scientist, communications officer. Each has its own skills and activities |
 | Code structure | An abstract `Player`, one class per role, and interfaces for skills, activities, hazards, base modules, tasks and controllers, for maintainability |
 | Hints | None, as before: nothing tells the player in advance what will go wrong. Causes are named only in the report after a run |
