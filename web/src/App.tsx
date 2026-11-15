@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { isStandin, send, standinEmit, subscribe } from "./bridge/bridge";
 import type { MissionState, Step } from "./bridge/types";
-import { ScreenPlaceholder } from "./screens/Placeholder";
+import { StepScreen } from "./screens";
 import { CockpitPlaceholder } from "./cockpit/Placeholder";
 
 const STEPS: Step[] = ["goals", "concept", "requirements", "design", "build", "fly"];
@@ -31,7 +31,7 @@ export function App() {
     <>
       {step && state && (
         <div className="shell" role="dialog" aria-modal="true" aria-label={`Step: ${step}`}>
-          {step === "fly" ? <CockpitPlaceholder /> : <ScreenPlaceholder step={step} state={state} />}
+          {step === "fly" ? <CockpitPlaceholder /> : <StepScreen step={step} state={state} />}
         </div>
       )}
       {isStandin() && (

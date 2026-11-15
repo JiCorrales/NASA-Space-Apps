@@ -44,7 +44,7 @@ describe("app shell", () => {
     render(<App />);
     expect(screen.queryByTestId("screen")).toBeNull();
     act(() => standinEmit({ type: "openScreen", payload: { step: "design" } }));
-    expect(screen.getByTestId("screen")).toHaveTextContent("Screen: design");
+    expect(screen.getByTestId("screen")).toHaveAttribute("data-step", "design");
     act(() => standinEmit({ type: "openScreen", payload: { step: "fly" } }));
     expect(screen.getByTestId("screen")).toHaveTextContent("Screen: fly");
     act(() => standinEmit({ type: "closeScreen", payload: {} }));

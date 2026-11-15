@@ -1,0 +1,114 @@
+/* Screens for steps 1 to 5. Only the theme's colours and fonts (src/theme.css); pixel font sizes are whole
+   multiples so the glyphs stay sharp. */
+.screens { min-height: 100%; font-size: 14px; }
+.screens .frame { height: 100vh; }
+.screens .frame__body { overflow: auto; }
+.screens p { margin: 0 0 8px; line-height: 1.5; }
+
+.section-title { font: 12px var(--font-pixel); color: var(--accent); text-transform: uppercase; margin: 0 0 12px; line-height: 1.5; text-align: left; }
+.muted { color: var(--text-2); }
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.num--big { font-size: 20px; font-weight: 600; }
+.lead { font-size: 15px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.step-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.step-foot__mid { display: flex; gap: 12px; }
+
+.issues { display: grid; gap: 6px; margin-top: 12px; }
+
+/* Decision groups */
+.group { margin-bottom: 14px; }
+.group__title { font: 10px var(--font-pixel); color: var(--text); margin: 0 0 8px; text-transform: uppercase; }
+h2.group__title { font-size: 12px; color: var(--accent); }
+.group__options { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.group--compact .group__options { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.screens .card__name { flex-wrap: wrap; }
+.screens .card { overflow-wrap: anywhere; }
+.screens .src__text { overflow-wrap: anywhere; }
+.screens .res__row { flex-wrap: wrap; gap: 4px 8px; }
+.group--compact .card { padding: 8px; font-size: 12px; }
+.group--compact .card__name { font-size: 10px; }
+.group--compact .card__summary { margin: 4px 0; }
+.card__summary { display: block; }
+
+/* 1 Need and goals */
+.goals { display: grid; gap: 20px; }
+.worlds { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.world { border: 2px solid var(--edge); background: var(--bg); padding: 8px; }
+.world[data-open="false"] { border-style: dashed; }
+.world__pick { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px;
+  background: none; border: 2px solid transparent; color: var(--text); cursor: pointer; font: inherit; }
+.world__pick:hover:not([aria-disabled="true"]) { border-color: var(--accent); }
+.world__pick[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+.world__pick[aria-disabled="true"] { cursor: not-allowed; }
+.world__name { font: 12px var(--font-pixel); }
+.world__state { font: 10px var(--font-pixel); color: var(--accent); }
+.world[data-open="false"] .world__state { color: var(--text-2); }
+.world__changes { margin: 8px 0 0; font-size: 12px; }
+.change dt { color: var(--text-2); }
+.change dd { margin: 0 0 6px; }
+.missions { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.mission[aria-disabled="true"] { border-style: dashed; color: var(--text-2); cursor: not-allowed; }
+.goals__need { display: grid; grid-template-columns: minmax(260px, 1fr) 2fr; gap: 20px; align-items: start; }
+.need { border: 2px solid var(--edge); padding: 12px; }
+.need__label { font: 10px var(--font-pixel); color: var(--text-2); margin: 12px 0 6px; text-transform: uppercase; }
+
+/* 2 Concept: one decision, large type */
+.concept { max-width: 1100px; margin: 0 auto; display: grid; gap: 16px; }
+.concept__count { font: 12px var(--font-pixel); color: var(--text-2); }
+.concept__question { font: 24px var(--font-pixel); line-height: 1.6; }
+.concept .group__options { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.concept .card { padding: 20px; font-size: 17px; }
+.concept .card__name { font-size: 16px; }
+
+/* Console tables: 3 Requirements and 5 Build */
+.console { width: 100%; border-collapse: collapse; }
+.console caption { caption-side: top; }
+.console th, .console td { border-bottom: 2px solid var(--edge); padding: 10px; text-align: left; vertical-align: top; }
+.console thead th { font: 10px var(--font-pixel); color: var(--text-2); text-transform: uppercase; }
+.console tbody th { font-weight: 600; }
+.console__value { white-space: nowrap; }
+.reqs .console tbody th { width: 22%; }
+.reqs .console__value { width: 22%; white-space: normal; }
+.console__value .src { margin-top: 6px; }
+.adjust { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.adjust input[type="range"] { accent-color: var(--accent); width: 220px; }
+.num-input { width: 90px; background: var(--bg); color: var(--text); border: 2px solid var(--edge); font: 14px var(--font-mono); padding: 4px 6px; }
+.verdict { font: 10px var(--font-pixel); white-space: nowrap; }
+tr[data-verified="true"] .verdict { color: var(--ok); }
+tr[data-verified="false"] .verdict { color: var(--critical); }
+tr[data-verified="unknown"] .verdict { color: var(--text-2); }
+
+/* 4 Design: the blueprint */
+.bp { display: grid; grid-template-columns: minmax(300px, 1fr) minmax(360px, 1.1fr) minmax(300px, 1fr); gap: 16px; min-height: 100%; }
+.bp__col { min-width: 0; }
+.bp__block { margin-bottom: 8px; }
+.bp__centre { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.bp__sat { display: flex; justify-content: center; padding: 12px; border: 2px dashed var(--edge);
+  background-color: var(--bg);
+  background-image: linear-gradient(var(--edge) 1px, transparent 1px), linear-gradient(90deg, var(--edge) 1px, transparent 1px);
+  background-size: 24px 24px; }
+.pixel-cubesat { width: 100%; max-width: 440px; height: auto; }
+.res-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+.res-list li { display: grid; gap: 4px; justify-items: start; }
+.res-list .res { width: 100%; }
+
+/* 5 Build and verify */
+.build { display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px; align-items: start; }
+.reserve { margin: 8px 0 16px; }
+.build .res-list { grid-template-columns: 1fr; }
+
+/* Wider screens (1920 x 1080): bigger type in whole pixel steps. */
+@media (min-width: 1700px) {
+  .screens { font-size: 16px; }
+  .section-title, h2.group__title { font-size: 16px; }
+  .screens .card { font-size: 15px; }
+  .screens .card__name { font-size: 12px; }
+  .group--compact .card { font-size: 14px; }
+  .group--compact .card__name { font-size: 12px; }
+  .concept__question { font-size: 32px; }
+  .concept .card { font-size: 19px; }
+  .concept .card__name { font-size: 20px; }
+  .world__changes, .res__row { font-size: 14px; }
+}
