@@ -200,9 +200,9 @@ export const CROSS_ROWS = [
 ];
 /** Smoke rising from the broken station, three frames. */
 export const SMOKE_ROWS = [
-  [".......", ".......", ".......", ".......", "..ss...", ".ssss..", "..sss..", "...s..."],
-  [".......", "...ss..", "..ssss.", "...ss..", ".......", "..ss...", "..s....", "......."],
-  ["..s.s..", ".s.s.s.", "..s.s..", ".......", "...ss..", "...s...", ".......", "......."],
+  [".......", ".......", ".......", ".......", "..gg...", ".gggg..", "..ggg..", "...g..."],
+  [".......", "...gg..", "..gggg.", "...gg..", ".......", "..gg...", "..g....", "......."],
+  ["..g.g..", ".g.g.g.", "..g.g..", ".......", "...gg..", "...g...", ".......", "......."],
 ];
 /** A lightning bolt: charged particles hitting the CubeSat during a solar storm. Two frames. */
 export const BOLT_ROWS = [
