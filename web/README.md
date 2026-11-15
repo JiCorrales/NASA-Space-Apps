@@ -17,7 +17,10 @@ pnpm build       # output in web/dist
 
 - `src/bridge/` : `types.ts` (contract), `bridge.ts` (`send`, `subscribe`), `standin.ts` (fixture data and a
   fake Unity that reacts to `choose`, `toggle`, `setRequirement`, `setReserve`, `completeStep`, `close`).
-- `src/screens/` : steps goals, concept, requirements, design, build (screens agent).
+- `src/screens/` : steps goals, concept, requirements, design, build. `index.tsx` exports `StepScreen`; each
+  screen takes `state` and an optional `send` (tests pass a mock). `parts/` holds the pixel-art planets and
+  CubeSat (SVG rectangles, no image files) and the pieces the five screens share; `tests/` renders each screen
+  from the stand-in's fixture state.
 - `src/cockpit/` : step fly (cockpit agent).
 - `src/App.tsx` : the shell. Shows nothing until `openScreen`, hides on `closeScreen`, Escape sends `close`.
 
