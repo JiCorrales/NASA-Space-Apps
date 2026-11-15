@@ -141,8 +141,9 @@ const STREAKS = Array.from({ length: 70 }, () => ({
   a: 0.4 + rnd() * 0.6,
 }));
 
-const FONT_D = '600 12px "Chakra Petch","Segoe UI",system-ui,sans-serif';
-const FONT_M = '500 11px "IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace';
+// 16 stage px = 8 canvas px at the half-size canvas: the pixel font's native grid.
+const FONT_D = '16px "Press Start 2P",ui-monospace,monospace';
+const FONT_M = FONT_D;
 
 /** Seasonal colour of the target region: green early in the year, ochre late. Symbolic only. */
 export function seasonColour(week: number): string {
@@ -307,7 +308,7 @@ export class CockpitScene {
         c.font = FONT_D;
         c.textAlign = 'left';
         c.fillStyle = s.stationDown ? '#ff6464' : `rgba(98,211,148,${s.contact ? 1 : 0.6})`;
-        c.fillText(s.stationDown ? 'GROUND STATION · OFFLINE' : 'GROUND STATION', gx + 14, gy + 4);
+        c.fillText(s.stationDown ? 'GROUND STATION OFFLINE' : 'GROUND STATION', gx + 14, gy + 4);
       }
     }
     if (s.contact && !s.stationDown) {
@@ -449,10 +450,10 @@ export class CockpitScene {
     c.textAlign = 'right';
     c.font = FONT_D;
     c.fillStyle = `rgba(${hud},1)`;
-    c.fillText('EW-1 · 3U CUBESAT', xs0 - 106, ys0 - 3);
+    c.fillText('EW-1 3U CUBESAT', xs0 - 106, ys0 - 3);
     c.font = FONT_M;
     c.fillStyle = 'rgba(131,148,171,1)';
-    c.fillText('10 × 10 × 34 cm', xs0 - 106, ys0 + 13);
+    c.fillText('10 x 10 x 34 cm', xs0 - 106, ys0 + 20);
 
     // Solar storm
     if (S > 0.01) {

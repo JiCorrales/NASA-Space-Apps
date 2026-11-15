@@ -5,20 +5,14 @@ import { CockpitScene, STAGE_H, STAGE_W, type SceneInput } from "./scene/drawSce
  * The window onto space. React renders this once; a requestAnimationFrame loop then draws every frame
  * from refs, so the 60 fps animation never re-renders React. New SimFrames only update the input ref.
  */
-export function SpaceCanvas({ input, scale }: { input: SceneInput; scale: number }) {
+// 8-bit look: the scene is drawn at half the stage size and the browser scales it up without smoothing
+// (`image-rendering: pixelated` on .ck-space), so every drawn pixel shows as a 2 x 2 block.
+const PIXEL = 0.5;
+
+export function SpaceCanvas({ input }: { input: SceneInput }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputRef = useRef(input);
-  const kRef = useRef(1);
   inputRef.current = input;
-
-  useEffect(() => {
-    const cv = canvasRef.current;
-    if (!cv) return;
-    const k = Math.min(2, Math.max(1, (window.devicePixelRatio || 1) * scale));
-    kRef.current = k;
-    cv.width = Math.round(STAGE_W * k);
-    cv.height = Math.round(STAGE_H * k);
-  }, [scale]);
 
   useEffect(() => {
     const cv = canvasRef.current;
@@ -33,12 +27,12 @@ export function SpaceCanvas({ input, scale }: { input: SceneInput; scale: number
       const dt = (now - last) / 1000;
       last = now;
       scene.step(still ? Math.min(dt, 0.1) * 0.15 : dt, inputRef.current);
-      scene.draw(ctx!, inputRef.current, kRef.current);
+      scene.draw(ctx!, inputRef.current, PIXEL);
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  return <canvas ref={canvasRef} className="ck-space" width={STAGE_W} height={STAGE_H} aria-hidden="true" />;
+  return <canvas ref={canvasRef} className="ck-space" width={STAGE_W * PIXEL} height={STAGE_H * PIXEL} aria-hidden="true" />;
 }

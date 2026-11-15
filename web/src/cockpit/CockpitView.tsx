@@ -64,7 +64,7 @@ export function CockpitView({ frame, state, battery = [], link = [], onFly, onCo
     <div className="ck" ref={ref} data-testid="screen" aria-label="Step 6: fly the mission">
       <div className="ck-fit" style={{ width: STAGE_W * scale, height: STAGE_H * scale }}>
         <div className="ck-stage" style={{ transform: `scale(${scale})` }}>
-          <SpaceCanvas input={input} scale={scale} />
+          <SpaceCanvas input={input} />
           <svg className="ck-hull" viewBox="0 0 1280 720" aria-hidden="true">
             <defs>
               <linearGradient id="ck-hg" x1="0" y1="0" x2="0" y2="1">
