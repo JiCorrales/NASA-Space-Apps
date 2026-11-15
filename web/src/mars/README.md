@@ -33,7 +33,15 @@ const evening = world.eveningFor(2);    // 4. evening report, filtered for playe
 world.result();                         // null until the run ends; then outcome, score, causes
 ```
 
-`playSol(world, controllers)` does 1 and 2 for all four: everyone chooses, then players whose communicator works
+The screen drives the two rounds itself, in five steps:
+
+1. Round one: for every active player show `world.viewFor(id)` and call `world.choose(choice)`; `world.waitingFor()` lists who has not chosen.
+2. Round two: `world.reviseViews()` returns the views of the players whose communicator works, now with `plans` holding the others' round-one choices.
+3. Those players may call `world.choose` again (the last choice replaces the first); `world.revisable()` says who may. A cut-off player has no round two.
+4. When `waitingFor()` is empty (anyone missing rests), call `world.resolveSol()` and animate `report.events`.
+5. Read `world.eveningFor(id)` for each player, then `world.viewFor(id)` for the next sol, or `world.result()` if the run ended.
+
+`playSol(world, controllers)` does 1 to 4 for all four: everyone chooses, then players whose communicator works
 see the others' plans and may change theirs. A cut-off player's `PlayerView` has `shared` and `plans` set to
 `null`; the team learns what they did only when their link returns (it appears in `crew[i].known` and in the
 briefing's `news`).

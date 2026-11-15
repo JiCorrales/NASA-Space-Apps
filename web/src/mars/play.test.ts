@@ -184,3 +184,24 @@ describe("the demo helps its teammates", () => {
     expect(c).toMatchObject({ activity: "handOver", target: { kind: "player", id: 0 } });
   });
 });
+
+describe("the two rounds, driven by hand", () => {
+  it("round two shows linked players the others' plans and lets them change their choice; cut-off players have no round two", () => {
+    const w = fresh(1, GOOD_DESIGN, []);
+    w.players[2]!.position = { x: w.map.base.x + 14, y: w.map.base.y };
+    step(w); // player 2 is out of range from sol 2 on
+    expect(w.waitingFor()).toEqual([0, 1, 2, 3]);
+    w.choose(pick(0, "plan")); w.choose(pick(1, "build", { kind: "module", id: "array" })); w.choose(pick(2, "rest"));
+    expect(w.waitingFor()).toEqual([3]);
+    expect(w.revisable()).not.toContain(2);
+    const views = w.reviseViews();
+    expect(views.map((v) => v.self.id)).toEqual(w.revisable());
+    const v3 = views.find((v) => v.self.id === 3)!;
+    expect(v3.plans!.map((p) => p.player).sort()).toEqual([0, 1]);
+    w.choose(pick(1, "rest")); // Dev changes his mind after seeing the plans
+    expect(w.viewFor(0).plans!.find((p) => p.player === 1)!.activity).toBe("rest");
+    const r = w.resolveSol();
+    expect(r.choices.find((c) => c.player === 1)!.activity).toBe("rest");
+    expect(r.choices.find((c) => c.player === 3)!.activity).toBe("rest"); // never chose: rests
+  });
+});

@@ -286,6 +286,15 @@ export class MarsWorld {
   viewFor(id: PlayerId): PlayerView { return buildView(this, id); }
   views(): PlayerView[] { return PLAYER_IDS.map((id) => this.viewFor(id)); }
 
+  /** Active players who have not chosen yet this sol. */
+  waitingFor(): PlayerId[] { return this.players.filter((p) => p.active && !this.choices[p.id]).map((p) => p.id); }
+
+  /** Players who may change their choice after seeing the others': active, communicator working. */
+  revisable(): PlayerId[] { return this.players.filter((p) => p.active && p.linked).map((p) => p.id); }
+
+  /** Round two: the views of the players who may revise, with `plans` filled from round one. */
+  reviseViews(): PlayerView[] { return this.revisable().map((id) => this.viewFor(id)); }
+
   choose(c: Choice): ChoiceResult {
     if (this.status !== "running") return { ok: false, reason: "The run is over." };
     const p = this.players[c.player];
