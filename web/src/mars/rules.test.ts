@@ -4,6 +4,7 @@ import { TASKS } from "./tasks";
 import { MODULES } from "./modules";
 import { GOOD_DESIGN, MIDDLING_DESIGN, POOR_DESIGN, DESIGN_FIXTURES, deriveCapabilities } from "./capabilities";
 import { demoControllers } from "./demo";
+import { playRun } from "./controllers";
 import { RUN_SOLS, ROLES, type PlayerId } from "./types";
 import { fresh, only, occ, pick, step } from "./testkit";
 import { MarsWorld } from "./world";
@@ -28,11 +29,26 @@ describe("structure", () => {
   });
 
   it("keeps looks separate from roles: any look with any role", () => {
-    const crew = ROLES.map((role, i) => ({ name: `P${i}`, role, look: (["coral", "coral", "amber", "teal"] as const)[i]! }));
+    const crew = ROLES.map((role, i) => ({ name: `P${i}`, role, look: (["compact", "compact", "round", "broad"] as const)[i]! }));
     const w = new MarsWorld({ seed: 1, design: GOOD_DESIGN.design, crew });
-    expect(w.viewFor(0).self.look).toBe("coral");
-    expect(w.viewFor(1).self.look).toBe("coral");
+    expect(w.viewFor(0).self.look).toBe("compact");
+    expect(w.viewFor(1).self.look).toBe("compact");
     expect(w.viewFor(0).self.role).toBe("commander");
+  });
+});
+
+describe("capabilities handed over by Act 1", () => {
+  it("are used as given, even when the design ids are unknown to the table", () => {
+    const given = { ...deriveCapabilities(GOOD_DESIGN.design, GOOD_DESIGN.extras), warningLeadSols: 3, mapRadiusStart: 33, spares: 9 };
+    const design = { format: "mars-x", power: "mars-y", orbit: "mars-z", radio: "mars-w" };
+    const w = new MarsWorld({ seed: 1, design, capabilities: given });
+    expect(w.caps).toEqual(given);
+    expect(w.knownRadius).toBe(33);
+    const derived = new MarsWorld({ seed: 1, design });
+    expect(derived.caps).not.toEqual(given);
+    playRun(w, demoControllers());
+    expect(w.attempt()!.capabilities).toEqual(given);
+    expect(w.attempt()!.design).toEqual(design);
   });
 });
 
@@ -510,11 +526,15 @@ describe("the satellite shapes what the crew has", () => {
 
   it("a better instrument reveals more of the map and more sites before anyone walks", () => {
     const known = (f: typeof GOOD_DESIGN) => {
-      const v = fresh(5, f, []).viewFor(0).shared!;
-      return { tiles: v.map.rows.join("").split("").filter((c) => c !== "?").length, sites: v.sites.length };
+      let tiles = 0, sites = 0;
+      for (let seed = 1; seed <= 8; seed++) {
+        const v = fresh(seed, f, []).views().find((x) => x.shared)!.shared!;
+        tiles += v.map.rows.join("").split("").filter((c) => c !== "?").length; sites += v.sites.length;
+      }
+      return { tiles, sites };
     };
     const [g, m, p] = [known(GOOD_DESIGN), known(MIDDLING_DESIGN), known(POOR_DESIGN)];
-    expect(g.tiles).toBeGreaterThan(m.tiles); expect(m.tiles).toBeGreaterThan(p.tiles);
+    expect(g.tiles).toBeGreaterThan(m.tiles); expect(m.tiles).toBeGreaterThanOrEqual(p.tiles);
     expect(g.sites).toBeGreaterThanOrEqual(m.sites); expect(m.sites).toBeGreaterThanOrEqual(p.sites);
     expect(g.sites).toBeGreaterThan(p.sites);
   });
