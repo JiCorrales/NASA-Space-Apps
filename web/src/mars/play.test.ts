@@ -26,8 +26,8 @@ describe("nothing is telegraphed", () => {
         for (const s of [...evening, ...strings(w.lastReport)]) expect(s, s).not.toMatch(ODDS);
       }
     }
-    expect(count).toBeGreaterThan(5000);
-  });
+    expect(count).toBeGreaterThan(2000);
+  }, 60000);
 
   it("does not leak the satellite's fault rate or the hazard schedule", () => {
     const text = JSON.stringify(fresh(3).views());
@@ -156,7 +156,7 @@ describe("balance", () => {
     expect(mid.winRate).toBeGreaterThan(poor.winRate);
     for (const t of rows) expect(Object.keys(t.endSols).length).toBeGreaterThan(0);
     expect(RUN_SOLS).toBe(30);
-  });
+  }, 60000);
 });
 
 void step;

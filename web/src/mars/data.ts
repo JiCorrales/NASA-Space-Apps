@@ -105,7 +105,7 @@ export const TEAM = {
   relayEfficiency: t("Share of the radio rate that becomes data", 0.25, "x"),
   analyseWork: t("Analysis work of one site", 4, "units"),
   // hazards
-  dustStormRun: t("Runs with a dust storm", 0.75, "share of seeds"),
+  dustStormRun: t("Runs with a dust storm", 0.85, "share of seeds"),
   dustStormMin: t("Shortest dust storm", 5, "sols"),
   dustStormMax: t("Longest dust storm", 11, "sols"),
   solarStormRun: t("Runs with a solar storm", 0.8, "share of seeds"),
@@ -113,7 +113,7 @@ export const TEAM = {
   coldNightsMax: t("Most cold nights", 4, "nights"),
   satFirstFaultMin: t("Earliest guaranteed satellite fault", 8, "sol"),
   satFirstFaultMax: t("Latest guaranteed satellite fault", 17, "sol"),
-  satFaultWindow: t("Sols to save the satellite", 5, "sols"),
+  satFaultWindow: t("Sols to save the satellite", 4, "sols"),
   satDiagnoseWork: t("Work to diagnose a fault", 2, "units"),
   satRecoverWork: t("Work to recover the satellite", 3, "units"),
   satDrainStorm: t("Satellite charge lost per storm sol", 26, "points"),

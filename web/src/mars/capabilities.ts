@@ -100,7 +100,7 @@ export const MIDDLING_DESIGN: DesignFixture = {
 export const POOR_DESIGN: DesignFixture = {
   name: "poor",
   design: {
-    format: "3u", power: "fixed", attitude: "magnetorquers", storage: "small", instrument: "none", radio: "uhf",
+    format: "3u", power: "fixed", attitude: "magnetorquers", storage: "small", instrument: "rgb", radio: "uhf",
     groundStation: "own", backupStation: "none", orbit: "leo-iss", tests: [],
   },
   extras: { reserve: 0.02, massMarginKg: 0 },

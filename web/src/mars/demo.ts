@@ -141,6 +141,16 @@ class Turn {
     const work = this.fieldWork();
     if (work && this.v.sol >= 2) return work;
     if (sh.sites.length < 3 && this.v.sol >= 6 && this.ok("travel")) return this.explore();
+    // idle: treat whoever has the lowest gauge, if they are at the base
+    if (this.atBase && this.ok("firstAid")) {
+      let worst: { id: PlayerId; good: number } | null = null;
+      for (const c of sh.crew) {
+        if (c.status !== "active" || !c.health || cheb(c.position, this.base) > 3) continue;
+        const g = Math.min(...c.health.filter((x) => x.id !== "energy" && x.id !== "rest").map((x) => x.good));
+        if (g < 0.8 && (!worst || g < worst.good)) worst = { id: c.id, good: g };
+      }
+      if (worst) return this.act("firstAid", { kind: "player", id: worst.id });
+    }
     if (this.ok("plan")) return this.act("plan");
     return null;
   }
@@ -152,13 +162,13 @@ class Turn {
     if (this.me.carrying.samples.length === 0 && !this.atBase && cheb(this.me.position, this.base) > 3 && !this.m.assigned) return this.act("travel", { kind: "tile", x: this.base.x, y: this.base.y });
     if (array.status === "absent" || array.status === "building") { const b = build("array"); if (b) return b; }
     if (antenna.status === "absent" || antenna.status === "building") { const b = build("antenna"); if (b) return b; }
-    if ((array.status === "damaged" || array.wear >= 30) && this.ok("repair")) return this.act("repair", { kind: "module", id: "array" });
-    if (array.dust >= 0.2 && this.ok("clearDust")) return this.act("clearDust");
+    if ((array.status === "damaged" || array.wear >= 10) && this.ok("repair")) return this.act("repair", { kind: "module", id: "array" });
+    if (array.dust >= 0.08 && this.ok("clearDust")) return this.act("clearDust");
     for (const c of sh.crew) if (c.status === "active" && c.commHealth !== null && c.commHealth < 55 && this.ok("repair") && (c.id === this.me.id || cheb(c.position, this.me.position) <= 3)) return this.act("repair", { kind: "player", id: c.id });
     const work = this.fieldWork();
     if (work) return work;
     if (sh.sites.length < 3 && this.v.sol >= 6 && array.status !== "absent" && antenna.status === "working") return this.explore();
-    if (storage.status === "absent" && this.v.sol < 18) { const b = build("storage"); if (b) return b; }
+    if (storage.status === "absent") { const b = build("storage"); if (b) return b; }
     return null;
   }
 
