@@ -36,7 +36,7 @@ function viewsAt(solN: number) {
 }
 const panelProps = (views: ReturnType<typeof viewsAt>, i: 0 | 1 | 2 | 3) => ({
   index: i, roster: FIXTURE_CREW,
-  run: { views, controlled: [false, false, false, false], phase: "choosing", evening: null, report: null, after: null, playId: 0, reduced: true, speed: 1, reveals: [], waitingFor: [],
+  run: { views, controlled: [false, false, false, false], phase: "choosing", evening: null, report: null, after: null, playId: 0, reduced: true, speed: 1, reveals: [], revised: [], waitingFor: [],
     sceneBeat: noop, sceneDone: noop, choose: noop, letDemoChoose: noop } as unknown as ComponentProps<typeof Panel>["run"],
 });
 
