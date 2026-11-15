@@ -49,13 +49,21 @@ namespace SpaceApps.Mission
         public bool Has(string code) => issues.Any(i => i.code == code);
     }
 
+    /// <summary>Parts a design adds that the catalog's six groups do not cover (Earth Watch: attitude control,
+    /// storage, a backup station). They count in the mass, volume, power and budget checks.</summary>
+    public class DesignExtras
+    {
+        public float massKg, units, powerW, costUsd;
+    }
+
     /// <summary>Pure, deterministic check of a design against the catalog. No randomness, no Unity state.</summary>
     public static class MissionEvaluator
     {
         /// <summary>Evaluates a finished or unfinished design. A missing choice adds nothing, checks that need it
         /// are skipped, and an "incomplete-design" issue names what is still to choose.</summary>
-        public static MissionReport Evaluate(MissionCatalog catalog, MissionDesign design)
+        public static MissionReport Evaluate(MissionCatalog catalog, MissionDesign design, DesignExtras extras = null)
         {
+            extras = extras ?? new DesignExtras();
             var report = new MissionReport();
             var c = catalog.constants;
 
@@ -84,7 +92,7 @@ namespace SpaceApps.Mission
 
             // Mass: the format sets the limit, and the launcher may set a lower one.
             float mass = c.busMassKg + (format?.structureMassKg.value ?? 0f) + (power?.massKg.value ?? 0f) +
-                         (radio?.massKg.value ?? 0f) + instruments.Sum(i => i.massKg.value);
+                         (radio?.massKg.value ?? 0f) + instruments.Sum(i => i.massKg.value) + extras.massKg;
             float massLimit = format != null && launch != null ? Math.Min(format.maxMassKg.value, launch.maxMassKg.value)
                             : format?.maxMassKg.value ?? launch?.maxMassKg.value ?? 0f;
             Resource(report, ResourceKind.Mass, "kg", mass, massLimit);
@@ -95,7 +103,7 @@ namespace SpaceApps.Mission
                 Add(report, "mass-over-launcher", ResourceKind.Mass, Severity.Blocking,
                     Inv($"The {launch.name} can carry at most {launch.maxMassKg.value:0.##} kg per satellite, and this one weighs {mass:0.##} kg."));
 
-            float units = c.busUnits + instruments.Sum(i => i.units.value);
+            float units = c.busUnits + instruments.Sum(i => i.units.value) + extras.units;
             if (format != null && units > format.units)
                 Add(report, "volume-over-format", ResourceKind.Mass, Severity.Blocking,
                     Inv($"The parts need {units:0.##}U of space but a {format.name} has {format.units.value:0}U. If it does not fit, it does not fly."));
@@ -127,7 +135,7 @@ namespace SpaceApps.Mission
             // Power: orbit-average generation against the average load, and the battery through eclipse.
             // Before an orbit is chosen the panels show their full sunlit output.
             float txDuty = contactMinutes / 1440f;
-            float load = c.busPowerW + instruments.Sum(i => i.powerW * i.dutyCycle) + (radio != null ? radio.txPowerW * txDuty : 0f);
+            float load = c.busPowerW + extras.powerW + instruments.Sum(i => i.powerW * i.dutyCycle) + (radio != null ? radio.txPowerW * txDuty : 0f);
             float generated = power != null ? power.panelW * (orbit?.sunlitFraction.value ?? 1f) : 0f;
             Resource(report, ResourceKind.Power, "W", load, generated);
             if (power != null && orbit != null)
@@ -150,7 +158,7 @@ namespace SpaceApps.Mission
             var licences = catalog.licences.Where(l => !l.imagerOnly || imager).ToList();
             float cost = c.busCostUsd + (format?.costUsd.value ?? 0f) + (power?.costUsd.value ?? 0f) + (radio?.costUsd.value ?? 0f) +
                          (station?.costUsd.value ?? 0f) + launchToTeam + instruments.Sum(i => i.costUsd.value) +
-                         tests.Sum(t => t.costUsd.value) + licences.Sum(l => l.costUsd.value);
+                         tests.Sum(t => t.costUsd.value) + licences.Sum(l => l.costUsd.value) + extras.costUsd;
             var level = catalog.DifficultyOf(design);
             float budget = (objective?.budgetUsd.value ?? 0f) * (level?.budgetScale.value ?? 1f);
             Resource(report, ResourceKind.Budget, "USD", cost, budget);

@@ -51,6 +51,8 @@ namespace SpaceApps.Mission
         public string[] tags;
         public bool isImager;
         public Num massKg, units, powerW, dutyCycle, dataMbPerDay, costUsd, science, devMonths;
+        /// <summary>Size of one image in the weekly Earth Watch model; zero for instruments that are not imagers.</summary>
+        public Num imageMb;
     }
 
     [Serializable]
@@ -73,6 +75,8 @@ namespace SpaceApps.Mission
         public string[] bands;
         /// <summary>How many antennas; daily contact is this times the orbit's contactMinutesPerDay.</summary>
         public Num stationCount, costUsd, months;
+        /// <summary>Earth Watch: chance per year the station goes offline, and the weeks of contact it takes with it.</summary>
+        public Num outageChancePerYear, outageWeeks;
     }
 
     [Serializable]
@@ -157,6 +161,88 @@ namespace SpaceApps.Mission
         public Num budgetScale, deadlineScale, eventChanceScale;
     }
 
+    [Serializable]
+    public class MissionInfo
+    {
+        public string id, name, summary;
+    }
+
+    /// <summary>A story choice: the three regions share the same numbers.</summary>
+    [Serializable]
+    public class Region : Entry
+    {
+        public string summary;
+    }
+
+    [Serializable]
+    public class Revisit : Entry
+    {
+        public string summary;
+        public Num captureEveryWeeks;
+    }
+
+    /// <summary>Attitude control hardware: pointing accuracy, and how often and how badly it faults.</summary>
+    [Serializable]
+    public class AttitudeOption : Entry
+    {
+        public string summary;
+        public Num massKg, units, powerW, costUsd, basePointingDeg, driftDegPerWeek, faultChancePerYear, recalibrateWeeks;
+    }
+
+    /// <summary>On-board image memory: how many images wait for a ground pass.</summary>
+    [Serializable]
+    public class StorageOption : Entry
+    {
+        public string summary;
+        public Num capacityImages, massKg, costUsd;
+    }
+
+    /// <summary>A second ground station. weeksSaved shortens an outage; chanceFactor scales its chance;
+    /// passFactor scales what its passes carry.</summary>
+    [Serializable]
+    public class BackupStation : Entry
+    {
+        public string summary;
+        public Num costUsd, weeksSaved, chanceFactor, passFactor;
+    }
+
+    /// <summary>One adjustable requirement. The value is in the unit shown; min and max bound the player's edits.</summary>
+    [Serializable]
+    public class Requirement
+    {
+        public string id, label, unit, check;
+        public Num value;
+        public float min, max;
+    }
+
+    /// <summary>Every number of the weekly simulation, each with its source.</summary>
+    [Serializable]
+    public class SimConstants
+    {
+        public Num weeks, minImages, pointingToleranceDeg, minCaptureBatteryPct, maxCameraTempC, minLinkPct;
+        public Num captureHours, chargeHours, cameraBaseTempC, tempPerCameraW, tempRelax, panelLossFactor;
+        public Num stormYearlyChance, stormTightBatteryWh, stormTightBonus, stormEnergyWh, stormPointingDeg, stormHeatC, stormWeeks, stormDrainWh;
+        public Num pauseRecoverWh, pauseCoolC, safeModeWeeks, safeModeBatteryPct, attitudeFaultMaxWeeks, recalibrateWh;
+        public Num prioritizeWh, backupWeeks, silenceWeeksLost, eventSpacingWeeks;
+        public Num weightScience, weightLink, weightPower, weightPointing, weeksPerMonth;
+    }
+
+    /// <summary>The Earth Watch mission: its options, its simulation numbers and its adjustable requirements.</summary>
+    [Serializable]
+    public class EarthWatchData
+    {
+        public MissionInfo mission;
+        /// <summary>The objective the checks use. It lives here, not in the objectives list, so older screens do not offer it.</summary>
+        public Objective objective;
+        public Region[] regions;
+        public Revisit[] revisits;
+        public AttitudeOption[] attitudes;
+        public StorageOption[] storages;
+        public BackupStation[] backupStations;
+        public SimConstants sim;
+        public Requirement[] requirements;
+    }
+
     /// <summary>Every option the player can pick, loaded from Resources/MissionCatalog.json.</summary>
     [Serializable]
     public class MissionCatalog
@@ -175,6 +261,7 @@ namespace SpaceApps.Mission
         public EventCard[] events;
         public CrewSettings crew;
         public Difficulty[] difficulties;
+        public EarthWatchData earthWatch;
 
         public const string ResourcePath = "MissionCatalog";
 
@@ -186,6 +273,9 @@ namespace SpaceApps.Mission
         }
 
         public static MissionCatalog FromJson(string json) => JsonUtility.FromJson<MissionCatalog>(json);
+
+        /// <summary>A deep copy, so a session can edit requirements without touching the shared catalog.</summary>
+        public MissionCatalog Copy() => FromJson(JsonUtility.ToJson(this));
 
         /// <summary>Find an entry by id in one of the arrays above; null when missing.</summary>
         /// <summary>The design's difficulty level, or null for the plain catalog values.</summary>
