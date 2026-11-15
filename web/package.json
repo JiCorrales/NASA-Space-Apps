@@ -9,7 +9,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
-    "build:mars-art-world": "vite build -c vite.mars-art-world.config.ts"
+    "build:mars-art-world": "vite build -c vite.mars-art-world.config.ts",
+    "art:crew": "node scripts/inline-mars-art.mjs crew"
   },
   "dependencies": {
     "react": "^19.3.1",
