@@ -26,7 +26,7 @@ namespace SpaceApps.Ship.Editor
         const float HullTile = 3f;
         const float BeltHeight = WindowTop;
 
-        static Material plateMat, plateDarkMat, ceilingMat, ribMat, trimMat, lightPanelMat, coveMat, warmMat, consoleMat, consoleTopMat;
+        static Material plateMat, plateDarkMat, ceilingMat, ribMat, trimMat, lightPanelMat, coveMat, consoleMat, consoleTopMat;
         static Material[] buttonMats;
 
         /// <summary>
@@ -61,7 +61,6 @@ namespace SpaceApps.Ship.Editor
             trimMat = Mat("Trim", new Color(0.05f, 0.06f, 0.08f));
             lightPanelMat = Mat("Light Panel", new Color(0.9f, 0.93f, 1f), emission: new Color(0.9f, 1.0f, 1.15f));
             coveMat = Mat("Cove Light", new Color(0.7f, 0.85f, 1f), emission: new Color(0.6f, 1.1f, 1.6f));
-            warmMat = Mat("Warm Light", new Color(0.8f, 0.25f, 0.15f), emission: new Color(1.0f, 0.2f, 0.1f));
             consoleMat = Mat("Console", new Color(0.18f, 0.2f, 0.25f));
             consoleTopMat = Mat("Console Top", new Color(0.07f, 0.08f, 0.1f));
             buttonMats = new[]
@@ -182,8 +181,8 @@ namespace SpaceApps.Ship.Editor
                 {
                     Dressing($"Window Sill {s:00}", frames, OnCircle(centre, inner - 0.04f, WindowBottom), centre, new Vector3(chord, 0.06f, 0.14f), trimMat);
                     Dressing($"Window Top {s:00}", frames, OnCircle(centre, inner - 0.02f, WindowTop), centre, new Vector3(chord, 0.06f, 0.08f), trimMat);
-                    // A warm strip under the glass, the colour of the nebula outside, against the cool cyan everywhere else.
-                    Dressing($"Sill Light {s:00}", lights, OnCircle(centre, inner - 0.11f, WindowBottom - 0.05f), centre, new Vector3(chord, 0.02f, 0.01f), warmMat);
+                    // A light strip under the glass, the same cool white as the cove strips.
+                    Dressing($"Sill Light {s:00}", lights, OnCircle(centre, inner - 0.11f, WindowBottom - 0.05f), centre, new Vector3(chord, 0.02f, 0.01f), coveMat);
                 }
                 else
                 {
@@ -207,11 +206,11 @@ namespace SpaceApps.Ship.Editor
                 float between = a + 360f / ringPieces / 2f;
                 if (i % 2 == 0)
                     Dressing($"Ceiling Beam {i:00}", ribs, OnCircle(between, 2.6f, Height - 0.04f), between, new Vector3(0.14f, 0.07f, 2.0f), ribMat);
-                // The inner ring glows the red of the nebula outside; the outer one is a dark girder.
+                // The inner ring glows the same cool white as the cove strips (red is kept for a cover with a problem); the outer one is a dark girder.
                 foreach (float r in new[] { 1.6f, 3.6f })
                 {
                     float girder = 2f * r * Mathf.Tan(Mathf.PI / ringPieces) + 0.02f;
-                    Dressing($"Ceiling Ring {r:0.0} {i:00}", ribs, OnCircle(a, r, Height - 0.04f), a, new Vector3(girder, 0.07f, 0.14f), r < 2f ? warmMat : ribMat);
+                    Dressing($"Ceiling Ring {r:0.0} {i:00}", ribs, OnCircle(a, r, Height - 0.04f), a, new Vector3(girder, 0.07f, 0.14f), r < 2f ? coveMat : ribMat);
                 }
             }
 
