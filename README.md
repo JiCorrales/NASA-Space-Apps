@@ -1,11 +1,36 @@
-# Space Mission Design Game
+# Tradeoff
 
-A 3D Unity game for the [Space Mission Design Game](https://www.spaceappschallenge.org/2026/challenges/space-mission-design-game/)
+*Every decision made on Earth lands on Mars with you.*
+
+A game by team LaPeace for the
+[Space Mission Design Game](https://www.spaceappschallenge.org/2026/challenges/space-mission-design-game/)
 challenge of the NASA Space Apps Challenge 2026.
 
-The player is inside a spaceship and walks through it. Each screen in the ship decides one part of a space
-mission: objective, spacecraft, instruments, launch vehicle and orbit. The game then simulates the mission and
-shows how each decision affected the result.
+Four players design a Mars relay satellite with real NASA data (objective, spacecraft, instruments, launch
+vehicle and orbit), launch it, and then live 30 sols on the surface with the satellite they built. The game
+gives no odds and no advice while playing: the causes are named only in the final report, and every attempt
+is saved.
+
+The repository holds two versions:
+
+- **The Mars version** (the game described above): a web page in TypeScript and React, under `web/`. The plan
+  is in [docs/mars-plan.md](docs/mars-plan.md) and the sourced numbers in `Resources/10-mars-surface/`.
+- **Earth Watch**, the earlier version: a 3D Unity ship whose screens decide an Earth-observation mission,
+  with a web page drawn over the Unity canvas. It is the Unity project at the root of this repository; the
+  branch `backup/earth-watch` keeps a snapshot of it.
+
+## Running the Mars version
+
+```bash
+cd web
+pnpm install
+pnpm dev      # then open /mars-act1.html (the design) or /mars.html (the 30 sols) on the printed address
+pnpm test     # the rules, the screens and the balance
+```
+
+See [web/README.md](web/README.md) for the pages and builds.
+
+## Requirements for the Unity project
 
 ## Requirements
 
@@ -15,7 +40,7 @@ shows how each decision affected the result.
 
 The project was created from Unity Hub's VR template (OpenXR, XR Interaction Toolkit, URP).
 
-## Getting started
+## Getting started with Unity
 
 ```bash
 git clone https://github.com/JiCorrales/NASA-Space-Apps.git

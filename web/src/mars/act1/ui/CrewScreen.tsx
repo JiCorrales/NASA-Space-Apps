@@ -12,7 +12,7 @@ export function CrewScreen({ onDone }: { onDone: (crew: CrewSetup[]) => void }) 
     <section className="a1 a1-crew" aria-labelledby="crew-title">
       <header className="a1-head">
         <div>
-          <p className="a1-kicker">Mars Relay, Act 1</p>
+          <p className="a1-kicker">Tradeoff, Act 1</p>
           <h1 id="crew-title">Pick your crew</h1>
         </div>
         <p className="a1-lede">
