@@ -3,7 +3,7 @@
 import { DESIGN_FIXTURES, type DesignFixture } from "./capabilities";
 import { playRun } from "./controllers";
 import { demoControllers } from "./demo";
-import type { HazardId, LoseReason, RunResult } from "./types";
+import type { HazardId, LoseReason, RelayCapabilities, RunResult } from "./types";
 import { MarsWorld } from "./world";
 
 export interface Tally {
@@ -16,13 +16,13 @@ export interface Tally {
   linkCuts: number;
 }
 
-export function playSeed(seed: number, f: DesignFixture): { result: RunResult; world: MarsWorld } {
-  const world = new MarsWorld({ seed, design: f.design, extras: f.extras });
+export function playSeed(seed: number, f: DesignFixture, capabilities?: RelayCapabilities): { result: RunResult; world: MarsWorld } {
+  const world = new MarsWorld({ seed, design: f.design, extras: f.extras, ...(capabilities ? { capabilities } : {}) });
   playRun(world, demoControllers());
   return { result: world.result()!, world };
 }
 
-export function balance(f: DesignFixture, seeds: number[]): Tally {
+export function balance(f: DesignFixture, seeds: number[], capabilities?: RelayCapabilities): Tally {
   const t: Tally = {
     design: f.name, runs: seeds.length, wins: 0, winRate: 0,
     loseReasons: { "window-closed": 0, "resource-exhausted": 0, "crew-lost": 0 }, endSols: {},
@@ -30,7 +30,7 @@ export function balance(f: DesignFixture, seeds: number[]): Tally {
     meanTasks: 0, meanScore: 0, meanSolsOut: 0, unfinished: {}, linkCuts: 0,
   };
   for (const seed of seeds) {
-    const { result: r, world } = playSeed(seed, f);
+    const { result: r, world } = playSeed(seed, f, capabilities);
     if (r.outcome === "won") t.wins++; else t.loseReasons[r.loseReason!]++;
     const bucket = `${Math.floor((r.endedOnSol - 1) / 5) * 5 + 1}-${Math.floor((r.endedOnSol - 1) / 5) * 5 + 5}`;
     t.endSols[bucket] = (t.endSols[bucket] ?? 0) + 1;
