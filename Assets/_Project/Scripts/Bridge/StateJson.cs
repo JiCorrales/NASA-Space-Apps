@@ -44,8 +44,12 @@ namespace SpaceApps.Bridging
 
             w.Key("requirements").BeginArray();
             foreach (var r in s.requirements)
+            {
                 w.BeginObject().Field("id", r.id).Field("label", r.label).Field("value", r.value).Field("unit", r.unit)
-                 .Field("min", r.min).Field("max", r.max).Field("check", r.check).EndObject();
+                 .Field("min", r.min).Field("max", r.max).Field("check", r.check);
+                if (r.verified.HasValue) w.Field("verified", r.verified.Value);
+                w.EndObject();
+            }
             w.EndArray();
 
             w.Key("resources").BeginArray();
