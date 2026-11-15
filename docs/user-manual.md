@@ -161,7 +161,7 @@ The page shows the four players side by side, one panel each. When you open it, 
 **One panel** shows, for its player:
 
 - The portrait, the name, the role and the **link** state: LINK UP or LINK DOWN.
-- The **map** around the player, with the state of the sky (clear, hazy, storm).
+- The **map** around the player, with the state of the sky (clear, hazy, dust or dark).
 - Three **health gauges**, the ones that are lowest right now. **ALL GAUGES** shows the eight of them:
   radiation dose, energy, rest, air, water, food, body and morale.
 - The **activity** chosen for this sol.
