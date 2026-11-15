@@ -202,7 +202,7 @@ export const ACTIVITIES: Record<ActivityId, Activity> = {
   schedulePass: make({
     id: "schedulePass", name: "Schedule a pass", summary: "Ask the satellite for a pass over the base tomorrow.", skill: "relay", targetKind: "none",
     blocked(w) {
-      if (!w.modules.antenna.built) return block("There is no antenna to reach the satellite.", false);
+      if (!w.modules.antenna.built) return block("There is no antenna to reach the satellite.");
       if (w.sat.fault || w.sat.lost) return block("The satellite is not answering.");
       return null;
     },
@@ -217,7 +217,7 @@ export const ACTIVITIES: Record<ActivityId, Activity> = {
   sendData: make({
     id: "sendData", name: "Send data", summary: "Send analysed data up to the satellite during a pass.", skill: "relay", targetKind: "none",
     blocked(w) {
-      if (!w.modules.antenna.built) return block("There is no antenna to reach the satellite.", false);
+      if (!w.modules.antenna.built) return block("There is no antenna to reach the satellite.");
       if (w.bufferMb <= 0) return block("No data is waiting to be sent.");
       if (w.sat.lost || w.sat.fault) return block("The satellite is not answering.");
       if (!w.sat.passToday) return block("The satellite does not pass over today.");
@@ -322,7 +322,7 @@ export const ACTIVITIES: Record<ActivityId, Activity> = {
   diagnoseSatellite: make({
     id: "diagnoseSatellite", name: "Diagnose the satellite", summary: "Read the satellite's telemetry to find what is wrong.", skill: "radio", targetKind: "none",
     blocked(w) {
-      if (!w.modules.antenna.built) return block("There is no antenna to reach the satellite.", false);
+      if (!w.modules.antenna.built) return block("There is no antenna to reach the satellite.");
       if (!w.sat.fault) return block("The satellite shows no fault.");
       if (w.sat.fault.diagnosed) return block("The fault is already diagnosed.");
       return null;
@@ -343,7 +343,7 @@ export const ACTIVITIES: Record<ActivityId, Activity> = {
   recoverSatellite: make({
     id: "recoverSatellite", name: "Recover the satellite", summary: "Send the commands that bring a diagnosed satellite back.", skill: "relay", targetKind: "none",
     blocked(w) {
-      if (!w.modules.antenna.built) return block("There is no antenna to reach the satellite.", false);
+      if (!w.modules.antenna.built) return block("There is no antenna to reach the satellite.");
       if (!w.sat.fault) return block("The satellite shows no fault.");
       if (!w.sat.fault.diagnosed) return block("The fault is not diagnosed yet.");
       return null;
