@@ -204,13 +204,18 @@ describe("cockpit on the bridge", () => {
 });
 
 describe("flight stand-in", () => {
+  let off = () => {};
+  afterEach(() => { off(); vi.useRealTimers(); });
+
   it("plays the recording on launch, waits at an alert and goes on when a command is pressed", async () => {
     vi.useFakeTimers();
     const seen: SimFrame[] = [];
-    const off = subscribe((m: UnityToPage) => { if (m.type === "simTick") seen.push(m.payload); });
+    off = subscribe((m: UnityToPage) => { if (m.type === "simTick") seen.push(m.payload); });
     const { send } = await import("../bridge/bridge");
     send("fly", { action: "launch" });
-    await vi.waitFor(() => expect(seen.length).toBe(1));
+    // The recording loads through a dynamic import; let it settle without moving the clock.
+    for (let i = 0; i < 50 && seen.length === 0; i++) await vi.advanceTimersByTimeAsync(0);
+    expect(seen).toHaveLength(1);
     expect(seen[0]!.week).toBe(1);
     send("fly", { action: "fast" });
     // Fast forward runs until the storm, then drops to detail and waits for an answer.
@@ -226,7 +231,5 @@ describe("flight stand-in", () => {
     send("command", { name: "pauseCamera" });
     expect(seen.at(-1)!.commands.find((c) => c.name === "pauseCamera")?.active).toBe(true);
     send("fly", { action: "pause" });
-    off();
-    vi.useRealTimers();
   });
 });
