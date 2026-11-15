@@ -1,6 +1,6 @@
 import type {
-  GroupDef, Group, MissionState, Option, PageToUnity, Resource, ResourceKind, Issue, Source, Step, StepStatus,
-  UnityToPage,
+  GroupDef, Group, MissionCard, MissionState, Option, PageToUnity, Resource, ResourceKind, Issue, Source, Step,
+  StepStatus, UnityToPage, World,
 } from "./types";
 
 // Fixture data for Earth Watch (EW-1). Values marked "team" are plausible, not yet checked.
@@ -89,6 +89,50 @@ const groups: GroupDef[] = [
   ] },
 ];
 
+// Mission select. Sunlight is the solar irradiance from the NASA Planetary Fact Sheet; the signal is the loss
+// against a satellite at 500 km (inverse square of the distance to Earth). null = the team has not collected it.
+const factSheet = nasa("NASA Planetary Fact Sheet (nssdc.gsfc.nasa.gov/planetary/factsheet): solar irradiance");
+const signalFrom = (distance: string) =>
+  derived(`Inverse square of the distance to Earth (${distance}) against a satellite at 500 km`);
+const worlds: World[] = [
+  { id: "earth", name: "Earth", open: true,
+    sunlight: { value: 1361, unit: "W/m2", source: factSheet }, signal: null, travel: null },
+  { id: "moon", name: "Moon", open: false,
+    sunlight: { value: 1361, unit: "W/m2, same as Earth", source: factSheet },
+    signal: { value: -58, unit: "dB", source: signalFrom("384,400 km") },
+    travel: { value: 3, unit: "days", source: nasa("NASA Apollo missions: about 3 days from Earth to the Moon") } },
+  { id: "mars", name: "Mars", open: false,
+    sunlight: { value: 586, unit: "W/m2, 43% of Earth", source: factSheet },
+    signal: { value: -113, unit: "dB", source: signalFrom("225 million km, average") },
+    travel: { value: 7, unit: "months", source: nasa("NASA Mars Exploration: the trip to Mars takes about seven months") } },
+  { id: "venus", name: "Venus", open: false,
+    sunlight: { value: 2601, unit: "W/m2, 191% of Earth", source: factSheet },
+    signal: null,
+    travel: { value: 4, unit: "months", source: team("Team estimate, not yet checked against a NASA source") } },
+  { id: "jupiter", name: "Jupiter", open: false,
+    sunlight: { value: 50, unit: "W/m2, 4% of Earth", source: factSheet },
+    signal: null,
+    travel: { value: 5, unit: "years", source: nasa("NASA Juno: launched 2011, reached Jupiter in 2016") } },
+];
+const missions: MissionCard[] = [
+  { id: "EW-1", world: "earth", name: "Earth Watch", open: true,
+    summary: "A 3U CubeSat photographs one region once a week for 52 weeks.",
+    who: "Scientists and rangers who look after the region, and the people who live there.",
+    why: "A picture every week shows change early: forest cleared, a fire scar, ice breaking up. They can act in time, and an image counts only when it reaches them." },
+  { id: "radiation-survey", world: "earth", name: "Radiation survey", open: false,
+    summary: "Measure the radiation dose a spacecraft receives in low Earth orbit.",
+    who: "Spacecraft engineers.", why: "To design electronics that last in orbit." },
+  { id: "space-weather", world: "earth", name: "Space weather watch", open: false,
+    summary: "Track how solar storms disturb Earth's magnetic field.",
+    who: "Power grid and satellite operators.", why: "To get warning before a storm reaches Earth." },
+  { id: "cloud-ice", world: "earth", name: "Cloud ice survey", open: false,
+    summary: "Measure the ice high in clouds at every hour of the day.",
+    who: "Weather and climate modellers.", why: "Cloud ice is one of the largest unknowns in their models." },
+];
+
+/** Toy rule: the tests that verify each requirement. Unity decides this for real. */
+const VERIFIED_BY: Record<string, string[]> = { images: ["day", "thermal"], deadline: ["vibration"] };
+
 const STEPS: Step[] = ["goals", "concept", "requirements", "design", "build", "fly"];
 
 function initial(): MissionState {
@@ -101,11 +145,15 @@ function initial(): MissionState {
     design: { tests: [] },
     groups,
     requirements: [
-      { id: "images", label: "Weekly images delivered", value: 45, unit: "of 52", min: 26, max: 52, check: "Counted in the simulated year" },
-      { id: "deadline", label: "Months to reach orbit", value: 24, unit: "months", min: 9, max: 36, check: "Launch option wait time" },
-      { id: "reserve", label: "Budget reserve", value: 10, unit: "%", min: 10, max: 30, check: "Reserve set in build and verify" },
+      { id: "images", label: "Weekly images delivered", value: 45, unit: "of 52", min: 26, max: 52, check: "Counted in the simulated year",
+        source: team("A rule of the game; NASA gives no minimum") },
+      { id: "deadline", label: "Months to reach orbit", value: 24, unit: "months", min: 9, max: 36, check: "Launch option wait time",
+        source: nasa("NASA CubeSat 101: 9 months at the fastest, 18 to 24 typical") },
+      { id: "reserve", label: "Budget reserve", value: 10, unit: "%", min: 0, max: 30, check: "Reserve set in build and verify",
+        source: nasa("NASA CubeSat 101: reserves of at least 10% of the budget") },
     ],
     resources: [], issues: [], attempts: [],
+    worlds, missions, reserve: 0.1,
   };
 }
 
@@ -117,14 +165,20 @@ function recompute(s: MissionState): MissionState {
   const pick = (g: Group) => s.design[g] as string | undefined;
   const spec = (g: Group, label: string) =>
     groups.find((x) => x.group === g)?.options.find((o) => o.id === pick(g))?.stats.find((t) => t.label === label)?.value as number | undefined;
-  const reserve = s.requirements.find((r) => r.id === "reserve")?.value ?? 10;
+  const reserve = (s.reserve ?? 0.1) * 100;
   const resources: Resource[] = [
-    { kind: "mass", used: round(sum("mass")), available: spec("format", "Mass limit") ?? 0, unit: "kg", known: has("format") },
-    { kind: "power", used: round(sum("power")), available: spec("power", "Power") ?? 0, unit: "W", known: has("power") },
-    { kind: "budget", used: sum("cost"), available: Math.round(1_500_000 * (1 - reserve / 100)), unit: "USD", known: true },
-    { kind: "data", used: sum("data"), available: has("storage") ? (pick("storage") === "large" ? 16000 : 2000) : 0, unit: "MB", known: has("storage") },
-    { kind: "communications", used: sum("data"), available: sum("link"), unit: "MB/day", known: has("radio") },
-    { kind: "time", used: (spec("launch", "Wait") ?? 0), available: 24, unit: "months", known: true },
+    { kind: "mass", used: round(sum("mass")), available: spec("format", "Mass limit") ?? 0, unit: "kg", known: has("format"),
+      source: nasa("NASA CubeSat 101: the mass limit of the chosen format") },
+    { kind: "power", used: round(sum("power")), available: spec("power", "Power") ?? 0, unit: "W", known: has("power"),
+      source: team("Power of the chosen panels; team value") },
+    { kind: "budget", used: sum("cost"), available: Math.round(1_500_000 * (1 - reserve / 100)), unit: "USD", known: true,
+      source: team("Total budget is the team's: NASA publishes none for this kind of CubeSat. Minus the reserve") },
+    { kind: "data", used: sum("data"), available: has("storage") ? (pick("storage") === "large" ? 16000 : 2000) : 0, unit: "MB", known: has("storage"),
+      source: team("Capacity of the chosen storage; team value") },
+    { kind: "communications", used: sum("data"), available: sum("link"), unit: "MB/day", known: has("radio"),
+      source: derived("Rate of the chosen radio over the daily contacts") },
+    { kind: "time", used: (spec("launch", "Wait") ?? 0), available: 24, unit: "months", known: true,
+      source: nasa("NASA CubeSat 101: 18 to 24 months is typical to reach orbit") },
   ];
   const issues: Issue[] = [];
   const over = (kind: ResourceKind, step: Step, label: string) => {
@@ -137,7 +191,16 @@ function recompute(s: MissionState): MissionState {
     issues.push({ code: "data.tight", severity: "warning", resource: "data", step: "design", message: "Small storage will fill quickly with multispectral images." });
   if (has("groundStation") && !has("backupStation"))
     issues.push({ code: "backup.unset", severity: "info", resource: null, step: "design", message: "No backup ground station chosen yet." });
-  return { ...s, resources, issues };
+  const tests = (s.design.tests as string[] | undefined) ?? [];
+  const minReserve = s.requirements.find((r) => r.id === "reserve")?.value ?? 0;
+  const requirements = s.requirements.map((r) => ({
+    ...r,
+    verified: r.id === "reserve" ? reserve >= r.value : (VERIFIED_BY[r.id] ?? []).every((t) => tests.includes(t)),
+  }));
+  if (reserve < minReserve)
+    issues.push({ code: "reserve.low", severity: "warning", resource: "budget", step: "build",
+      message: `The reserve is ${Math.round(reserve)}%, below the ${minReserve}% the requirements ask for.` });
+  return { ...s, requirements, resources, issues };
 }
 const round = (n: number) => Math.round(n * 100) / 100;
 
@@ -165,9 +228,9 @@ export function createStandin(emit: (m: UnityToPage) => void) {
           r.id === msg.payload.id ? { ...r, value: Math.min(r.max, Math.max(r.min, msg.payload.value)) } : r) });
         push(); return;
       case "setReserve":
-        // Reserve is a requirement here so the budget limit follows it.
-        handle({ type: "setRequirement", payload: { id: "reserve", value: Math.round(msg.payload.fraction * 100) } });
-        return;
+        // The reserve requirement is the minimum asked for; this is the reserve actually kept.
+        state = recompute({ ...state, reserve: Math.min(1, Math.max(0, msg.payload.fraction)) });
+        push(); return;
       case "completeStep": {
         setStatus(msg.payload.step, "done");
         const next = STEPS[STEPS.indexOf(msg.payload.step) + 1];
