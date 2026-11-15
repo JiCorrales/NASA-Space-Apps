@@ -154,6 +154,8 @@ describe("balance", () => {
     expect(poor.winRate).toBeLessThanOrEqual(0.15);
     expect(good.winRate).toBeGreaterThan(mid.winRate);
     expect(mid.winRate).toBeGreaterThan(poor.winRate);
+    // a poor satellite means working blind and late, not everyone dying
+    expect(poor.loseReasons["crew-lost"]).toBeLessThan((poor.runs - poor.wins) / 2);
     for (const t of rows) expect(Object.keys(t.endSols).length).toBeGreaterThan(0);
     expect(RUN_SOLS).toBe(30);
   }, 60000);

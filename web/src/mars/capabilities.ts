@@ -58,7 +58,7 @@ export function deriveCapabilities(design: Act1Design, extras: Act1Extras = {}):
   const relayStorageMb = Math.round(300 + 600 * q("storage"));
 
   // Mass and budget left become supplies and spare parts.
-  const supplyDays = Math.round(-3 + 40 * reserve);
+  const supplyDays = Math.round(-1 + 36 * reserve);
   const materialsKg = Math.round(270 + 800 * reserve + 4 * margin);
   const spares = Math.round(1 + 14 * reserve + margin);
 
