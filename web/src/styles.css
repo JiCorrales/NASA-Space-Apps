@@ -11,3 +11,5 @@
 .engine[data-phase="failed"] .engine__box { border-color: var(--critical); }
 .engine__title { font-size: 14px; }
 .engine p { margin: 0; line-height: 1.5; color: var(--text); }
+
+.engine__details { margin: 0 0 12px; padding-left: 16px; font-size: 12px; color: var(--text-2); overflow-wrap: anywhere; }

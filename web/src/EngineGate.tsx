@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useEngine } from "./bridge/engine";
+import { engineDetails, useEngine } from "./bridge/engine";
 import { PixelButton } from "./ui";
 
 /** Covers the canvas while the Unity engine downloads and starts, and says so plainly when it cannot start. */
@@ -22,6 +22,9 @@ export function EngineGate() {
             The game could not start on this device and browser. It needs a desktop browser with WebGL 2
             (Chrome, Edge or Firefox on a computer) and a keyboard and mouse.
           </p>
+          <ul className="engine__details" aria-label="Details">
+            {engineDetails().map((line) => <li key={line}>{line}</li>)}
+          </ul>
           <PixelButton primary onClick={() => window.location.reload()}>Try again</PixelButton>
         </div>
       ) : (
@@ -31,6 +34,11 @@ export function EngineGate() {
           </h1>
           {engine.phase === "loading" && <p className="num">{Math.round(engine.progress * 100)}%</p>}
           {engine.phase === "starting" && <p>This can take a little while on the first visit.</p>}
+          {engine.phase === "starting" && (window.__unityErrors?.length ?? 0) > 0 && (
+            <ul className="engine__details" aria-label="Details">
+              {engineDetails().map((line) => <li key={line}>{line}</li>)}
+            </ul>
+          )}
         </div>
       )}
     </div>
