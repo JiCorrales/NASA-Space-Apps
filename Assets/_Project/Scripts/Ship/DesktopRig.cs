@@ -5,7 +5,7 @@ namespace SpaceApps.Ship
 {
     /// <summary>
     /// Keyboard-and-mouse player: WASD or arrows to move, hold the right mouse button to look,
-    /// left click uses screens through the EventSystem. The cursor stays free, which behaves in WebGL.
+    /// left click on a cover opens its step (ShipScreens). The cursor stays free, which behaves in WebGL.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
     public sealed class DesktopRig : MonoBehaviour
@@ -23,8 +23,12 @@ namespace SpaceApps.Ship
 
         void Awake() => body = GetComponent<CharacterController>();
 
+        /// <summary>Set by the view lock (ShipScreens): while true, keys and the mouse neither move nor turn the rig.</summary>
+        public bool InputLocked { get; set; }
+
         void Update()
         {
+            if (InputLocked) return;
             var keys = Keyboard.current;
             if (keys != null)
             {
