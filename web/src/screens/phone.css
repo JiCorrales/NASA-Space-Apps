@@ -1,0 +1,69 @@
+/* Narrow screens: tablets in portrait (design blueprint) and phones. Everything is behind max-width queries, so the
+   desktop and landscape tablet layouts, shared with the Earth version, are exactly as before. */
+
+/* The three-column blueprint needs 990 px: below that, one column, with issues, the CubeSat and the resources first. */
+@media (max-width: 1000px) {
+  .bp { display: flex; flex-direction: column; }
+  .bp__centre { order: -1; }
+  .pixel-cubesat { max-width: 360px; max-height: 260px; }
+}
+
+@media (max-width: 640px) {
+  .shell .screens .frame { height: auto; min-height: 100vh; padding: 12px; gap: 12px; }
+  .shell .frame__head { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .shell .frame__title { font-size: 14px; overflow-wrap: anywhere; }
+  .shell .frame__steps { flex-wrap: wrap; font-size: 11px; gap: 4px; }
+  .shell .frame__steps li { padding: 3px 6px; overflow-wrap: anywhere; }
+  .shell .screens .frame__body { overflow: visible; padding: 12px; min-width: 0; }
+
+  /* The footer stays at the bottom of the screen, in the page's own background, below the content. */
+  .shell .frame > footer { position: sticky; bottom: 0; z-index: 2; background: var(--bg); padding: 8px 0 10px; border-top: 2px solid var(--edge); }
+  .shell .step-foot { flex-wrap: wrap; gap: 8px; }
+  .shell .step-foot__mid { display: contents; }
+  .shell .step-foot .pxbtn { flex: 1 1 140px; }
+
+  .shell .pxbtn { min-height: 44px; font-size: 11px; overflow-wrap: anywhere; line-height: 1.4; }
+  .shell .src { min-height: 44px; min-width: 44px; padding: 8px 10px; font-size: 11px; }
+  .shell .src__text { font-size: 14px; }
+  .shell .num-input { min-height: 44px; width: 110px; font-size: 16px; }
+  .shell .adjust input[type="range"] { flex: 1 1 150px; min-width: 150px; width: auto; min-height: 44px; }
+  .shell .adjust { gap: 8px; }
+
+  .screens { font-size: 14px; }
+  .screens p { overflow-wrap: anywhere; }
+  .section-title, h2.group__title { font-size: 12px; overflow-wrap: anywhere; }
+  .group__title { font-size: 11px; }
+  .screens .card, .group--compact .card { font-size: 14px; padding: 12px; min-height: 44px; }
+  .screens .card__name, .group--compact .card__name { font-size: 11px; overflow-wrap: anywhere; }
+  .group__options, .group--compact .group__options, .concept .group__options { grid-template-columns: 1fr; }
+  .world__name { font-size: 12px; }
+  .world__state, .res__state, .res__label { font-size: 10px; }
+  .res__row { font-size: 14px; }
+  .issue { font-size: 14px; }
+  .issue__tag { font-size: 10px; }
+
+  .goals__need { grid-template-columns: 1fr; }
+  .worlds { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .missions { grid-template-columns: 1fr; }
+  .concept__question { font-size: 16px; overflow-wrap: anywhere; }
+  .concept .card { padding: 12px; font-size: 14px; }
+  .concept .card__name { font-size: 12px; }
+
+  /* Console tables become stacked rows: label, value, check, control, one under the other. */
+  .console, .console tbody, .console tr, .console th, .console td, .console caption { display: block; width: auto; }
+  .console thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .console tr { border: 2px solid var(--edge); margin-bottom: 12px; padding: 4px 0; }
+  .console th, .console td { border-bottom: 0; padding: 6px 10px; overflow-wrap: anywhere; }
+  .reqs .console tbody th, .reqs .console__value { width: auto; }
+  .console__value { white-space: normal; }
+  .console tbody th { font-size: 15px; }
+  .console td[data-label]::before, .console td:nth-child(3)::before, .console td:nth-child(4)::before { display: block; font: 10px var(--font-pixel); color: var(--text-2); text-transform: uppercase; margin-bottom: 4px; }
+  .reqs .console td:nth-child(3)::before, .build .console td:nth-child(3)::before { content: "How it is checked"; }
+  .reqs .console td:nth-child(4)::before { content: "Adjust"; }
+  .build .console td:nth-child(4)::before { content: "State"; }
+
+  .build, .goals__need { grid-template-columns: 1fr; gap: 16px; }
+  .res-list { grid-template-columns: 1fr; }
+  .bp__col, .bp__centre { min-width: 0; }
+  .pixel-cubesat { max-width: 300px; max-height: 220px; }
+}
