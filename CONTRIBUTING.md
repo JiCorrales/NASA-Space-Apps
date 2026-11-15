@@ -72,6 +72,10 @@ that costs hours during a 48-hour hackathon.
 - The output goes to `Builds/WebGL/`, which is ignored by git. Serve the folder over HTTP to test it; opening
   `index.html` from disk does not work.
 - Compression is disabled for this build only, because GitHub Pages cannot send `Content-Encoding` headers.
+- Windows VR (Meta Quest over Link, and keyboard and mouse), from the repo root:
+  `<Unity> -batchmode -quit -projectPath . -buildTarget Win64 -executeMethod SpaceApps.Editor.Build.WindowsBuild.Build -logFile build.log`,
+  optionally with `-windowsBuildOutput <folder>`. The output goes to `Builds/Windows/SpaceMissionDesignGame.exe`. It builds
+  with Mono (restored to the project's IL2CPP afterwards) and fails if `openxr_loader.dll` is missing from the player.
 - **A build or platform switch rewrites shared settings files.** Unity changes `ProjectSettings/ProjectSettings.asset`,
   `GraphicsSettings.asset`, `EditorBuildSettings.asset`, `Assets/XR/Settings/OpenXRPackageSettings.asset`,
   `Assets/DefaultVolumeProfile.asset` and the URP assets in `Assets/Settings/Project Configuration/`.
