@@ -582,3 +582,39 @@ describe("four people are four visible people", () => {
     }
   });
 });
+
+describe("supplies: who the base feeds and when a pack is used", () => {
+  const far = (w: MarsWorld) => ({ kind: "tile" as const, x: Math.min(38, w.map.base.x + 25), y: w.map.base.y });
+
+  it("a player who walks out without loading is not out of air, water and food within four sols", () => {
+    const w = fresh(1, GOOD_DESIGN, []);
+    w.modules.array.built = true;
+    for (let i = 0; i < 4; i++) step(w, pick(1, "travel", far(w)));
+    const dev = w.players[1]!;
+    expect(dev.out).toBeNull();
+    expect(Math.min(dev.air, dev.water, dev.food)).toBeGreaterThan(0);
+    expect(w.atBase(dev)).toBe(false);
+  });
+
+  it("the base feeds everyone within three tiles from its stores and leaves their pack alone", () => {
+    const w = fresh(1, GOOD_DESIGN, []);
+    w.modules.array.built = true;
+    const stock = w.stock.oxygen;
+    step(w, pick(1, "moveSupplies", { kind: "player", id: 1 }));
+    const loaded = w.players[1]!.carry.rations;
+    expect(loaded).toBeGreaterThan(0);
+    step(w, pick(1, "rest"));
+    expect(w.players[1]!.carry.rations).toBe(loaded);
+    expect(w.stock.oxygen).toBeLessThan(stock);
+  });
+
+  it("away from the base the pack is used, one sol of supplies a sol", () => {
+    const w = fresh(1, GOOD_DESIGN, []);
+    w.modules.array.built = true;
+    w.players[1]!.carry.rations = 3;
+    w.players[1]!.position = { x: w.map.base.x + 6, y: w.map.base.y };
+    step(w, pick(1, "rest"));
+    expect(w.players[1]!.carry.rations).toBe(2);
+    expect(w.players[1]!.air).toBe(100);
+  });
+});

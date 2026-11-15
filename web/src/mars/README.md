@@ -43,6 +43,17 @@ power, the satellite's downlink, supplies and gauges, the lab, the tasks, win an
 links, passes and satellite faults. All randomness is `roll(seed, ...keys)`, so the same seed, design and choices
 replay the same run.
 
+## Supplies: who the base feeds and when a pack is used
+
+- Anyone within 3 tiles of the habitat is fed from the base stores each sol (air, water, food): their gauges
+  recover. Their pack is not touched.
+- Anyone farther away eats from their pack, one sol of supplies a sol. With an empty pack the three gauges fall
+  28 a sol and the player is out when one reaches 0.
+- Loading supplies (an activity) fills a pack from the stores, up to 10 sols. A player who walks out with an empty
+  pack takes a suit reserve of 3 sols from the stores, so an unloaded walk is a margin, not a death in four sols.
+- Packs are paid for from the stores when loaded; the run is lost for lack of supplies only when a store is empty
+  and nobody has any left in a pack.
+
 ## Where the numbers live
 
 `data.ts` has two objects: `NASA` (each value carries the id of its row in

@@ -75,6 +75,7 @@ export const TEAM = {
   restRecover: t("Rest gained by a quiet sol", 35, "points"),
   suppliesRecover: t("Air, water or food gauge recovered per supplied sol", 40, "points"),
   suppliesLoss: t("Air, water or food gauge lost per unsupplied sol", 28, "points"),
+  suitReserve: t("Sols of supplies a player takes when leaving the base with an empty pack", 3, "sols", "so walking out unloaded costs a few sols of margin, not the run"),
   packMax: t("Most sols of supplies a player can carry", 10, "sols"),
   bodyHealPerSol: t("Body healed by a quiet sol", 5, "points"),
   firstAidBody: t("Body a skilled first aid restores", 35, "points"),
