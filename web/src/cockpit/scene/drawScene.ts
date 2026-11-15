@@ -444,16 +444,17 @@ export class CockpitScene {
     c.lineWidth = 1.5;
     brackets(c, xs0 - 84, ys0 - 58, 168, 116, 13);
     c.beginPath();
-    c.moveTo(xs0 - 84, ys0);
-    c.lineTo(xs0 - 100, ys0);
+    // The label sits to the right of the CubeSat: on the left, the wide pixel font ran under the window strut.
+    c.moveTo(xs0 + 84, ys0);
+    c.lineTo(xs0 + 100, ys0);
     c.stroke();
-    c.textAlign = 'right';
+    c.textAlign = 'left';
     c.font = FONT_D;
     c.fillStyle = `rgba(${hud},1)`;
-    c.fillText('EW-1 3U CUBESAT', xs0 - 106, ys0 - 3);
+    c.fillText('EW-1 3U CUBESAT', xs0 + 190, ys0 - 3);
     c.font = FONT_M;
     c.fillStyle = 'rgba(131,148,171,1)';
-    c.fillText('10 x 10 x 34 cm', xs0 - 106, ys0 + 20);
+    c.fillText('10 x 10 x 34 cm', xs0 + 190, ys0 + 20);
 
     // Solar storm
     if (S > 0.01) {
