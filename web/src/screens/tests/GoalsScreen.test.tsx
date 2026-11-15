@@ -68,6 +68,13 @@ describe("goals screen (mission select)", () => {
     expect(fn).toHaveBeenCalledWith({ type: "close", payload: {} });
   });
 
+  it("finishing sends completeStep and then close, so the player returns to the ship", async () => {
+    const { send, fn } = mockSend();
+    render(<GoalsScreen state={fixtureState()} send={send} />);
+    await userEvent.click(screen.getByRole("button", { name: /Finish step/ }));
+    expect(fn.mock.calls.map((c) => c[0].type)).toEqual(["completeStep", "close"]);
+  });
+
   it("without worlds or missions in the state shows Earth alone, open", async () => {
     const { worlds: _w, missions: _m, ...bare } = fixtureState();
     render(<GoalsScreen state={bare} send={mockSend().send} />);
