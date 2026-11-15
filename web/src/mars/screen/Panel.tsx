@@ -32,12 +32,12 @@ function Gauge({ g }: { g: GaugeView }) {
   return (
     <li className="gauge" data-low={g.low} title={`${g.label}: ${g.value} of ${g.max} ${g.unit}`}>
       <Icon name={GAUGE_ICON[g.id]} />
-      <span className="gauge__label">{g.label}</span>
+      <span className="gauge__label">{g.label.split(" ")[0]}</span>
       <span className="gauge__track" role="meter" aria-label={g.label} aria-valuemin={0} aria-valuemax={g.max} aria-valuenow={g.value}
         aria-valuetext={`${g.value} of ${g.max} ${g.unit}${g.low ? ", low" : ""}`}>
         <span className="gauge__fill" style={{ width: `${Math.round(Math.max(0, Math.min(1, g.good)) * 100)}%` }} />
       </span>
-      <span className="gauge__val">{g.value}{g.unit === "%" ? "%" : ` ${g.unit}`}{g.low ? " LOW" : ""}</span>
+      <span className="gauge__val">{g.value}{g.unit === "points" ? "" : ` ${g.unit}`}{g.low ? " LOW" : ""}</span>
       <SourceTag source={asSource(g.source)} />
     </li>
   );
@@ -120,7 +120,8 @@ export function Panel({ run, index, roster }: PanelProps) {
     },
     onDone: () => run.sceneDone(index),
   };
-  const myPlan = view.myChoice ?? null;
+  const did = showEvening ? run.report?.choices.find((c) => c.player === self.id) ?? null : null;
+  const myPlan = did ?? view.myChoice ?? null;
   const reveal = linked ? run.reveals.filter((r) => r.player !== self.id) : [];
   const lead = run.phase === "briefing" || run.phase === "choosing";
   return (
@@ -154,14 +155,14 @@ export function Panel({ run, index, roster }: PanelProps) {
                   <button type="button" className="mini" disabled={out || !waiting} onClick={() => run.letDemoChoose(self.id)}>LET THE DEMO CHOOSE</button>
                 </>
               ) : null}
-              <p className="mychoice"><Icon name={myPlan ? ACTIVITY_ICON[myPlan.activity] : "task_hidden"} /> {out ? "Out for the rest of the run." : myPlan ? `${optionName(view, myPlan.activity)}${myPlan.target.kind !== "none" ? `: ${targetName(view, myPlan.target)}` : ""}` : waiting ? "Waiting for you to choose." : "Not chosen yet."}</p>
+              <p className="mychoice"><Icon name={myPlan ? ACTIVITY_ICON[myPlan.activity] : "task_hidden"} /> {out ? "Out for the rest of the run." : did ? `Did: ${optionName(view, did.activity)}${did.target.kind !== "none" ? `: ${targetName(view, did.target)}` : ""}` : myPlan ? `${optionName(view, myPlan.activity)}${myPlan.target.kind !== "none" ? `: ${targetName(view, myPlan.target)}` : ""}` : waiting ? "Waiting for you to choose." : "Not chosen yet."}</p>
             </section>
             {linked && view.shared ? (
               <>
                 <section className="sec" aria-label="Shared resources">
                   <h3 className="sec__t">RESOURCES</h3>
                   <ul className="res6">{view.shared.resources.map((r) => (
-                    <li key={r.kind} title={`${r.label}: ${r.detail} (source ${r.source})`} aria-label={`${r.label} ${r.value} ${r.unit}`}><Icon name={RESOURCE_ICON[r.kind]} /><span><b>{r.value}</b> <small>{r.unit}</small></span></li>
+                    <li key={r.kind} title={`${r.label}: ${r.detail} (source ${r.source})`} aria-label={`${r.label} ${r.value} ${r.unit}`}><Icon name={RESOURCE_ICON[r.kind]} /><span><b>{r.value}</b> <small>{r.unit.split(" ")[0]}</small></span></li>
                   ))}</ul>
                   {view.shared.forecast.map((w) => <p key={w.hazard + w.inSols} className="warn"><Icon name="dust_storm" /> {w.text}</p>)}
                 </section>

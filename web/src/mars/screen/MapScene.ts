@@ -74,14 +74,16 @@ export class MapScene {
     const seen = this.people(view);
     for (const [id, o] of seen) {
       const w = this.walkers.get(id) ?? { x: o.pos.x, y: o.pos.y, facing: "down", mode: "stand", bubble: null };
-      w.x = o.pos.x; w.y = o.pos.y; w.mode = "stand";
+      w.x = o.pos.x; w.y = o.pos.y; w.mode = "stand"; w.bubble = null;
       this.walkers.set(id, w);
     }
     for (const id of [...this.walkers.keys()]) if (!seen.has(id)) this.walkers.delete(id);
     this.moduleOverride.clear();
+    this.dusty = false; this.rings = []; this.toast = null;
   }
 
   private people(view: PlayerView): Map<PlayerId, { pos: Pos; out: boolean }> {
+    // a character is drawn in the suit of the roster; `o.id` is the player's id (its `state` is the role)
     const out = new Map<PlayerId, { pos: Pos; out: boolean }>();
     out.set(view.self.id, { pos: view.self.position, out: view.self.status === "out" });
     if (view.shared) for (const c of view.shared.crew) { if (c.id !== view.self.id) out.set(c.id, { pos: c.position, out: c.status === "out" }); }
@@ -239,7 +241,7 @@ export class MapScene {
     const items: { y: number; draw: () => void }[] = [];
     const baseP = view.shared?.map.base;
     if (baseP) items.push({ y: baseP.y - 1, draw: () => blit(pickFrame(BASE_ART.lander!, T0), baseP.x * TILE - 16, (baseP.y + 1) * TILE - 48 - 8) });
-    for (const m of this.moduleList(view)) items.push({ y: m.pos.y, draw: () => this.drawModule(blit, m.id, m.pos, m.status, m.progress, T0) });
+    for (const m of this.moduleList(view)) items.push({ y: m.pos.y, draw: () => this.drawModule(blit, m.id, m.pos, m.status, m.progress, T0, m.dust) });
     for (const s of this.siteList(view)) items.push({ y: s.pos.y - 0.2, draw: () => blit(pickFrame(T[s.sampled ? "siteSampled" : "siteFound"]!, T0), s.pos.x * TILE, s.pos.y * TILE) });
     for (const [id, wk] of this.walkers) items.push({ y: wk.y + 0.5, draw: () => this.drawPerson(blit, id, wk, T0) });
     items.sort((a, b) => a.y - b.y).forEach((i) => i.draw());
@@ -298,10 +300,10 @@ export class MapScene {
     ctx.fillStyle = "#e4ecf5"; ctx.textBaseline = "middle"; ctx.fillText(text, Math.round((w - tw) / 2) + 4, 42, tw - 8);
   }
 
-  private moduleList(view: PlayerView): { id: ModuleId; pos: Pos; status: ModuleStatus; progress: number }[] {
-    const out: { id: ModuleId; pos: Pos; status: ModuleStatus; progress: number }[] = [];
-    if (view.shared) for (const m of view.shared.modules) out.push({ id: m.id, pos: m.pos, status: m.status, progress: m.needed ? m.progress / m.needed : 0 });
-    else for (const o of view.surroundings.objects) if (o.kind === "module") out.push({ id: o.id as ModuleId, pos: o.pos, status: asStatus(o.state), progress: asStatus(o.state) === "working" ? 1 : 0.5 });
+  private moduleList(view: PlayerView): { id: ModuleId; pos: Pos; status: ModuleStatus; progress: number; dust: boolean }[] {
+    const out: { id: ModuleId; pos: Pos; status: ModuleStatus; progress: number; dust: boolean }[] = [];
+    if (view.shared) for (const m of view.shared.modules) out.push({ id: m.id, pos: m.pos, status: m.status, progress: m.needed ? m.progress / m.needed : 0, dust: m.dust > 0.2 });
+    else for (const o of view.surroundings.objects) if (o.kind === "module") out.push({ id: o.id as ModuleId, pos: o.pos, status: asStatus(o.state), progress: asStatus(o.state) === "working" ? 1 : 0.5, dust: o.state === "dusty" });
     return out.map((m) => { const ov = this.moduleOverride.get(m.id); return ov ? { ...m, status: ov.status, progress: ov.status === "working" ? 1 : ov.progress / (view.shared?.modules.find((x) => x.id === m.id)?.needed || 3) } : m; });
   }
 
@@ -311,13 +313,13 @@ export class MapScene {
     return raw.filter((s) => this.tileChar(view, s.pos.x, s.pos.y) !== "?");
   }
 
-  private drawModule(blit: (s: Sprite, x: number, y: number, a?: number) => void, id: ModuleId, pos: Pos, status: ModuleStatus, progress: number, t: number): void {
+  private drawModule(blit: (s: Sprite, x: number, y: number, a?: number) => void, id: ModuleId, pos: Pos, status: ModuleStatus, progress: number, t: number, dirty: boolean): void {
     let key: string | null = null;
     const ant = this.clock < this.passUntil;
     if (status === "absent") { return; }
     switch (id) {
       case "habitat": key = status === "damaged" ? "habitatDamaged" : status === "building" ? (progress < 0.5 ? "habitatFrame" : "habitatShell") : "habitatPowered"; break;
-      case "array": key = status === "damaged" ? "solarDamaged" : status === "building" ? "solarStowed" : this.dusty || this.dust > 0.5 ? "solarDusty" : "solarClean"; break;
+      case "array": key = status === "damaged" ? "solarDamaged" : status === "building" ? "solarStowed" : dirty || this.dusty || this.dust > 0.5 ? "solarDusty" : "solarClean"; break;
       case "antenna": key = status === "damaged" ? "antennaDamaged" : status === "building" ? (progress < 0.5 ? "antenna1" : "antenna2") : ant ? "antennaTransmit" : "antenna3"; break;
       case "storage": key = status === "damaged" ? "storageDamaged" : status === "building" ? "storage1" : "storage2"; break;
     }
@@ -347,5 +349,5 @@ export class MapScene {
   }
 }
 
-const asStatus = (s: string): ModuleStatus => (s === "working" || s === "building" || s === "damaged" || s === "absent" ? s : "working");
+const asStatus = (s: string): ModuleStatus => (s === "dusty" ? "working" : s === "working" || s === "building" || s === "damaged" || s === "absent" ? s : "working");
 const sitePos = (v: PlayerView, id: SiteId): Pos | undefined => v.shared?.sites.find((s) => s.id === id)?.pos ?? v.surroundings.objects.find((o) => o.id === id)?.pos;
