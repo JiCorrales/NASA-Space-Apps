@@ -103,6 +103,8 @@ export interface SelfView {
   gauges: GaugeView[]; skills: Skill[]; carrying: CarryView;
   /** The communicator works this sol. */
   linked: boolean;
+  /** Condition of the player's own communicator, 0 to 100. */
+  commHealth: number;
 }
 
 // ---------------------------------------------------------------- views
@@ -122,13 +124,20 @@ export interface ActivityOption {
 }
 
 export type ObjectKind = "module" | "site" | "player";
+/** `state`: modules "absent" | "building" | "working" | "damaged" | "dusty"; sites "sampled" | "unsampled"; players their role. */
 export interface ObjectView { kind: ObjectKind; id: string; label: string; pos: Pos; state: string }
 
 /** What a player sees with their own eyes: a window of the map, the sky and what is in it. Always available. */
 export interface Surroundings { patch: MapPatch; sky: SkyState; objects: ObjectView[] }
 
 export type ModuleStatus = "absent" | "building" | "working" | "damaged";
-export interface ModuleView { id: ModuleId; name: string; status: ModuleStatus; progress: number; needed: number; pos: Pos; effect: string }
+export interface ModuleView {
+  id: ModuleId; name: string; status: ModuleStatus; progress: number; needed: number; pos: Pos; effect: string;
+  /** Share of the array's output lost to dust, 0 to 1. Zero for other modules. */
+  dust: number;
+  /** Wear, 0 to 100. */
+  wear: number;
+}
 
 export interface ResourceView {
   /** The six resources of the challenge. */
@@ -162,12 +171,18 @@ export interface CrewView {
   known: { sol: number; activity: ActivityId; target: Target }[];
   /** Last time this player's link was seen working, in sols. */
   lastContactSol: number;
+  /** Their gauges, shared over the link. Null while they are cut off. */
+  health: GaugeView[] | null;
+  carrying: CarryView | null;
+  commHealth: number | null;
 }
 
 /** The shared picture. Only players whose communicator works get it. */
 export interface SharedView {
   map: { width: number; height: number; rows: string[]; base: Pos; knownRadius: number };
   sites: SiteView[];
+  /** Sites whose sample is in the lab, waiting to be analysed. */
+  labSamples: SiteId[];
   modules: ModuleView[];
   resources: ResourceView[];
   forecast: Warning[];
@@ -341,4 +356,6 @@ export interface KeyValueStorage { getItem(key: string): string | null; setItem(
 export interface PlayerController {
   readonly player: PlayerId;
   choose(view: PlayerView): Choice | null;
+  /** Called once the sol has been resolved (a screen controller drops its pending choice here). */
+  endOfSol?(): void;
 }
