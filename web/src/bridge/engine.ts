@@ -6,6 +6,8 @@ declare global {
     __unityBuild?: boolean;
     /** Kept up to date by the template; it also fires a "unitystatus" event on every change. */
     __unityStatus?: { phase: "loading" | "starting" | "failed" | "ready"; progress: number };
+    /** What went wrong while starting, collected by the template: script errors and Unity's own messages. */
+    __unityErrors?: string[];
   }
 }
 
@@ -14,6 +16,13 @@ export const START_TIMEOUT_MS = 90_000;
 
 /** True inside a Unity build. There the page never uses the stand-in or shows the developer bar. */
 export const inUnityBuild = () => window.__unityBuild === true;
+
+/** The start-up errors seen so far, plus what this browser can do, for the failure screen. */
+export function engineDetails(): string[] {
+  let webgl2 = false;
+  try { webgl2 = !!document.createElement("canvas").getContext("webgl2"); } catch { webgl2 = false; }
+  return [...(window.__unityErrors ?? []), `WebGL 2: ${webgl2 ? "available" : "not available"}`];
+}
 
 export type EngineStatus =
   | { phase: "standin" } // plain `pnpm dev`: no Unity, the stand-in answers

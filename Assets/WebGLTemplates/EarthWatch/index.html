@@ -27,6 +27,17 @@
         window.__unityStatus = { phase: phase, progress: progress };
         window.dispatchEvent(new Event("unitystatus"));
       }
+      // What went wrong, for the failure screen: script errors, rejected promises and Unity's own banners.
+      window.__unityErrors = [];
+      function note(message) {
+        var text = String(message && message.message ? message.message : message).slice(0, 300);
+        if (window.__unityErrors.indexOf(text) < 0 && window.__unityErrors.length < 6) window.__unityErrors.push(text);
+        window.dispatchEvent(new Event("unitystatus"));
+      }
+      window.addEventListener("error", function (e) {
+        note((e.message || "Script error") + (e.filename ? " (" + e.filename.split("/").pop() + ":" + e.lineno + ")" : ""));
+      });
+      window.addEventListener("unhandledrejection", function (e) { note(e.reason || "Unhandled rejection"); });
       var buildUrl = "Build";
       var config = {
         arguments: [],
@@ -42,6 +53,8 @@
         companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
         productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
         productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+        // Unity reports unsupported browsers and start-up errors here; without it they are invisible.
+        showBanner: function (message, type) { note((type === "error" ? "" : "Warning: ") + message); },
       };
       var loader = document.createElement("script");
       loader.src = buildUrl + "/{{{ LOADER_FILENAME }}}";
@@ -60,6 +73,7 @@
         }).catch(function (message) {
           var loading = document.querySelector("#loading");
           if (loading) loading.textContent = "Could not start the game: " + message;
+          note(message);
           setStatus("failed", 0);
         });
       };

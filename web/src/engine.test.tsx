@@ -81,3 +81,13 @@ describe("plain pnpm dev (no flag)", () => {
     expect(screen.queryByRole("status")).toBeNull();
   });
 });
+
+describe("engine failure details", () => {
+  it("lists what the template collected and whether WebGL 2 exists", async () => {
+    const { engineDetails } = await import("./bridge/engine");
+    window.__unityErrors = ["Out of memory"];
+    expect(engineDetails()).toEqual(["Out of memory", "WebGL 2: not available"]); // jsdom has no WebGL
+    delete window.__unityErrors;
+    expect(engineDetails()).toEqual(["WebGL 2: not available"]);
+  });
+});
