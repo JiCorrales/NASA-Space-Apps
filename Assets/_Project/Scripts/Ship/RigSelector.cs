@@ -21,6 +21,8 @@ namespace SpaceApps.Ship
             XrActive = xrActive;
             desktopRig.SetActive(!xrActive);
             xrRig.SetActive(xrActive);
+            // One line in Player.log saying which scene started and in which mode, for checking builds without a headset.
+            Debug.Log($"[RigSelector] Scene {gameObject.scene.name}: {(xrActive ? "VR rig, an XR device is active" : "keyboard and mouse rig, no XR device")}");
             RigChanged?.Invoke(xrActive);
         }
     }
