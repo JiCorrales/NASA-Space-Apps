@@ -9,6 +9,8 @@ import { marsFactory } from "../marsFactory";
 import { MemoryStorage } from "../..";
 import { PLAYER_IDS, NO_TARGET, type Choice } from "../../types";
 import { FIXTURE_CREW, createFixtureEngine, fixtureFactory } from "./fixtureEngine";
+import { cutOffFactory, tick } from "./helpers";
+import { readFileSync } from "node:fs";
 
 const noop = () => {};
 /** A 2D context that accepts everything: the screen draws, the test only counts renders. */
@@ -21,9 +23,6 @@ beforeEach(() => {
   localStorage.clear();
 });
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
-
-/** Advances fake time in small steps, each in its own act: React only commits a phase change when its act ends. */
-const tick = async (ms: number) => { for (let t = 0; t < ms; t += 50) await act(async () => { await vi.advanceTimersByTimeAsync(50); }); };
 
 /** The views of the fixture engine at the start of sol `solN`, played by the demo. */
 function viewsAt(solN: number) {
@@ -162,5 +161,62 @@ describe("the hand-over from Act 1", () => {
     const broken = { getItem: () => { throw new Error("blocked"); }, setItem: () => { throw new Error("blocked"); }, removeItem: noop };
     expect(() => appendHistory(a.engine.attempt()!, broken)).not.toThrow();
     expect(readHandoff(broken)).toBeNull();
+  });
+});
+
+describe("density: no text under 12 px in a panel", () => {
+  const css = readFileSync(`${process.cwd()}/src/mars/screen/mars.css`, "utf8");
+  it("every font size in the screen's stylesheet is 12 px or more", () => {
+    const sizes = [...css.matchAll(/font(?:-size)?:\s*(?:[^;{}]*?\s)?(\d+(?:\.\d+)?)px/g)].map((m) => Number(m[1]));
+    expect(sizes.length).toBeGreaterThan(20);
+    expect(Math.min(...sizes)).toBeGreaterThanOrEqual(12);
+  });
+  it("the source tag, which the shared UI sets at 10 px, is raised to 12 px inside a panel", () => {
+    expect(css).toMatch(/\.mp \.src \{[^}]*font: 600 12px/);
+    expect(css).toMatch(/\.mp \.src__text \{[^}]*font-size: 12px/);
+  });
+});
+
+describe("the tab switcher of the narrow layouts", () => {
+  it("shows one panel at a time and marks a cut-off player on their tab", () => {
+    render(<MarsPage factory={cutOffFactory(3)} seed={7} autoplay={false} />);
+    const tabs = screen.getAllByRole("tab");
+    expect(tabs).toHaveLength(4);
+    expect(tabs.filter((t) => t.getAttribute("aria-selected") === "true")).toHaveLength(1);
+    expect(document.querySelectorAll('.mp[data-shown="true"]')).toHaveLength(1);
+    expect(within(tabs[3]!).getByText(/DOWN/)).toBeInTheDocument(); // text, not only colour
+    expect(tabs[3]).toHaveAttribute("data-link", "down");
+    for (const t of tabs.slice(0, 3)) { expect(within(t).getByText(/UP/)).toBeInTheDocument(); expect(t).toHaveAttribute("data-link", "up"); }
+    fireEvent.click(tabs[3]!);
+    expect(screen.getAllByRole("tab")[3]).toHaveAttribute("aria-selected", "true");
+    const shown = document.querySelector('.mp[data-shown="true"]')!;
+    expect(shown).toHaveAttribute("data-link", "down");
+    expect(document.querySelectorAll('.mp[data-shown="true"]')).toHaveLength(1);
+  });
+});
+
+describe("the second round of the choice", () => {
+  it("shows a revised plan of a linked demo player, and a cut-off player never revises", async () => {
+    vi.useFakeTimers(); reduce(true);
+    const calls = new Map<number, number>(); const chosen: Choice[] = []; let resolved = 0;
+    const factory = cutOffFactory(3, (kit) => ({
+      ...kit,
+      // a demo that rests the first time and plans the second time it is asked, so every second look is a change
+      demo: (p) => ({ player: p, choose: (view) => { const n = (calls.get(p) ?? 0) + 1; calls.set(p, n); return { player: p, activity: n % 2 ? "rest" : "plan", target: NO_TARGET }; void view; } }),
+      engine: { ...kit.engine, choose: (c) => { if (!resolved) chosen.push(c); return kit.engine.choose(c); }, resolveSol: () => { resolved++; return kit.engine.resolveSol(); } },
+    }));
+    render(<MarsPage factory={factory} seed={7} />);
+    let changedMark = false, chip = false;
+    await tick(4000, () => {
+      if (!resolved) {
+        changedMark ||= document.querySelectorAll(".mychoice .changed").length > 0;
+        chip ||= [...document.querySelectorAll(".chips li")].some((l) => /CHANGED/.test(l.textContent ?? ""));
+      }
+    });
+    expect(resolved).toBeGreaterThanOrEqual(1);
+    expect(changedMark).toBe(true);
+    expect(chip).toBe(true);
+    for (const p of [0, 1, 2]) expect(chosen.filter((c) => c.player === p).map((c) => c.activity)).toEqual(["rest", "plan"]);
+    expect(chosen.filter((c) => c.player === 3).map((c) => c.activity)).toEqual(["rest"]); // cut off: one choice, alone
   });
 });
