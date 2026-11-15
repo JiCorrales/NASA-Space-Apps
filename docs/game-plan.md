@@ -1,6 +1,6 @@
 # Game plan: Earth Watch
 
-> Draft 0.2, 2026-11-14, 21:30. It replaces draft 0.1 with the decisions Jose took on the evening of
+> Draft 0.3, 2026-11-14, 21:45. It replaces draft 0.1 with the decisions Jose took on the evening of
 > 2026-11-14. **Nothing in this plan gets coded until the team agrees to it.** What is still open is in
 > [section 11](#11-still-open).
 
@@ -18,7 +18,9 @@ report that explains why it succeeded or failed. Then they change the design and
 |---|---|
 | Platform | Keyboard and mouse in the browser. VR is dropped: its rig stays in the project, unsupported and untested |
 | Mission | **Earth Watch (EW-1):** a 3U CubeSat photographs the same region of Earth once a week for 52 weeks. An image counts only when it reaches the scientists |
-| Other missions and planets | Shown but locked. Only Earth, and only Earth Watch, can be chosen |
+| Other missions and planets | Shown but locked. Only Earth, and only Earth Watch, can be chosen. Each locked planet's card shows what would change there, from NASA data the team collected: less sunlight for the panels, a weaker radio signal, and the travel time. Opening them for play is the first addition if time allows |
+| Regions | Three presets, a choice of story only: Costa Rica's forests, the Amazon, Arctic sea ice. The numbers do not change with the region |
+| Sky | The Unity Asset Store sky stays. It ships inside the build and is kept out of the public repository |
 | Ship | A round control room: six screens on the wall in front, the CubeSat on a stand in the centre, large windows behind |
 | Outside the windows | The Earth, the red nebula sky from the SpaceSkies pack, and other planets passing by as scenery |
 | Screens in the ship | "Covers": each shows only its step number, its name and its state (to do, now, done, problem), in large type |
@@ -154,14 +156,25 @@ select, the design step and the cockpit are the last things to cut.
 ## 11. Still open
 
 1. The layouts per step, as read in section 3.
-2. The mission's numbers: budget, deadline, the minimum number of images for success, and every value the
-   brief marks as to be defined.
-3. Which regions the player can pick.
-4. Who takes each work package, and on which computer.
-5. Whether the Unity Asset Store sky stays (it cannot be in the public repository, so each build machine needs
-   it) or is replaced by a NASA or CC0 one.
-6. Where the browser build is hosted.
-7. Who records the 30-second demo, and what to do with the research notes that are in Spanish.
+2. The values NASA does not give (below), and every value the brief marks as to be defined.
+3. Who takes each work package. Proposed: Andres's and Padilla's computers take the React screens (packages
+   A to D), which need no Unity; Alexander's and the development PC take the round room and the logic (E to G).
+4. Where the browser build is hosted.
+5. Who records the 30-second demo, and what to do with the research notes that are in Spanish.
+
+### Mission numbers and where they come from
+
+Jose's rule: use NASA data. This is what the sources in the repository give for Earth Watch.
+
+| Number | Source | Value |
+|---|---|---|
+| Deadline to reach orbit | NASA, CubeSat 101: 9 months at the fastest, 18 to 24 typical | 24 months |
+| Budget reserve | NASA, CubeSat 101: at least 10% | 10% |
+| Launch cost covered | NASA, CubeSat 101: up to 300,000 USD on launches NASA provides | 300,000 USD |
+| Size and mass limit | 3U, 10 x 10 x 34 cm (NASA, CubeSat 101); up to 6 kg (CubeSat Design Specification rev 14.1) | 3U, 6 kg |
+| Orbit, eclipse, ground contact | Derived, `Tools/orbits/` | As computed |
+| Total budget | None: NASA publishes no budget for a CubeSat of this kind | The team's *(to define)* |
+| Minimum images for success | None: a rule of the game | The team's; proposed 40 of 52 |
 
 ## 12. Risks
 
