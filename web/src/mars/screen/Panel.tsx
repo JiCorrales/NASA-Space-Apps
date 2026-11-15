@@ -115,7 +115,13 @@ export function Panel({ run, index, roster, shown = true }: PanelProps) {
     onBeat: (e: SolEvent) => {
       run.sceneBeat(index, e);
       const el = root.current; if (!el) return;
-      if (e.kind === "gauge" && e.players.includes(self.id) && run.after?.[index]) applyGauges(el, run.after[index]!.self.gauges);
+      if (e.kind === "gauge" && e.players.includes(self.id) && run.after?.[index]) {
+        const next = run.after[index]!.self.gauges;
+        // the rules name the gauge and its new value; without them every gauge moves to its value after the sol
+        const one = e.gauge !== undefined && e.value !== undefined ? next.find((g) => g.id === e.gauge) : undefined;
+        if (one && e.value !== undefined) { const good = one.id === "radiation" ? 1 - e.value / one.max : e.value / one.max; applyGauges(el, [{ ...one, value: e.value, good, low: e.value === one.value ? one.low : good < 0.3 }]); }
+        else applyGauges(el, next);
+      }
       if (e.kind === "hazard") { el.dataset.flash = "hazard"; setTimeout(() => { delete el.dataset.flash; }, 600); }
     },
     onDone: () => run.sceneDone(index),

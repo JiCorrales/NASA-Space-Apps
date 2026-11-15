@@ -92,7 +92,7 @@ export class MapScene {
     const out = new Map<PlayerId, { pos: Pos; out: boolean }>();
     out.set(view.self.id, { pos: view.self.position, out: view.self.status === "out" });
     if (view.shared) for (const c of view.shared.crew) { if (c.id !== view.self.id) out.set(c.id, { pos: c.position, out: c.status === "out" }); }
-    else for (const o of view.surroundings.objects) if (o.kind === "player") out.set(Number(o.id) as PlayerId, { pos: o.pos, out: o.state === "out" || (o as { out?: boolean }).out === true });
+    else for (const o of view.surroundings.objects) if (o.kind === "player") out.set(Number(o.id) as PlayerId, { pos: o.pos, out: o.state === "out" || o.out === true });
     return out;
   }
 
@@ -303,11 +303,12 @@ export class MapScene {
     if (baseP) items.push({ y: baseP.y - 1, draw: () => blit(pickFrame(BASE_ART.lander!, T0), baseP.x * TILE - 16, (baseP.y + 1) * TILE - 48 - 8) });
     for (const m of this.moduleList(view)) items.push({ y: m.pos.y, draw: () => this.drawModule(blit, m.id, m.pos, m.status, m.progress, T0, m.dust) });
     for (const s of this.siteList(view)) items.push({ y: s.pos.y - 0.2, draw: () => {
-      const marker = s.state === "unknown" ? "siteUnknown" : s.state === "located" ? "siteFound" : "siteSampled";
+      // located by the map, not yet seen: the unknown marker; seen: found; then sampled; analysed, sent and delivered add a mark
+      const marker = s.state === "unknown" || s.state === "located" ? "siteUnknown" : s.state === "visited" ? "siteFound" : "siteSampled";
       blit(pickFrame(T[marker]!, T0), s.pos.x * TILE, s.pos.y * TILE);
       // analysed: a lab mark; sent: the data icon with a tick, so a delivered site reads at a glance
       if (s.state === "analysed" && ICON.analyse) blit(ICON.analyse, s.pos.x * TILE + 2, s.pos.y * TILE - 12);
-      if (s.state === "sent") { if (ICON.data) blit(ICON.data, s.pos.x * TILE - 1, s.pos.y * TILE - 12); if (ICON.task_done) blit(ICON.task_done, s.pos.x * TILE + 8, s.pos.y * TILE - 8); }
+      if (s.state === "sent" || s.state === "delivered") { if (ICON.data) blit(ICON.data, s.pos.x * TILE - 1, s.pos.y * TILE - 12); if (ICON.task_done) blit(ICON.task_done, s.pos.x * TILE + 8, s.pos.y * TILE - 8); }
     } });
     const apart = this.spread();
     for (const [id, wk] of this.walkers) items.push({ y: wk.y + 0.5 + (apart.get(id)!.dy + 1) * 0.01 + id * 0.001, draw: () => this.drawPerson(blit, id, wk, T0, apart.get(id)!) });
@@ -400,15 +401,15 @@ export class MapScene {
   }
 
   /** Site states: the rules' own when `SiteView.state` exists (unknown, located, sampled, analysed, sent), else derived. */
-  private siteList(view: PlayerView): { id: SiteId; pos: Pos; state: "unknown" | "located" | "sampled" | "analysed" | "sent" }[] {
-    type St = "unknown" | "located" | "sampled" | "analysed" | "sent";
-    const norm = (st: string | undefined, sampled: boolean, analysed: boolean, sent: boolean): St => {
-      if (st === "unknown" || st === "located" || st === "sampled" || st === "analysed" || st === "sent") return st;
-      return sent ? "sent" : analysed ? "analysed" : sampled ? "sampled" : "located";
+  private siteList(view: PlayerView): { id: SiteId; pos: Pos; state: "unknown" | "located" | "visited" | "sampled" | "analysed" | "sent" | "delivered" }[] {
+    type St = "unknown" | "located" | "visited" | "sampled" | "analysed" | "sent" | "delivered";
+    const norm = (st: string | undefined, sampled: boolean, sent: boolean): St => {
+      if (st === "unknown" || st === "located" || st === "visited" || st === "sampled" || st === "analysed" || st === "sent" || st === "delivered") return st;
+      return sent ? "sent" : sampled ? "sampled" : "visited";
     };
     const raw = view.shared
-      ? view.shared.sites.map((s) => ({ id: s.id, pos: s.pos, state: norm((s as { state?: string }).state, s.sampled, false, s.deliveredMb > 0 && s.deliveredMb >= s.datasetMb) }))
-      : view.surroundings.objects.filter((o: ObjectView) => o.kind === "site").map((o) => ({ id: o.id as SiteId, pos: o.pos, state: norm(o.state, o.state === "sampled", false, false) }));
+      ? view.shared.sites.map((s) => ({ id: s.id, pos: s.pos, state: norm(s.state, s.sampled, s.deliveredMb > 0 && s.deliveredMb >= s.datasetMb) }))
+      : view.surroundings.objects.filter((o: ObjectView) => o.kind === "site").map((o) => ({ id: o.id as SiteId, pos: o.pos, state: norm(o.state, o.state === "sampled", false) }));
     // a site is only drawn where its tile is known: fog hides it
     return raw.filter((s) => this.tileChar(view, s.pos.x, s.pos.y) !== "?");
   }
