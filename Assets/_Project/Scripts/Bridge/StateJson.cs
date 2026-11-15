@@ -16,6 +16,7 @@ namespace SpaceApps.Bridging
             Envelope("openScreen", new JsonWriter().BeginObject().Field("step", step).EndObject().ToString());
         public static string CloseScreenMessage() => Envelope("closeScreen", "{}");
 
+        // web/src/bridge/types.ts names the top severity "critical"; the session calls it "blocking".
         public static string Serialize(MissionState s)
         {
             var w = new JsonWriter().BeginObject();
@@ -54,7 +55,7 @@ namespace SpaceApps.Bridging
 
             w.Key("issues").BeginArray();
             foreach (var i in s.issues)
-                w.BeginObject().Field("code", i.code).Field("severity", i.severity).Field("resource", i.resource).Field("step", i.step).Field("message", i.message).EndObject();
+                w.BeginObject().Field("code", i.code).Field("severity", i.severity == "blocking" ? "critical" : i.severity).Field("resource", i.resource).Field("step", i.step).Field("message", i.message).EndObject();
             w.EndArray();
 
             w.Key("attempts").BeginArray();

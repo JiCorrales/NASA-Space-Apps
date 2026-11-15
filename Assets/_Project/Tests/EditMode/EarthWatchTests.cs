@@ -332,6 +332,8 @@ namespace SpaceApps.Mission.Tests
             var issues = (List<object>)r["issues"];
             Assert.IsNotEmpty(issues);
             foreach (var q in issues) HasKeys(q, "code", "severity", "resource", "step", "message");
+            Assert.IsTrue(issues.Any(q => (string)((Dictionary<string, object>)q)["severity"] == "critical"), "web/src/bridge/types.ts calls blocking issues critical");
+            Assert.IsTrue(issues.All(q => new[] { "info", "warning", "critical" }.Contains((string)((Dictionary<string, object>)q)["severity"])));
 
             session.CompleteStep("goals"); session.CompleteStep("concept"); session.CompleteStep("requirements");
             session.CompleteStep("design"); session.CompleteStep("build");
