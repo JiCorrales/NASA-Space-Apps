@@ -4,5 +4,8 @@ import { App } from "./App";
 import "./theme.css";
 import "./ui/ui.css";
 import "./styles.css";
+import { installClickSound } from "./sound";
+
+installClickSound();
 
 createRoot(document.getElementById("root")!).render(<StrictMode><App /></StrictMode>);

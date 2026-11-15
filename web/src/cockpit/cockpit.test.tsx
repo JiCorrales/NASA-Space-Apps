@@ -233,3 +233,22 @@ describe("flight stand-in", () => {
     send("fly", { action: "pause" });
   });
 });
+
+describe("flight sounds", () => {
+  const f = (over: Partial<SimFrame>): SimFrame => ({ ...scene("storm"), alert: null, report: null, week: 5, imagesDelivered: 4, imagesLost: 0, speed: "detail", ...over });
+  it("names the sound for each flight event, and none when nothing happened", async () => {
+    const { flightSounds } = await import("../sound");
+    expect(flightSounds(null, f({}))).toEqual(["launch"]);
+    expect(flightSounds(f({}), f({}))).toEqual([]);
+    expect(flightSounds(f({}), f({ imagesDelivered: 5 }))).toEqual(["image"]);
+    expect(flightSounds(f({}), f({ imagesDelivered: 5, speed: "fast" }))).toEqual([]);
+    expect(flightSounds(f({}), f({ imagesLost: 1, speed: "fast" }))).toEqual(["lost"]);
+    const storm = { code: "storm", title: "Solar storm" };
+    expect(flightSounds(f({}), f({ alert: storm }))).toEqual(["alert"]);
+    expect(flightSounds(f({ alert: storm }), f({ alert: storm }))).toEqual([]);
+    const report = { ...scene("report").report!, successRate: 86 };
+    expect(flightSounds(f({}), f({ report }))).toEqual(["success"]);
+    expect(flightSounds(f({}), f({ report: { ...report, successRate: 30 } }))).toEqual(["failure"]);
+    expect(flightSounds(f({ week: 52 }), f({ week: 1 }))).toEqual(["launch"]);
+  });
+});

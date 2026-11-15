@@ -7,6 +7,7 @@ import { SpaceCanvas } from "./SpaceCanvas";
 import { StatusScreens } from "./StatusScreens";
 import { STAGE_H, STAGE_W } from "./scene/drawScene";
 import { pad, sceneInputFromFrame, segmentStatus } from "./status";
+import { isMuted, setMuted } from "../sound";
 import "./cockpit.css";
 
 export interface CockpitViewProps {
@@ -46,6 +47,7 @@ export function CockpitView({ frame, state, battery = [], link = [], onFly, onCo
   const segments = segmentStatus(frame);
   const speed = frame?.speed ?? "paused";
   const ended = Boolean(frame?.report);
+  const [muted, setMutedState] = useState(isMuted);
 
   // Keyboard: space toggles pause, F fast forward, D detail (only while flying).
   useEffect(() => {
@@ -123,6 +125,8 @@ export function CockpitView({ frame, state, battery = [], link = [], onFly, onCo
                 </li>
               ))}
             </ol>
+            <button type="button" className="ck-sbtn" aria-pressed={!muted}
+              onClick={() => { setMuted(!muted); setMutedState(!muted); }}>{muted ? "SOUND OFF" : "SOUND ON"}</button>
             <button type="button" className="ck-sbtn" onClick={onClose} aria-label="Back to the ship (Escape)">SHIP · ESC</button>
           </div>
         </div>

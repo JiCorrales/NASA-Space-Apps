@@ -25,6 +25,8 @@ pnpm build       # output in web/dist
   CubeSat (SVG rectangles, no image files) and the pieces the five screens share; `tests/` renders each screen
   from the stand-in's fixture state.
 - `src/cockpit/` : step fly (cockpit agent).
+- `src/sound.ts` : 8-bit sound effects made with the Web Audio API (no audio files): a click on every button,
+  and the flight events of step fly. `SOUND ON/OFF` in the cockpit mutes them; the choice is kept in localStorage.
 - `src/App.tsx` : the shell. Shows nothing until `openScreen`, hides on `closeScreen`, Escape sends `close`.
 
 To plug in a screen, render it from `App.tsx` for its step; it receives the `MissionState` and calls
