@@ -332,17 +332,42 @@ export const REQUIREMENT_DEFS: RequirementDef[] = [
 
 /** Team rules for capabilitiesFromDesign. None of these is NASA data. */
 export const CAPABILITY_RULES = {
-  /** Map radius in tiles for a ground pixel up to `pixelM`. */
-  mapRadius: [{ pixelM: 15, tiles: 8 }, { pixelM: 60, tiles: 6 }, { pixelM: 600, tiles: 4 }, { pixelM: 2000, tiles: 3 }, { pixelM: Infinity, tiles: 2 }],
-  /** How far reading the maps can extend the known radius. */
-  mapGrowth: 4,
+  /**
+   * Map radius in tiles known at landing, for a ground pixel up to `pixelM`. The Act 2 map is 40 x 24 tiles and its
+   * three sample sites lie 8 to 27 tiles from the base, so these are on that scale: a sounder-class instrument
+   * shows all three, a weather camera two, no instrument only the surroundings.
+   */
+  mapRadius: [{ pixelM: 15, tiles: 30 }, { pixelM: 60, tiles: 27 }, { pixelM: 600, tiles: 24 }, { pixelM: 2000, tiles: 16 }, { pixelM: Infinity, tiles: 12 }],
+  /** With no instrument at all the crew knows only this much. */
+  mapRadiusNone: 8,
+  /** How far reading the maps can extend the known radius, in tiles; a watching plan adds more. */
+  mapGrowth: 12,
   maxWarningSols: 4,
   /** Fault rate per sol with no tests and simple pointing; each test and the star tracker take some off. */
-  faultBase: 0.08, faultPerTest: 0.015, faultStar: 0.01, faultMin: 0.01,
-  /** Budget left that buys one crew-day of supplies; one spare part; the first spare comes free. */
-  usdPerSupplyDay: 40000, usdPerSpare: 250000,
-  /** Building materials: a fixed allocation plus 10 kg of the cargo flight per kg of mass margin left. */
-  materialsBaseKg: 40, materialsPerMarginKg: 10,
+  faultBase: 0.09, faultPerTest: 0.015, faultStar: 0.01, faultMin: 0.02,
+  /**
+   * The relay can only send what Earth can take: the base's upload per sol is the radio's relay volume, held to
+   * `dsnReach` times what the Deep Space Network brings down plus `relayFloorMb`, and always inside the range NASA
+   * measured through orbiters; `relayGain` stands for the pass's peak rate over its average (170 to 1,563 Mb per day, CSV C21 and C23).
+   */
+  relayGain: 1.5, dsnReach: 2, relayFloorMb: 350, relayFloorNoDsnMb: 200, relayMinMb: 170, relayMaxMb: 1563,
+  /** Downlink to Earth per sol: the floor plus a share of what the network brings, up to a ceiling; a design with no ground station gets the floor. */
+  dsnMinMb: 230, dsnNoneMb: 170, dsnSlope: 0.72, dsnMaxMb: 950,
+  /** What the relay holds when a pass is missed: a floor, plus a share of the storage fitted, up to a ceiling. */
+  holdFloorMb: 300, holdPerStorageMb: 0.04, holdMaxMb: 1500,
+  /**
+   * Satellite power margin (0 to 0.9): a base from having panels at all, what the panels give above the load, and
+   * what the battery carries. The poor design's panels do not cover its load, so it gets only the base.
+   */
+  powerBase: 0.25, powerPerMargin: 1.5, powerPerBatteryWh: 1 / 160, powerMax: 0.9,
+  /**
+   * Money and mass left over become supplies, materials and spares, but only a little, so an under-built satellite
+   * with a full wallet is never the best way to play: at most this many extra crew-days of air, water and food, this
+   * many kg of materials above the 280 the array and antenna need, and this many extra spare parts.
+   */
+  supplyDaysMax: 4, supplyDaysPerBudgetShare: 12,
+  materialsBaseKg: 280, materialsPerMarginKg: 10, materialsMaxExtraKg: 120,
+  sparesMax: 3, sparesPerBudgetShare: 8,
   /** The backup relay fills the sols without a pass of our own. */
   backupPassSols: 1,
 };

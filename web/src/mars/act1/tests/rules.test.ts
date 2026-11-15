@@ -47,7 +47,7 @@ describe("capabilitiesFromDesign", () => {
     expect(caps({ ...MIDDLING_DESIGN, instrument: "mapping-multi" }).mapRadiusStart).toBeGreaterThan(mid.mapRadiusStart);
     expect(caps({ ...MIDDLING_DESIGN, groundStation: "dsn34-4h" }).dsnMbPerSol).toBeGreaterThan(mid.dsnMbPerSol);
     expect(caps({ ...MIDDLING_DESIGN, orbit: "low-sso" })).toMatchObject({ passesPerSol: 2, passMinutes: 10 });
-    expect(caps({ ...MIDDLING_DESIGN, storage: "large" }).relayStorageMb).toBe(32000);
+    expect(caps({ ...MIDDLING_DESIGN, storage: "large" }).relayStorageMb).toBeGreaterThan(mid.relayStorageMb);
     expect(caps({ ...MIDDLING_DESIGN, attitude: "star" }).faultPerSol).toBeLessThan(mid.faultPerSol);
     expect(caps({ ...MIDDLING_DESIGN, backupStation: "orbiters" }).passSolFraction).toBe(1);
   });
