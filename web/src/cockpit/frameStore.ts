@@ -12,10 +12,12 @@ export interface FlightView {
   battery: number[];
   /** Contact state of the last frames received, oldest first. */
   link: LinkSample[];
+  /** True once this flight has shown a launch act: LAUNCH then stays dark after it. */
+  launchSeen: boolean;
 }
 
 const HISTORY = 42;
-const EMPTY: FlightView = { frame: null, battery: [], link: [] };
+const EMPTY: FlightView = { frame: null, battery: [], link: [], launchSeen: false };
 let view: FlightView = EMPTY;
 const listeners = new Set<() => void>();
 
@@ -25,14 +27,18 @@ export function isStationDown(frame: SimFrame | null): boolean {
 
 /** Adds a frame to a view. Exported for tests. */
 export function pushFrame(prev: FlightView, frame: SimFrame): FlightView {
-  // A retry starts a new flight: the graphs start again.
-  const restart = prev.frame !== null && frame.week < prev.frame.week;
+  // A retry starts a new flight: the graphs start again. So does a new launch act.
+  const launching = Boolean(frame.launch);
+  const restart = prev.frame !== null && (frame.week < prev.frame.week || (launching && (!prev.frame.launch || Boolean(prev.frame.report))));
   const battery = restart ? [] : prev.battery;
   const link = restart ? [] : prev.link;
+  // The launch act shows no graphs: its frames add nothing to them.
+  if (launching) return { frame, battery, link, launchSeen: true };
   return {
     frame,
     battery: [...battery, frame.battery].slice(-HISTORY),
     link: [...link, { up: frame.contact, down: isStationDown(frame) }].slice(-HISTORY),
+    launchSeen: restart ? false : prev.launchSeen,
   };
 }
 

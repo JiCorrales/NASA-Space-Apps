@@ -5,6 +5,9 @@ import { CommandDeck } from "./CommandDeck";
 import { ReportCard } from "./ReportCard";
 import { SpaceCanvas } from "./SpaceCanvas";
 import { StatusScreens } from "./StatusScreens";
+import { LaunchCanvas } from "./launch/LaunchCanvas";
+import { LaunchStrip } from "./launch/LaunchStrip";
+import { launchWord, metText } from "./launch/launchStatus";
 import { STAGE_H, STAGE_W } from "./scene/drawScene";
 import { pad, sceneInputFromFrame, segmentStatus } from "./status";
 import { isMuted, setMuted } from "../sound";
@@ -15,6 +18,8 @@ export interface CockpitViewProps {
   state: MissionState | null;
   battery?: number[];
   link?: LinkSample[];
+  /** True once this flight has shown a launch act (from the frame store). */
+  launchSeen?: boolean;
   onFly: (action: FlyAction) => void;
   onCommand: (name: CommandName) => void;
   onClose: () => void;
@@ -41,18 +46,19 @@ function useFit() {
 }
 
 /** The flight screen. Pure: shows what the props say and reports what the player pressed. */
-export function CockpitView({ frame, state, battery = [], link = [], onFly, onCommand, onClose }: CockpitViewProps) {
+export function CockpitView({ frame, state, battery = [], link = [], launchSeen = false, onFly, onCommand, onClose }: CockpitViewProps) {
   const { ref, scale } = useFit();
   const region = state?.design.region;
   const input = useMemo(() => sceneInputFromFrame(frame, state), [frame, region]); // eslint-disable-line react-hooks/exhaustive-deps
-  const segments = segmentStatus(frame);
+  const launch = frame?.launch ?? null;
+  const segments = segmentStatus(frame, launchSeen);
   const speed = frame?.speed ?? "paused";
   const ended = Boolean(frame?.report);
   const [muted, setMutedState] = useState(isMuted);
 
   // Keyboard: space toggles pause, F fast forward, D detail (only while flying).
   useEffect(() => {
-    if (!frame || ended) return;
+    if (!frame || ended || launch) return; // the launch act is watch-only
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLElement && e.target.closest("button,input,select,textarea")) return;
       if (e.key === " ") { e.preventDefault(); onFly(speed === "paused" ? "resume" : "pause"); }
@@ -61,13 +67,13 @@ export function CockpitView({ frame, state, battery = [], link = [], onFly, onCo
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [frame, ended, speed, onFly]);
+  }, [frame, ended, launch, speed, onFly]);
 
   return (
     <div className="ck" ref={ref} data-testid="screen" aria-label="Step 6: fly the mission">
       <div className="ck-fit" style={{ width: STAGE_W * scale, height: STAGE_H * scale }}>
         <div className="ck-stage" style={{ transform: `scale(${scale})` }}>
-          <SpaceCanvas input={input} />
+          {launch ? <LaunchCanvas launch={launch} /> : <SpaceCanvas input={input} />}
           <svg className="ck-hull" viewBox="0 0 1280 720" aria-hidden="true">
             <defs>
               <linearGradient id="ck-hg" x1="0" y1="0" x2="0" y2="1">
@@ -87,7 +93,7 @@ export function CockpitView({ frame, state, battery = [], link = [], onFly, onCo
 
           <div className="ck-hud-l">
             <b>{(state?.mission.name ?? "Earth Watch").toUpperCase()} · {state?.mission.id ?? "EW-1"}</b>
-            <span data-testid="clock">{frame ? `WEEK ${pad(frame.week)} / 52 · DAY ${pad(frame.day, 3)}` : "WEEK 00 / 52 · READY FOR LAUNCH"}</span>
+            <span data-testid="clock">{launch ? `${metText(launch.met)} · ${launchWord(launch)}` : frame ? `WEEK ${pad(frame.week)} / 52 · DAY ${pad(frame.day, 3)}` : "WEEK 00 / 52 · READY FOR LAUNCH"}</span>
           </div>
           <div className="ck-hud-r">ILLUSTRATIVE VALUES</div>
           {frame?.alert && !ended && (
@@ -103,19 +109,20 @@ export function CockpitView({ frame, state, battery = [], link = [], onFly, onCo
           )}
 
           {frame?.report && (
-            <ReportCard report={frame.report} week={frame.week} onRetry={() => onFly("retry")} onChangeDesign={onClose} />
+            <ReportCard report={frame.report} week={frame.week} title={launch ? "MISSION REPORT · LAUNCH" : undefined} onRetry={() => onFly("retry")} onChangeDesign={onClose} />
           )}
 
-          <div className="ck-console">
+          <div className={launch ? "ck-console ck-console--launch" : "ck-console"}>
+            {launch && <LaunchStrip launch={launch} />}
             <StatusScreens frame={frame} state={state} battery={battery} link={link} />
-            <CommandDeck frame={frame} onCommand={onCommand} />
+            {!launch && <CommandDeck frame={frame} onCommand={onCommand} />}
           </div>
 
           <div className="ck-bottom">
             <div className="ck-speed" role="group" aria-label="Simulation speed">
               {([["resume", "detail", "DETAIL"], ["fast", "fast", "FAST"], ["pause", "paused", "PAUSE"]] as const).map(([action, s, label]) => (
                 <button key={action} type="button" className="ck-sbtn" data-action={action}
-                  aria-pressed={frame ? speed === s : false} disabled={!frame || ended}
+                  aria-pressed={frame && !launch ? speed === s : false} disabled={!frame || ended || Boolean(launch)}
                   onClick={() => onFly(action)}>{label}</button>
               ))}
             </div>

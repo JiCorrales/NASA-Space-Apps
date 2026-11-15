@@ -1,0 +1,41 @@
+/* The launch strip, in the console under the window during the launch act. Same Retro 4 look as the rest of
+   the cockpit: the pixel font for labels, mono for numbers, square edges and hard shadows. Scoped under .ck. */
+.ck-console--launch .ck-screens { top: 182px; height: 70px; }
+.ck-console--launch .ck-scr { padding: 10px 10px 8px; grid-template-rows: auto auto; gap: 8px; }
+.ck-console--launch .ck-val, .ck-console--launch .ck-gfx { display: none; }
+.ck-segs li[data-s="warn"] { --state: var(--warn); }
+
+.lx { position: absolute; left: 28px; right: 28px; top: 10px; height: 164px; display: grid;
+  grid-template-columns: minmax(0, 1fr) 236px 372px; grid-template-rows: 118px 34px; gap: 12px; }
+.lx section { background: var(--glass); border: 2px solid #223149; box-shadow: 4px 4px 0 #0a0f19; padding: 10px 12px; min-width: 0; }
+.lx h4 { margin: 0 0 8px; font: 400 8px/1 var(--display); color: var(--dim); }
+
+.lx-voice { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 14px; align-items: start;
+  border-color: var(--warn) !important; }
+.lx-voice h4 { color: var(--warn); }
+.lx-face { width: 84px; height: 84px; image-rendering: pixelated; background: #142033; display: block; }
+.lx-voice p { margin: 0; font: 400 15px/1.4 var(--mono); color: var(--ink); }
+
+.lx-tele { display: grid; align-content: start; gap: 8px; }
+.lx-met { font: 500 30px/1 var(--mono); color: var(--warn); font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+.lx-row { display: flex; justify-content: space-between; align-items: baseline; }
+.lx-row span { font: 400 8px/1 var(--display); color: var(--dim); }
+.lx-row b { font: 500 17px/1 var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.lx-poll ol { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.lx-poll li { --state: #56657c; display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 6px; align-items: center;
+  background: #0a111c; border: 2px solid #1a2638; padding: 6px 6px; }
+.lx-poll li[data-go="go"] { --state: var(--ok); }
+.lx-poll li[data-go="nogo"] { --state: var(--crit); border-color: var(--crit); }
+.lx-poll li i { width: 10px; height: 10px; background: var(--state); }
+.lx-poll li[data-go="nogo"] i { animation: lx-blink 1s steps(2) infinite; }
+.lx-poll li span { font: 400 8px/1 var(--display); color: var(--ink); overflow: hidden; }
+.lx-poll li b { font: 600 12px/1 var(--mono); color: var(--state); }
+@keyframes lx-blink { 50% { opacity: .2; } }
+
+.lx-rail { grid-column: 1 / -1; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+.lx-rail li { display: grid; place-items: center; font: 400 8px/1 var(--display); color: #56657c; background: #0a111c; border: 2px solid #1a2638; }
+.lx-rail li[data-state="done"] { color: #04121a; background: var(--ok); border-color: var(--ok); }
+.lx-rail li[data-state="now"] { color: #1a1305; background: var(--warn); border-color: var(--warn); }
+.lx-rail li[data-state="hold"] { color: var(--warn); border-color: var(--warn); animation: lx-blink 1s steps(2) infinite; }
+.lx-rail li[data-state="fail"] { color: var(--ink); background: var(--crit); border-color: var(--crit); }

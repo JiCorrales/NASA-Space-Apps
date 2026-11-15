@@ -9,14 +9,16 @@ const num = (v: string | number) => {
 };
 
 /** The end-of-mission card: success rate, factors, what weighed most, a suggestion and the 52 images. */
-export function ReportCard({ report, week, onRetry, onChangeDesign }: {
+export function ReportCard({ report, week, title, onRetry, onChangeDesign }: {
   report: Report; week: number; onRetry: () => void; onChangeDesign: () => void;
+  /** Optional heading; by default "MISSION REPORT · WEEK n". */
+  title?: string;
 }) {
   const images = Array.from({ length: 52 }, (_, i) => report.images[i] ?? "");
   const delivered = images.filter((s) => s === "sent").length;
   return (
     <section className="ck-result" role="dialog" aria-labelledby="ck-result-title" data-testid="report">
-      <div className="ck-eyebrow" id="ck-result-title">MISSION REPORT · WEEK {week}</div>
+      <div className="ck-eyebrow" id="ck-result-title">{title ?? `MISSION REPORT · WEEK ${week}`}</div>
       <div className="ck-result-cols">
         <div className="ck-result-l">
           <div className="ck-top">

@@ -60,11 +60,12 @@ export function StatusScreens({ frame, state, battery, link }: {
 }) {
   const f = frame;
   const reserve = state?.requirements.find((r) => r.id === "reserve");
-  if (!f) {
+  // Before launch, and during the launch act: nothing to show until the CubeSat is in orbit.
+  if (!f || f.launch) {
     return (
       <div className="ck-screens">
         {["POWER", "ATTITUDE", "DATA LINK", "THERMAL", "IMAGING", "MISSION"].map((t) => (
-          <Panel key={t} id={t.toLowerCase().replace(" ", "")} title={t} status={IDLE} value="—" sub="waiting for launch">
+          <Panel key={t} id={t.toLowerCase().replace(" ", "")} title={t} status={IDLE} value="—" sub={f ? "waiting for orbit" : "waiting for launch"}>
             {t === "IMAGING" ? <WeekGrid weeks={[]} label="Weeks" /> : null}
           </Panel>
         ))}

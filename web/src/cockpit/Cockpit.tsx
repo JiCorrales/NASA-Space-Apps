@@ -7,7 +7,7 @@ import { flightSounds, play } from "../sound";
 
 /** Step "fly": the cockpit, wired to the bridge. Shows the latest `simTick`; sends `fly` and `command`. */
 export function Cockpit({ state }: { state: MissionState | null }) {
-  const { frame, battery, link } = useFlightView();
+  const { frame, battery, link, launchSeen } = useFlightView();
   const heard = useRef<typeof frame>(null);
   useEffect(() => {
     flightSounds(heard.current, frame).forEach(play);
@@ -17,5 +17,5 @@ export function Cockpit({ state }: { state: MissionState | null }) {
   const onCommand = useCallback((name: CommandName) => send("command", { name }), []);
   // "Change design" goes back to the ship, where the player opens the design screen again.
   const onClose = useCallback(() => send("close", {}), []);
-  return <CockpitView frame={frame} state={state} battery={battery} link={link} onFly={onFly} onCommand={onCommand} onClose={onClose} />;
+  return <CockpitView frame={frame} state={state} battery={battery} link={link} launchSeen={launchSeen} onFly={onFly} onCommand={onCommand} onClose={onClose} />;
 }

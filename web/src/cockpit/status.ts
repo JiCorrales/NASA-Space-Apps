@@ -5,6 +5,7 @@ import type { MissionState, SimFrame, WeekState } from "../bridge/types";
 import type { SceneInput } from "./scene/drawScene";
 import { regionKey } from "./scene/earth";
 import { isStationDown } from "./frameStore";
+import { STAGE_ORDER, launchWord } from "./launch/launchStatus";
 
 export type Tone = "ok" | "warn" | "crit" | "idle";
 export interface PanelStatus { tone: Tone; chip: string }
@@ -69,12 +70,32 @@ export const WEEK_WORDS: Record<WeekState, string> = {
 export type Segment = "launch" | "space" | "ground" | "user";
 export interface SegmentStatus { segment: Segment; label: string; state: string; tone: Tone; lit: boolean }
 
-/** Which of the four mission segments the current moment involves. */
-export function segmentStatus(f: SimFrame | null): SegmentStatus[] {
+/** The LAUNCH segment during the launch act, from `frame.launch` alone. */
+function launchSegment(l: NonNullable<SimFrame["launch"]>): SegmentStatus {
+  const bad = l.outcome === "lost" || l.outcome === "scrubbed";
+  const word = bad || l.stage === "hold" || l.stage === "done" ? launchWord(l)
+    : STAGE_ORDER[l.stage] === 0 ? "COUNTDOWN" : STAGE_ORDER[l.stage] >= STAGE_ORDER.separation ? "DEPLOYING" : "ASCENT";
+  return { segment: "launch", label: "LAUNCH", lit: true, tone: bad ? "crit" : l.stage === "hold" ? "warn" : "ok", state: word };
+}
+
+/**
+ * Which of the four mission segments the current moment involves. During the launch act LAUNCH is lit from
+ * `frame.launch`; after one (`launchSeen`) it stays dark. Without a launch act it keeps the old reading of
+ * the first days of week 1.
+ */
+export function segmentStatus(f: SimFrame | null, launchSeen = false): SegmentStatus[] {
   const p = problemOf(f);
   const last = f?.log[f.log.length - 1];
   const delivering = Boolean(f && last && last.kind === "good" && last.week === f.week && f.imagesDelivered > 0);
-  const launching = !f || (f.week <= 1 && f.day <= 2);
+  if (f?.launch) {
+    return [
+      launchSegment(f.launch),
+      { segment: "space", label: "SPACE", lit: false, tone: "idle", state: "STANDBY" },
+      { segment: "ground", label: "GROUND", lit: false, tone: "idle", state: "STANDBY" },
+      { segment: "user", label: "USER", lit: false, tone: "idle", state: "WAITING" },
+    ];
+  }
+  const launching = !f || (!launchSeen && f.week <= 1 && f.day <= 2);
   return [
     { segment: "launch", label: "LAUNCH", lit: launching, tone: launching ? "ok" : "idle",
       state: !f ? "READY" : launching ? "DEPLOYING" : "IN ORBIT" },
