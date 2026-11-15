@@ -1,5 +1,5 @@
 // Step 6: launch, cruise, arrival and landing, ending with what the crew has and the hand-over to Act 2.
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { MissionState } from "../../../bridge/types";
 import { PixelButton } from "../../../ui";
 import { CRUISE, TRANSFER } from "../data";
@@ -19,8 +19,10 @@ type Phase = "brief" | "launch" | "report" | "cruise" | "arrival" | "summary";
 /** Runs `plan.steps` one after another, each held for its own time; `skip` jumps to the last frame. */
 function useLaunchPlayer(plan: LaunchPlan | null) {
   const [i, setI] = useState(0);
+  const [skipped, setSkipped] = useState(false);
   useEffect(() => {
     setI(0);
+    setSkipped(false);
     if (!plan) return;
     let k = 0, timer = 0;
     const next = () => {
@@ -31,7 +33,8 @@ function useLaunchPlayer(plan: LaunchPlan | null) {
     return () => window.clearTimeout(timer);
   }, [plan]);
   const last = plan ? plan.steps.length - 1 : 0;
-  return { frame: plan ? plan.steps[Math.min(i, last)]!.frame : null, done: Boolean(plan) && i >= last, skip: () => setI(last) };
+  const at = skipped ? last : Math.min(i, last);
+  return { frame: plan ? plan.steps[at]!.frame : null, done: Boolean(plan) && at >= last, skip: () => setSkipped(true) };
 }
 
 /** 0 to 1 over `seconds` of real time while `on`; `skip` jumps to 1. */
@@ -94,6 +97,9 @@ export function FlightScreen({ session, state, crew, onBoard, initialPhase = "br
   const handoff = handoffOf(session, crew);
   useEffect(() => { if (phase === "summary") writeHandoff(handoff); }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const reportRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { if (phase === "report") reportRef.current?.scrollIntoView?.({ block: "end", behavior: "smooth" }); }, [phase]);
+
   const frame: LaunchFrame | null = player.frame;
   const ok = plan?.outcome === "ok";
 
@@ -128,7 +134,7 @@ export function FlightScreen({ session, state, crew, onBoard, initialPhase = "br
           <LaunchStrip launch={frame} />
           {phase === "launch" && <div className="a1-actions"><PixelButton onClick={player.skip}>Skip to the end of the launch (Space)</PixelButton></div>}
           {phase === "report" && plan && (
-            <div className="a1-box a1-report" role="status" data-outcome={plan.outcome}>
+            <div ref={reportRef} className="a1-box a1-report" role="status" data-outcome={plan.outcome}>
               <h2>{ok ? "In orbit, and on its way" : plan.outcome === "lost" ? "Lost" : "Scrubbed"}</h2>
               <ul>{plan.report.map((l) => <li key={l}>{l}</li>)}</ul>
               <div className="a1-actions">
