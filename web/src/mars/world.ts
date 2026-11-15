@@ -384,6 +384,11 @@ export class MarsWorld {
         act = ACTIVITIES.rest; t = NO_TARGET;
       } else {
         moved = true;
+        // leaving the base with an empty pack: the suit's own reserve is taken from the stores
+        if (cheb(p.position, this.map.base) <= 3 && p.carry.rations === 0) {
+          const n = Math.min(TEAM.suitReserve.value, Math.floor(this.rationsInStock()));
+          if (n > 0) { this.takeRations(n); p.carry.rations = n; this.emit("supplies", [p.id], `${p.name} left with a suit reserve of ${n} sols.`, { amount: n }); }
+        }
         let budget: number = TEAM.moveBudget.value;
         const from = { ...p.position }, walked: Pos[] = [];
         for (const step of path.path) {
