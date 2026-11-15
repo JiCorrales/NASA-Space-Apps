@@ -17,16 +17,22 @@ pnpm build       # output in web/dist
 
 - `src/bridge/` : `types.ts` (contract), `bridge.ts` (`send`, `subscribe`), `standin.ts` (fixture data and a
   fake Unity that reacts to `choose`, `toggle`, `setRequirement`, `setReserve`, `completeStep`, `close`).
-  For step fly it replays the recorded flight in `fixtures/flight.ts` (`flightStandin.ts`): `fly` launches,
-  pauses, resumes (detail speed), goes fast or retries; at each alert the recording waits until a command is
-  pressed (or 15 s pass) and then shows the answer it was recorded with.
+  For step fly (`flightStandin.ts`), `fly launch` and `fly retry` first play a recorded launch act from
+  `fixtures/launch.ts`, picked by a seed that moves on with every attempt (clean, a hold that resolves, a vehicle
+  lost in the climb, a scrub after a NO-GO, a CubeSat that does not deploy; fixture data, not game rules). A
+  launch that reaches orbit hands over to the recorded flight in `fixtures/flight.ts`, which pauses, resumes
+  (detail speed) and goes fast; at each alert the recording waits until a command is pressed (or 15 s pass) and
+  then shows the answer it was recorded with. A lost or scrubbed launch ends with its report.
 - `src/screens/` : steps goals, concept, requirements, design, build. `index.tsx` exports `StepScreen`; each
   screen takes `state` and an optional `send` (tests pass a mock). `parts/` holds the pixel-art planets and
   CubeSat (SVG rectangles, no image files) and the pieces the five screens share; `tests/` renders each screen
   from the stand-in's fixture state.
-- `src/cockpit/` : step fly (cockpit agent).
+- `src/cockpit/` : step fly (cockpit agent). `scene/` draws the window onto space; `launch/` the launch act that
+  plays while `SimFrame.launch` is present (the ascent scene, its sprites, and the strip with mission control,
+  telemetry, the GO/NO-GO poll and the stage rail). The launch shows only what is happening, never odds; a test
+  checks that no launch text has a percentage or the words risk, chance or probability.
 - `src/sound.ts` : 8-bit sound effects made with the Web Audio API (no audio files): a click on every button,
-  and the flight events of step fly. `SOUND ON/OFF` in the cockpit mutes them; the choice is kept in localStorage.
+  and the flight events of step fly, including the launch (countdown tick, ignition rumble, staging, separation). `SOUND ON/OFF` in the cockpit mutes them; the choice is kept in localStorage.
 - `src/App.tsx` : the shell. Shows nothing until `openScreen`, hides on `closeScreen`, Escape sends `close`.
 
 To plug in a screen, render it from `App.tsx` for its step; it receives the `MissionState` and calls
